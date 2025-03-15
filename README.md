@@ -1,4 +1,4 @@
-<large>Express application using MongoDB</large>
+##Graceful Living Express App with Mongo DB
 
 <strong>Required dependencies for development.<strong>
 <li>npm</li>
