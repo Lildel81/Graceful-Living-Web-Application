@@ -1,6 +1,6 @@
-Express application using MongoDB
+<large>Express application using MongoDB</large>
 
-Required dependencies for development.
+<strong>Required dependencies for development.<strong>
 <li>npm</li>
 <li>express</li>
 <li>cors</li>
