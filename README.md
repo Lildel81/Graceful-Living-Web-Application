@@ -1,5 +1,7 @@
 ## <strong>Graceful Living Express App with Mongo DB</strong>
 
+
+# **ALWAYS REMEMBER TO PULL BEFORE YOU START CODING**
 ### <strong>Required dependencies for development.<strong>
 <li>npm</li>
 <li>express</li>
@@ -36,4 +38,4 @@ or
 ### <strong> Branches: </strong>
 <li>The main branch is for fully working code</li>
 <li>The master branch is what you should push to before merging with main branch.</li>
-# <li>ALWAYS REMEMBER TO PULL BEFORE YOU START CODING</li>
+# **ALWAYS REMEMBER TO PULL BEFORE YOU START CODING**
