@@ -2,19 +2,19 @@ Express application using MongoDB
 
 Required dependencies for development.
 
-npm
-express
-cors
-body-parser
-mongoos
-joi@13.13.3
-joi-objectid@2.0.0
-winsoton@2.4.0
-express-ejs-layouts
-dotenv
-ejs
-express-async-errors
-nodemon --save-dev
+//npm
+//express
+//cors
+//body-parser
+//mongoos
+//joi@13.13.3
+//joi-objectid@2.0.0
+//winsoton@2.4.0
+//express-ejs-layouts
+//dotenv
+//ejs
+//express-async-errors
+//nodemon --save-dev
 
 
 One npm is installed, the rest van be installed using npm
