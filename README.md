@@ -50,3 +50,12 @@ git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git
 ```bash
 git pull https://github.com/Lildel81/Graceful-Living-Web-Application.git
 ```
+<strong>To push your work for the first time use:</strong>
+```bash
+git remote add origin https://github.com/Lildel81/Graceful-Living-Web-Application.git
+git push --set-upstream origin main
+```
+<strong>After that just use:</strong>
+```bash
+git push origin
+```
