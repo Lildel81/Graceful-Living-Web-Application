@@ -15,6 +15,7 @@ dotenv
 ejs
 express-async-errors
 nodemon --save-dev
+mongodb
 
 
 One npm is installed, the rest van be installed using npm
@@ -22,5 +23,7 @@ One npm is installed, the rest van be installed using npm
 npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors
 
 npm install nodemon --save-dev
+
+npm install mongodb
 
 Techinically Winston is installed and dependencies are ready, but logging is currently not working. That needs to be troubleshooted still. 
