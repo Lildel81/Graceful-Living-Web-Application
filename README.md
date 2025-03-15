@@ -32,3 +32,8 @@ or
 
 ### <strong>For error verbosity run:</strong>
 <li>node --verbose index.js</li>
+
+### <strong> Branches: </strong>
+<li>The main branch is for fully working code</li>
+<li>The master branch is what you should push to before merging with main branch.</li>
+# <li>ALWAYS REMEMBER TO PULL BEFORE YOU START CODING</li>
