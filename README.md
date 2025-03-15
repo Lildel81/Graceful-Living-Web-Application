@@ -28,11 +28,11 @@ npm install mongodb
 ### The app will be listening on <strong>127.0.0.1:8080</strong>
 ### <strong>To start it (after dependencies are installed) run:</strong>
 ```bash
-npm start    //starts the batch file
+npm start    #starts the batch file
 
-node index.js    //runs one time
+node index.js    #runs one time
 
-//For error verbosity run
+#For error verbosity run
 
 node --verbose index.js
 ```
@@ -44,19 +44,19 @@ node --verbose index.js
 <strong>To start coding in a new folder use: </strong>
 
 ```bash
-git init
-git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git
+git init   # initiates the git repositories locally
+git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git  #clones the repository to your local folder
 ```
 <strong>To make sure your local folder is up to date with the repository use:</strong>
 ```bash
-git pull https://github.com/Lildel81/Graceful-Living-Web-Application.git
+git pull https://github.com/Lildel81/Graceful-Living-Web-Application.git   #syncs the current repository with your local folders
 ```
 <strong>To push your work for the first time use:</strong>
 ```bash
-git remote add origin https://github.com/Lildel81/Graceful-Living-Web-Application.git
-git push --set-upstream origin main
+git remote add origin https://github.com/Lildel81/Graceful-Living-Web-Application.git   #adds the github repository with label origin
+git push --set-upstream origin master  #sets the upstream linking your origin and the repository's master branches
 ```
 <strong>After that just use:</strong>
 ```bash
-git push origin
+git push origin   #pushes up your code to the master branch.
 ```
