@@ -1,9 +1,8 @@
 Express application using MongoDB
 
 Required dependencies for development.
-<li>
-npm
-express
+<li>npm</li>
+<li>express</li>
 cors
 body-parser
 mongoos
