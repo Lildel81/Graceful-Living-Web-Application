@@ -1,38 +1,34 @@
-Express application using MongoDB
+## <strong>Graceful Living Express App with Mongo DB</strong>
 
-Required dependencies for development.
+### <strong>Required dependencies for development.<strong>
+<li>npm</li>
+<li>express</li>
+<li>cors</li>
+<li>body-parser</li>
+<li>mongoose</li>
+<li>joi@17.13.3</li>
+<li>joi-objectid@2.0.0</li>
+<li>winsoton@2.4.0</li>
+<li>express-ejs-layouts</li>
+<li>dotenv</li>
+<li>ejs</li>
+<li>express-async-errors</li>
+<li>nodemon</li>
 
-npm
+### <strong>After npm is installed run:</strong>
+<li>npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors</li>
 
-express
+<li>npm install nodemon --save-dev</li>
 
-cors
+<li>npm install mongodb</li>
 
-body-parser
+<strong>Techinically</strong> Winston is installed, and dependencies are ready, but logging is currently not working. That still needs to be troubleshooted. 
 
-mongoose
+### The app will be listening on <strong>127.0.0.1:8080</strong>
+### <strong>To start it (after dependencies are installed) run:</strong>
+<li>npm start</li>
+or
+<li>node index.js</li>
 
-joi@13.13.3
-
-joi-objectid@2.0.0
-
-winsoton@2.4.0
-
-express-ejs-layouts
-
-dotenv
-
-ejs
-
-express-async-errors
-
-nodemon --save-dev
-
-
-One npm is installed, the rest van be installed using npm
-
-npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors
-
-npm install nodemon --save-dev
-
-Techinically Winston is installed and dependencies are ready, but logging is currently not working. That needs to be troubleshooted still. 
+### <strong>For error verbosity run:</strong>
+<li>node --verbose index.js</li>
