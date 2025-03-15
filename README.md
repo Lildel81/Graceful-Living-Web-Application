@@ -30,6 +30,8 @@ npm install mongodb
 ```bash
 npm start    #starts the batch file
 
+#OR
+
 node index.js    #runs one time
 
 #For error verbosity run
