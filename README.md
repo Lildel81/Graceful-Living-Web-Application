@@ -40,3 +40,5 @@ or
 <li>The master branch is what you should push to before merging with main branch.</li>
 
 ## **ALWAYS REMEMBER TO PULL BEFORE YOU START CODING**
+<strong>To start coding in a new folder use: </strong>
+git clone 
