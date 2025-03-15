@@ -3,29 +3,33 @@ Express application using MongoDB
 Required dependencies for development.
 <li>npm</li>
 <li>express</li>
-cors
-body-parser
-mongoos
-joi@13.13.3
-joi-objectid@2.0.0
-winsoton@2.4.0
-express-ejs-layouts
-dotenv
-ejs
-express-async-errors
-nodemon --save-dev
-mongodb
-</li>
+<li>cors</li>
+<li>body-parser</li>
+<li>mongoose</li>
+<li>joi@17.13.3</li>
+<li>joi-objectid@2.0.0</li>
+<li>winsoton@2.4.0</li>
+<li>express-ejs-layouts</li>
+<li>dotenv</li>
+<li>ejs</li>
+<li>express-async-errors</li>
+<li>nodemon</li>
 
-One npm is installed, the rest van be installed using npm
+One npm is installed run:
+<li>npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors</li>
 
-npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors
+<li>npm install nodemon --save-dev</li>
 
-npm install nodemon --save-dev
+<li>npm install mongodb</li>
 
-npm install mongodb
+<strong>Techinically</strong> Winston is installed, and dependencies are ready, but logging is currently not working. That still needs to be troubleshooted. 
 
-Techinically Winston is installed and dependencies are ready, but logging is currently not working. That needs to be troubleshooted still. 
+The app will be listening on 127.0.0.1:8080
+To start it (after dependencies are installed) run:
+<li>npm start</li>
+or
+<li>node index.js</li>
 
-"npm start" is the script to run the app. It will be listening on 127.0.0.1:8080
+For error verbosity run:
+<li>node --verbose index.js</li>
 
