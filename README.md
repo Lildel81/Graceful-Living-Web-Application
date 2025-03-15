@@ -41,4 +41,12 @@ or
 
 ## **ALWAYS REMEMBER TO PULL BEFORE YOU START CODING**
 <strong>To start coding in a new folder use: </strong>
-git clone 
+
+```bash
+git init
+git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git
+```
+<strong>To make sure your local folder is up to date with the repository use:</strong>
+```bash
+git pull https://github.com/Lildel81/Graceful-Living-Web-Application.git
+```
