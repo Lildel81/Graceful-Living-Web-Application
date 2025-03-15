@@ -15,7 +15,7 @@ Required dependencies for development.
 <li>express-async-errors</li>
 <li>nodemon</li>
 
-One npm is installed run:
+<strong>After npm is installed run:</strong>
 <li>npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors</li>
 
 <li>npm install nodemon --save-dev</li>
@@ -24,12 +24,12 @@ One npm is installed run:
 
 <strong>Techinically</strong> Winston is installed, and dependencies are ready, but logging is currently not working. That still needs to be troubleshooted. 
 
-The app will be listening on 127.0.0.1:8080
-To start it (after dependencies are installed) run:
+The app will be listening on <strong>127.0.0.1:8080</strong>
+<strong>To start it (after dependencies are installed) run:</strong>
 <li>npm start</li>
 or
 <li>node index.js</li>
 
-For error verbosity run:
+<strong>For error verbosity run:</strong>
 <li>node --verbose index.js</li>
 
