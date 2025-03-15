@@ -8,9 +8,9 @@
 <li>cors</li>
 <li>body-parser</li>
 <li>mongoose</li>
-<li>joi@17.13.3</li>
-<li>joi-objectid@2.0.0</li>
-<li>winsoton@2.4.0</li>
+<li>joi --version 17.13.3</li>
+<li>joi-objectid --version 2.0.0</li>
+<li>winsoton --version2.4.0</li>
 <li>express-ejs-layouts</li>
 <li>dotenv</li>
 <li>ejs</li>
