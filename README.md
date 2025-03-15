@@ -1,7 +1,7 @@
 Express application using MongoDB
 
 Required dependencies for development.
-
+<li>
 npm
 express
 cors
@@ -16,7 +16,7 @@ ejs
 express-async-errors
 nodemon --save-dev
 mongodb
-
+</li>
 
 One npm is installed, the rest van be installed using npm
 
@@ -27,3 +27,6 @@ npm install nodemon --save-dev
 npm install mongodb
 
 Techinically Winston is installed and dependencies are ready, but logging is currently not working. That needs to be troubleshooted still. 
+
+"npm start" is the script to run the app. It will be listening on 127.0.0.1:8080
+
