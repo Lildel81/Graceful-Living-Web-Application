@@ -18,7 +18,7 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.container {
+.navbar-container {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
@@ -79,6 +79,68 @@ body {
     display: none;
     font-size: 24px;
     cursor: pointer;
+}
+
+/* Embedded YouTube video */
+.video-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-container iframe {
+    max-width: 100%;
+  }
+
+/* Styling for homepage text */
+.home-container {
+    margin: 80px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Styling the header */
+.home-container h1 {
+    text-align: center;
+    margin-top: 180px;
+    font-size: 36px;
+}
+
+.home-container h2 {
+    text-align: center;
+    margin-top: 80px;
+    font-size: 36px;
+}
+
+/* Styling the paragraph */
+.home-container p {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 30px;
+}
+
+/* Basic button styling */
+.home-container button {
+    float: right; /* Push the button to the right */
+    margin-right: 20px;
+    background-color: #818589;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px 20px;
+    min-width: 150px;
+  }
+  
+/* Hover effect */
+.home-container button:hover {
+    background-color: #6c6f73; /* Darker gray on hover */
+}
+  
+/* Active (click) effect */
+.home-container button:active {
+    background-color: #5c5f63; /* Even darker gray when clicked */
 }
 
 /* Responsive Design */
