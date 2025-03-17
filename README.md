@@ -47,11 +47,11 @@ node --verbose index.js
 
 ```bash
 git init   # initiates the git repositories locally
-git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git  #clones the repository to your local folder
+git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git  #clones the repository to your local folder  **see cloning from a certain branch for more info**
 ```
 <strong>To make sure your local folder is up to date with the repository use:</strong>
 ```bash
-git pull https://github.com/Lildel81/Graceful-Living-Web-Application.git   #syncs the current repository with your local folders
+git pull --rebase origin master    //this is assuming origin is your push/fetch name if its not see "To push your work for the first time"
 ```
 <strong>To push your work for the first time use:</strong>
 ```bash
@@ -62,3 +62,28 @@ git push --set-upstream origin master  #sets the upstream linking your origin an
 ```bash
 git push origin   #pushes up your code to the master branch.
 ```
+<strong>To clone from a certain branch, the master for example, use:</strong>
+```bash
+gi clone --branch master --single-branch <repo_url>
+```
+<strong>To check which branch your going to push to use:</strong>
+```bash
+git branch
+```
+<strong>To change to the master branch use:</strong>
+```bash
+git checkout master
+```
+<strong>To set upstream to the master branch (this only needs doing once per git folder) use:
+```bash
+git branch --set-upstream-to=origin/master master
+```
+<strong>To push changes to __only__ master use:   (after you have the upstream set)
+```bash
+git push origin master
+```
+<strong>To change the default branch to only the current branch your working in (after these steps it should be master) use:
+```bash
+git config --global push.default current
+```
+
