@@ -51,7 +51,7 @@ git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git  #clon
 ```
 <strong>To make sure your local folder is up to date with the repository use:</strong>
 ```bash
-git pull --rebase origin master    //this is assuming origin is your push/fetch name if its not see "To push your work for the first time"
+git pull --rebase origin master    #this is assuming origin is your push/fetch name if its not see "To push your work for the first time"
 ```
 <strong>To push your work for the first time use:</strong>
 ```bash
