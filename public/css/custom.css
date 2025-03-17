@@ -237,3 +237,35 @@ footer p {
     font-size: 14px;
     padding: 20px 0;
 }
+
+.footer-logo {
+    width: 175px;
+    height: auto;
+}
+
+.footer-left {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    padding-left: 20px;
+}
+/* Middle Section: Services, Resources */
+.footer-sections {
+    flex: 2;
+    display: flex;
+    justify-content: flex-start; /* Moves "Services" section to the left */
+    text-align: left;
+    gap: 50px;
+}
+
+/* Services Section (Aligned to the Left) */
+.footer-column {
+    flex: 1;
+    padding: 10px;
+}
+
+.footer-column ul li a {
+    text-decoration: none;
+    color: black !important; /* Forces black text */
+}
