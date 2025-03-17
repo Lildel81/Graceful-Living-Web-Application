@@ -64,7 +64,7 @@ git push origin   #pushes up your code to the master branch.
 ```
 <strong>To clone from a certain branch, the master for example, use:</strong>
 ```bash
-gi clone --branch master --single-branch <repo_url>
+git clone --branch master --single-branch <repo_url>
 ```
 <strong>To check which branch your going to push to use:</strong>
 ```bash
