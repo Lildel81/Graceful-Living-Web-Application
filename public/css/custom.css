@@ -212,3 +212,28 @@ body {
 .right-section .review-name{
     margin:0;
 }
+
+/* Horizontal line before footer */
+.footer-line {
+    border: 0; /* Remove default border */
+    height: 5px; /* Set the height of the line */
+    background-color: #008080; /* Dark green color */
+}
+
+
+footer {
+    background-color: #E0F2F1; /* light green */
+    color: #2C3E50; /* dark blue text color */
+    text-align: center;
+    padding: 20px 0 0 0;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    background-color: #008080; /* dark green */
+    margin: 0;
+    font-size: 14px;
+    padding: 20px 0;
+}
