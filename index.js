@@ -15,6 +15,7 @@ require('./startup/validations')();
 
 // ✅ Set view engine before using express-ejs-layouts
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // Ensure Express looks in the correct views folder
 app.use(expressLayouts); // ✅ No parentheses!
 
 // ✅ Middleware setup order
@@ -25,7 +26,14 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
 
+// ✅ Services Page Route (NEWLY ADDED)
+app.get('/services', (req, res) => {
+    res.render('services');  // Renders views/services.ejs
+});
 
+// ✅ Existing Routes
 app.use(clientRoutes.routes);
 
+// ✅ Start the Server
 app.listen(config.port, () => winston.info('App is listening on http://localhost:' + config.port));
+
