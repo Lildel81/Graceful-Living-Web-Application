@@ -42,7 +42,7 @@ const validateClient = (client) => {
         lastname: Joi.string().min(1).max(50),
         phonenumber: Joi.string().min(10),
         email: Joi.string().min(1).max(100).required(),
-        closedChakra: Joi.string().min(1).max(50).required(),
+        closedChakra: Joi.string().min(1).max(50),
     });
 
     return schema.validate(client);

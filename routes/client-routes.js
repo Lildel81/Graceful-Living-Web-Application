@@ -1,15 +1,20 @@
-const express  = require('express');
-const {getAllClients} = require('../controllers/clientController');
+const express - require('express');
+const {getHubView,getHomeView,getAssessmentView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView} = require ('../controllers/clientController');
 
 
 const router = express.Router();
 
-// Route to render homepage
-router.get('/', (req, res) => {
-    res.render('home'); // This will render the home.ejs file using layout.ejs
-});
+router.get('/', getHomeView);
+router.get('/hub', getHubView);
+router.get('/assessment', getAssessmentView);
+router.get('/adminportal', getAdminPortalView);
+router.get('/contact', getContactView);
+router.get('/resources', getResourcesView);
+router.get('/notFound', getNotFoundView);
+router.get('/services', getServicesView);
+router.get('/shop', getShopView);
 
-router.get('/', getAllClients);
+
 
 module.exports = {
     routes: router

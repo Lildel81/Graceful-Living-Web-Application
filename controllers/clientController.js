@@ -1,13 +1,52 @@
-const Client = require('../models/client'); // ✅ Correct import
+const Client = require('../models/client'); 
 
-const getAllClients = async (req, res, next) => {
-    try {
-        const list = await Client.find(); // ✅ Make sure Client is properly imported
-        res.render('clientlist', { client: list });
-    } catch (error) {
-        console.error("Error fetching clients:", error);
-        res.status(500).send("Internal Server Error");
-    }
-};
 
-module.exports = { getAllClients };
+
+const getHubView = async (req,res,next) => {
+    res.render('hub');
+}
+
+const getHomeView = async (req, res, next) => {
+    res.render('home');
+}
+
+const getAssessmentView = async (req, res, next) => {
+    res.render('assessment');
+}
+
+const getAdminPortalView = async(req, res, next) => {
+    res.render('adminportal');
+}
+
+const getContactView = async(req, res, next) => {
+    res.render('contact');
+}
+
+const getResourcesView = async(req, res, next) =>{
+    res.render('resources');
+}
+
+const getNotFoundView = async(req, res, next) => {
+    res.render('notFound');
+}
+
+const getServicesView = async(req, res, next) => {
+    res.render('services');
+}
+
+const getShopView = async(req, res, next) => {
+    res.render('shop');
+}
+
+module.exports = { 
+    
+    getHubView,
+    getHomeView,
+    getAssessmentView,
+    getAdminPortalView,
+    getContactView,
+    getResourcesView,
+    getNotFoundView,
+    getServicesView,
+    getShopView,
+ };
