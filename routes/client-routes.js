@@ -1,4 +1,4 @@
-const express - require('express');
+const express = require('express');
 const {getHubView,getHomeView,getAssessmentView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView} = require ('../controllers/clientController');
 
 
