@@ -1,9 +1,14 @@
 <!--/*------------------Carousel section-------------------------------*/-->
 <section aria-label="Newest Photos">
   <div class="carousel" data-carousel>
+    <!--previous and next btn start-->
     <button class="carousel-button prev" data-carousel-button="prev">&#60;</button>
     <button class="carousel-button next" data-carousel-button="next">&#62;</button>
+    <!--previous and next btn end-->
+
+    <!--main slider start-->
     <ul data-slides>
+      <!--Image cards start-->
       <li class="slide" data-active>
         <img class="slide-img" src="https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bmF0dXJlJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww" alt="Nature Image #1">
         <div class="img-content">
@@ -30,10 +35,34 @@
           <button class="slide-btn">Action Button</button>
         </div>
       </li>
+      <!--Image cards end-->
     </ul>
+    <!--main slider end-->
+
+     <!--Radio button start-->
+     <input type="radio" name="radio-btn" id="radio1">
+     <input type="radio" name="radio-btn" id="radio2">
+     <input type="radio" name="radio-btn" id="radio3">
+     <!--Radio button end-->
+
+     <!--Automatic navigation start-->
+    <div class="navigation-auto">
+      <div class="auto-btn-1"></div>
+      <div class="auto-btn-2"></div>
+      <div class="auto-btn-3"></div>
+    </div>
+    <!--Automatic navigation end-->
+
+    <!--Mannual navigation start-->
+    <div class="navigation-mannual">
+      <label for="radio1" class="mannual-btn"></label>
+      <label for="radio2" class="mannual-btn"></label>
+      <label for="radio3" class="mannual-btn"></label>
+    </div>
+    <!--Mannual navigation end-->
   </div>
 </section>
-<!--/*-----------------------------------------------------------------*/-->
+<!--/*------------------------Cacousel Section End------------------------------------*/-->
 <div class="home-container">
   <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
   <href="/"><button id="quiz-button">Take our quiz</button></href>
