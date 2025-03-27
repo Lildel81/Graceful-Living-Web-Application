@@ -31,6 +31,11 @@ app.get('/services', (req, res) => {
     res.render('services');  // Renders views/services.ejs
 });
 
+// ✅ Contact Page Route
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
 // ✅ Existing Routes
 app.use(clientRoutes.routes);
 
