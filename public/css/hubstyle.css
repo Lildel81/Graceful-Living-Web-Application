@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    text-align: center;
+    padding-top: 150px;
+}
+.wellnesshubheaderbackgroundbar {
+    background-color: #008080;
+    padding: 20px 20px 20px 20px;
+}
+.wellnesshubheader {
+    background-color: #008080;
+    padding-top: 50;
+    font-size: 5em;
+    color: #E0F2F1;
+    margin-left: 60px;
+}
+.belowwellnessheader {
+    font-size: 2em;
+    color: #E0F2F1;
+    margin-left: 60px;
+}
+.welnesshubnavigationbuttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 80px;
+    row-gap: 50px;
+    max-width: 60%;
+    margin: 0px auto;
+    padding: 50px 50px;
+    margin-left: 255px;
+    margin-top: -20px;
+    text-decoration: none;
+    color: inherit;
+    
+    
+}
+.nav-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 128, 0.5);
+    border-radius: 20px;
+    box-shadow: 5px 4px 10px rgba(0,0,0,0.1);
+    padding: 20px 20px;
+    width: 30%; /* allows 2 per row */
+    min-width: 3px;
+    min-height: 40px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 500;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-card:hover {
+    background-color: #E0F2F1;
+    box-shadow: 0 0 10px rgba(0, 150, 136, 0.6);
+    transform: translateY(-5px);
+}
+.sidebar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 120vh;
+    margin-left: 200px;
+    background-color: #008080;
+    padding: 20px;
+}
+
+.sidebar-photo {
+    width: 250px;           /* size of the image */
+    height: 250px;
+    border-radius: 50%;     /* this makes it perfectly round */
+    object-fit: cover;      /* keeps the image from stretching */
+    display: block;
+    margin-left: -50px;
+    border: 3px solid #ccc; /* optional: adds a nice border */
+    margin-top: 100px;
+    
+  }
+
+  .sidebar-photo:hover {
+    box-shadow: 0 0 10px rgba(0, 150, 136, 0.6);
+  }
