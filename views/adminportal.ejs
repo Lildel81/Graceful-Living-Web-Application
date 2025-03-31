@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GracefulLiving Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            min-height: 100vh;
+            background: url('/public/images/admin_background.jpg') center/cover no-repeat fixed;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e6f3f8;
+            padding: 15px 50px;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 100%;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: black;
+        }
+        .sign-in {
+            background: #225a5a;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .hero {
+            color: white;
+            text-align: left;
+            padding: 100px 50px;
+            padding-top: 50px;
+            font-size: 3em;
+        }
+        .overview {
+            background: rgba(230, 243, 248, 0.8);
+            margin: -50px auto 120px;
+            padding: 40px;
+            width: 80%;
+            text-align: center;
+            border-radius: 0px;
+        }
+        .overview-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        .overview-box {
+            background: white;
+            padding: 1px;
+            width: 30%;
+            border-radius: 0px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.211);
+        }
+        .overview-box h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .content-box {
+            padding: 15px;
+            height: 150px;
+            border-radius: 5px;
+            overflow-y: auto;
+        }
+        .overview h2 {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="/public/images/logo.png" alt="GracefulLiving Logo" style="height: 40px;">
+        </div>
+        
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/sessions">Session Management</a>
+                <a href="/content">Content Management</a>
+                <a href="/billing">Billing & Payments</a>
+            </div>
+            <a href="/login" class="sign-in">Sign in</a>
+        </div>
+    </div>
+    <div class="hero">
+        <b>Welcome <%= userName %>!</b>
+    </div>
+    <div class="overview">
+        <h2>Quick Overview</h2>
+        <div class="overview-container">
+            <div class="overview-box">
+                <h3>Upcoming Sessions</h3>
+                <div class="content-box"><%= upcomingSessions %></div>
+            </div>
+            <div class="overview-box">
+                <h3>Notifications</h3>
+                <div class="content-box"><%= notifications %></div>
+            </div>
+            <div class="overview-box">
+                <h3>Recent Activities</h3>
+                <div class="content-box"><%= recentActivities %></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -72,7 +72,7 @@ body {
 }
 
 .btn:hover {
-    background: rgba(0, 128, 128, 0.5);;
+    background: rgba(0, 128, 128, 0.5);
 }
 
 /* Mobile Menu Toggle */
@@ -221,52 +221,281 @@ body {
     background-color: #008080; /* Dark green color */
 }
 
+/* 1. Contact Form Section (Full-Width Background) */
+.contact-form {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px;
+    color: white;
+}
 
-footer {
-    background-color: #E0F2F1; /* light green */
-    color: #2C3E50; /* dark blue text color */
+.contact-form::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url('/images/notFound_background.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(1px);
+    z-index: -1;
+}
+
+/* 2. Left Section: Headings + Paragraph */
+.contact-form .left-section {
+    width: 50%;
+    /* Helps text stand out on background */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+  
+.contact-form .left-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+}
+  
+.contact-form .left-section h3 {
+    font-size: 1.2rem;
+    line-height: 1.4;
+    max-width: 500px; /* Limit text width for readability */
+}
+  
+/* 3. Right Section: Center the White Box */
+.contact-form .right-section {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+/* 4. White Box Container */
+.form-box {
+    margin:6vh;
+    background-color: #fff;
+    padding: 2rem;
+    padding-top:1vh;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    /* Subtle drop shadow */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Text color inside the box */
+    color: #000;
+}
+
+.experience-form input[type="text"] {
+    padding-right: 0;
+    padding-left: 1px;
+}
+  
+/* 5. Form Headings & Spacing */
+.experience-form h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
     text-align: center;
-    padding: 20px 0 0 0;
+}
+  
+/* 6. Input Grouping (Name, Contact, Location) */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+  
+/* 7. Inputs & Select */
+.experience-form input,
+.experience-form select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+  
+/* 8. Radio Group Layout */
+.radio-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+  
+/* 9. Submit Button */
+.experience-form button[type="submit"] {
+    background-color: #008080; /* Teal */
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    /* Center horizontally */
+    margin: 0 auto;
+    display: block;
+}
+  
+.experience-form button[type="submit"]:hover {
+    background-color: #006666; /* Darker teal on hover */
+}
+
+.approach{
+    margin:3vh;
+    padding: 1vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.principle{
+    padding: 1vh;
+    background-color: #d9d9d9
+}
+
+.principle h2{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.icon-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    margin: 2rem 0;
+    text-align: center;
+  }
+  
+  .icon-item {
+    margin: 1rem;
+  }
+  
+  .icon-item img {
+    width: 60px;   /* Adjust size as needed */
+    height: auto;
+    margin-bottom: 0.5rem;
+}
+
+
+
+
+
+/* Footer CSS*/
+footer {
+    background-color: #E0F2F1; /* soft green */
+    color: #2C3E50;
+    padding: 30px 50px 0 50px;
     position: relative;
     width: 100%;
     bottom: 0;
+    box-sizing : border-box; 
+    text-align: left;
 }
 
-footer p {
-    background-color: #008080; /* dark green */
-    margin: 0;
-    font-size: 14px;
-    padding: 20px 0;
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 30px;
 }
 
-.footer-logo {
-    width: 175px;
-    height: auto;
-}
-
+/* Left Section */
 .footer-left {
     flex: 1;
     display: flex;
-    justify-content: flex-start; 
-    align-items: center;
-    padding-left: 20px;
-}
-/* Middle Section: Services, Resources */
-.footer-sections {
-    flex: 2;
-    display: flex;
-    justify-content: flex-start; /* Moves "Services" section to the left */
-    text-align: left;
-    gap: 50px;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
 }
 
-/* Services Section (Aligned to the Left) */
+/* Logo */
+.footer-logo {
+    width: 150px;
+    height: auto;
+  
+}
+
+/* Map Placeholder */
+.footer-map {
+    width: 300px;
+    height: 160px;
+    margin-left: -35px;
+}
+
+.map-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* logo Icons facebook,insta, phone*/
+.icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+
+
+
+/* Footer Columns (Services, Resources, Connect) */
+.footer-sections {
+    flex: 3;
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
 .footer-column {
-    flex: 1;
-    padding: 10px;
+    min-width: 150px;
+}
+
+.footer-column h3 {
+    margin-bottom: 8px;
+    color: #2C3E50;
+    font-size: 16px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin: 5px 0;
 }
 
 .footer-column ul li a {
     text-decoration: none;
-    color: black !important; /* Forces black text */
+    color: #2C3E50;
+    transition: color 0.3s;
+}
+
+.footer-column ul li a:hover {
+    color: #008080;
+}
+
+/* Bottom bar */
+.footer-bottom-text {
+    background-color: #008080;
+    margin-top: 30px;
+    padding: 20px 0;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    width: 100vw;  /* full viewport width */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
 }

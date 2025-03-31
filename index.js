@@ -31,9 +31,20 @@ app.get('/services', (req, res) => {
     res.render('services');  // Renders views/services.ejs
 });
 
+// ✅ Contact Page Route
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+// ✅ About Page Route (NEWLY ADDED)
+app.get('/about', (req, res) => {
+    res.render('aboutUS'); // Renders views/about.ejs
+});
+
 // ✅ Existing Routes
 app.use(clientRoutes.routes);
 
 // ✅ Start the Server
 app.listen(config.port, () => winston.info('App is listening on http://localhost:' + config.port));
+
 

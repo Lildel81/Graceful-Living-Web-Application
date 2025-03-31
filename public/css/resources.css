@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    text-align: center;
+    padding-top: 6rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: normal;
+}
+
+.intro_paragraph{
+    text-align: center;
+    padding: 2rem 5rem 0rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.video_wrapper{
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+.youtube_video{
+    position: relative;
+    width: 80%; /* width of the containe */
+    max-width: 800px; /* max width */
+
+    margin-left: auto; 
+    margin-right: auto; 
+
+    padding-bottom: 40%; /* 16:9 aspect ratio */
+
+    height: 0;
+    overflow: hidden;
+}
+
+.youtube_video iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.downloads_container{
+    background-color: #008080;
+    padding: 4rem;
+
+    position: relative;  /* positioning of text over the images */
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+
+.downloads_wrapper{
+    display: flex;
+    gap: 4rem;
+}
+
+.image-item {
+    position: relative; /* absolute positioning of text */
+}
+
+.image{
+    width: 350px;
+    height: 450px;
+    border-radius: 15px;  
+    object-fit: cover;  
+    display: block;  
+}
+
+.image-item::before {
+    content: '';  /* creates the overlay */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);  /* dark transparent overlay */
+    z-index: 1;  /* ensures overlay is beneath the text */
+    border-radius: 15px;
+}
+
+.text-overlay {
+    font-family: 'Playfair Display', serif;
+
+    position: absolute;
+    top: 10%;  
+    left: 50%; 
+    transform: translateX(-50%); 
+    color: white;  
+    font-size: 25px;  
+    text-align: center;  
+    z-index: 2; 
+}
+
+.image-button {
+    position: absolute;
+    bottom: 10%;  
+    left: 50%; 
+    transform: translateX(-50%); 
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #2C3E50; 
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    z-index: 3;
+}
+
+.image-button:hover {
+    background-color: #34495E; /* darker background on hover */
+}

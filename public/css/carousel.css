@@ -1,122 +1,162 @@
 
 .carousel {
-    width: 100vw;
-    height: 50vh;
-    margin-top: 80px;
-    position: relative;
-  }
-  
-  .carousel > ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  
-  .slide {
-    position: absolute; /*absolute*/
-    inset: 0;
-    opacity: 0;
-    transition: 200ms opacity ease-in-out;
-    transition-delay: 200ms;
-  }
+  width: 100vw;
+  height: 50vh;
+  position: relative;
+}
 
-  
-  .slide > img { /*.slide > img*/
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-  
-  .slide[data-active] {
-    opacity: 1;
-    z-index: 1;
-    transition-delay: 0ms;
-  }
-  
-  .img-content{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+.carousel > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-    background-color: rgba(255, 255, 255, 0.4);
-    color: #2c3e50;
-  
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items:center;
-    opacity: 1;
-    transition: opacity 0.3s;
-  }
+ul > input {
+  display: none;
+}
 
-  .slide-title{
-    font-size: larger;
-    line-height: 1;
-    padding: 0;
-    margin-top: auto;
-    margin-bottom: 0;
-  }
+.slide {
+  position: absolute; /*absolute*/
+  inset: 0;
+  opacity: 0;
+  transition: 200ms opacity ease-in-out;
+  transition-delay: 200ms;
+}
 
-  .slide-content{
-    padding: 0.5rem;
-    text-align: center;
-    font-size: 1rem;
-    line-height: 1.5rem;
-    width: 50%;
-  }
 
-  .slide-btn{
-    padding: 1rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    border: none;
-    border-radius: 20px;
-    font: inherit;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #e0f2f1;
-    background-color: #008080;
+.slide > img { /*.slide > img*/
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 
-  }
-  .slide-btn:hover,
-  .slide-btn:active{
-    background-color: #0080808d;
-    color: #2c3e50;
-  }
 
-  .carousel-button {
-    position: absolute;
-    z-index: 2;
-    background: none;
-    border: none;
-    font-size: 4rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, .5);
-    cursor: pointer;
-    border-radius: .25rem;
-    padding: 0 .5rem;
-    background-color: rgba(0, 0, 0, .1);
-  }
-  
-  .carousel-button:hover{
-    color: white;
-    background-color: rgba(0, 0, 0, .2);
-  }
-  
-  .carousel-button:focus {
-    outline: 1px solid black;
-  }
-  
-  .carousel-button.prev {
-    left: 1rem;
-  }
-  
-  .carousel-button.next {
-    right: 1rem;
-  }
+.slide[data-active] {
+  opacity: 1;
+  z-index: 1;
+  transition-delay: 0ms;
+}
+
+.img-content{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+
+  background-color: rgba(255, 255, 255, 0.4);
+  color: #2c3e50;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:center;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.slide-title{
+  font-size: larger;
+  line-height: 1;
+  padding: 0;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.slide-content{
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  width: 50%;
+}
+
+.slide-btn{
+  padding: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border: none;
+  border-radius: 20px;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #e0f2f1;
+  background-color: #008080;
+
+}
+.slide-btn:hover,
+.slide-btn:active{
+  background-color: #0080808d;
+  color: #2c3e50;
+}
+
+.carousel-button {
+  position: absolute;
+  z-index: 2;
+  background: none;
+  border: none;
+  font-size: 4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, .5);
+  cursor: pointer;
+  border-radius: .25rem;
+  padding: 0 .5rem;
+  background-color: rgba(0, 0, 0, .1);
+}
+
+.carousel-button:hover{
+  color: white;
+  background-color: rgba(0, 0, 0, .2);
+}
+
+.carousel-button:focus {
+  outline: 1px solid black;
+}
+
+.carousel-button.prev {
+  left: 1rem;
+}
+
+.carousel-button.next {
+  right: 1rem;
+}
+
+.navigation-mannual {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 5;
+}
+
+.mannual-btn {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff88;
+  padding: 5px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mannual-btn:hover {
+  background-color: #ffffff88;
+}
+
+input[name="radio-btn"]{
+  display: none;
+}
+
+input#radio1:checked ~ .navigation-mannual label[for="radio1"],
+input#radio2:checked ~ .navigation-mannual label[for="radio2"],
+input#radio3:checked ~ .navigation-mannual label[for="radio3"] {
+  background-color: #008080;
+}
