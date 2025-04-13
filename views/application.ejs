@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Energy Consult Application</title>
+</head>
+<body>
+  <form action="#" method="post">
+    <h2>Questions for Application (to schedule a session)</h2>
+
+    <label for="full-name">Full Name (First and last name, please.):</label><br>
+    <input type="text" id="full-name" name="full-name" required><br><br>
+
+    <label for="age">Age (How old are you?):</label><br>
+    <input type="number" id="age" name="age" required><br><br>
+
+    <label for="email">Email Address (Where can I send your confirmation and details?):</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="reason">What led you to schedule an Energy Consult at this time?</label><br>
+    <textarea id="reason" name="reason" rows="5" required></textarea><br><br>
+
+    <p>Have you ever worked with an energy healer, life coach, or holistic practitioner before?</p>
+    <input type="radio" id="currently" name="worked-with-practitioner" value="Currently working with one">
+    <label for="currently">Yes, currently working with one</label><br>
+
+    <input type="radio" id="past" name="worked-with-practitioner" value="In the past">
+    <label for="past">Yes, in the past</label><br>
+
+    <input type="radio" id="first-time" name="worked-with-practitioner" value="First time">
+    <label for="first-time">No, this is my first time</label><br>
+
+    <input type="radio" id="not-sure" name="worked-with-practitioner" value="Not sure">
+    <label for="not-sure">Not sure</label><br><br>
+
+    <p>Which of the following are you familiar with? (Check all that apply)</p>
+    <input type="checkbox" id="kundalini" name="familiar-with" value="Kundalini Yoga">
+    <label for="kundalini">Kundalini Yoga</label><br>
+
+    <input type="checkbox" id="sound-baths" name="familiar-with" value="Sound Baths">
+    <label for="sound-baths">Sound Baths</label><br>
+
+    <input type="checkbox" id="life-coaching" name="familiar-with" value="Life Coaching">
+    <label for="life-coaching">Life Coaching</label><br>
+
+    <input type="checkbox" id="eft" name="familiar-with" value="Emotional Freedom Technique">
+    <label for="eft">Emotional Freedom Technique (EFT)</label><br>
+
+    <input type="checkbox" id="none" name="familiar-with" value="None of the above">
+    <label for="none">None of the above</label><br><br>
+
+    <label for="experience">If you selected any practices above, please share a little about your experience:</label><br>
+    <textarea id="experience" name="experience" rows="4"></textarea><br><br>
+
+    <label for="goals">What are your top 1–2 goals or intentions for improving your energy health?</label><br>
+    <textarea id="goals" name="goals" rows="4" required></textarea><br><br>
+
+    <label for="challenges">Are there specific challenges you’re currently facing that you’d like support with?</label><br>
+    <textarea id="challenges" name="challenges" rows="4"></textarea><br><br>
+
+    <label for="anything-else">Is there anything else you’d like me to know before we meet?</label><br>
+    <textarea id="anything-else" name="anything-else" rows="4"></textarea><br><br>
+
+    <button type="submit" style="padding: 10px 20px; border-radius: 8px; border: none; background-color: #4CAF50; color: white; font-size: 16px; cursor: pointer;">
+      Submit
+    </button>
+  </form>
+</body>
+</html>
