@@ -38,6 +38,10 @@ const getShopView = async(req, res, next) => {
     res.render('shop');
 }
 
+const getApplicationView = async(req, res, next) => {
+    res.render('application');
+}
+
 module.exports = { 
     
     getHubView,
@@ -49,4 +53,5 @@ module.exports = {
     getNotFoundView,
     getServicesView,
     getShopView,
+    getApplicationView,
  };

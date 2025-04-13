@@ -12,35 +12,7 @@
             min-height: 100vh;
             background: url('/public/images/admin_background.jpg') center/cover no-repeat fixed;
         }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #e6f3f8;
-            padding: 15px 50px;
-        }
-        .nav-container {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            width: 100%;
-        }
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: black;
-        }
-        .sign-in {
-            background: #225a5a;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin-left: 20px;
-        }
+        
         .hero {
             color: white;
             text-align: left;
@@ -85,21 +57,7 @@
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="logo">
-            <img src="/public/images/logo.png" alt="GracefulLiving Logo" style="height: 40px;">
-        </div>
-        
-        <div class="nav-container">
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/sessions">Session Management</a>
-                <a href="/content">Content Management</a>
-                <a href="/billing">Billing & Payments</a>
-            </div>
-            <a href="/login" class="sign-in">Sign in</a>
-        </div>
-    </div>
+    
     <div class="hero">
         <b>Welcome <%= userName %>!</b>
     </div>
