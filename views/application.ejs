@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Energy Consult Application</title>
+  <link rel="stylesheet" href="/css/application.css">
 </head>
 <body>
   <form action="#" method="post">
-    <h2>Questions for Application (to schedule a session)</h2>
+    <h2>GET IN TOUCH</h2>
+    <p class="subtext">Interested in booking a session? Please complete the form below, and we’ll be in touch with you shortly.</p>
 
     <label for="full-name">Full Name (First and last name, please.):</label><br>
     <input type="text" id="full-name" name="full-name" required><br><br>
@@ -34,20 +36,30 @@
     <label for="not-sure">Not sure</label><br><br>
 
     <p>Which of the following are you familiar with? (Check all that apply)</p>
+    <label>
     <input type="checkbox" id="kundalini" name="familiar-with" value="Kundalini Yoga">
-    <label for="kundalini">Kundalini Yoga</label><br>
+    Kundalini Yoga
+    </label><br>
 
+    <label>
     <input type="checkbox" id="sound-baths" name="familiar-with" value="Sound Baths">
-    <label for="sound-baths">Sound Baths</label><br>
+    Sound Baths
+    </label><br>
 
+    <label>
     <input type="checkbox" id="life-coaching" name="familiar-with" value="Life Coaching">
-    <label for="life-coaching">Life Coaching</label><br>
+    Life Coaching
+    </label><br>
 
+    <label>
     <input type="checkbox" id="eft" name="familiar-with" value="Emotional Freedom Technique">
-    <label for="eft">Emotional Freedom Technique (EFT)</label><br>
+    Emotional Freedom Technique (EFT)
+    </label><br>
 
+    <label>
     <input type="checkbox" id="none" name="familiar-with" value="None of the above">
-    <label for="none">None of the above</label><br><br>
+    None of the above
+    </label><br><br>
 
     <label for="experience">If you selected any practices above, please share a little about your experience:</label><br>
     <textarea id="experience" name="experience" rows="4"></textarea><br><br>
@@ -61,9 +73,7 @@
     <label for="anything-else">Is there anything else you’d like me to know before we meet?</label><br>
     <textarea id="anything-else" name="anything-else" rows="4"></textarea><br><br>
 
-    <button type="submit" style="padding: 10px 20px; border-radius: 8px; border: none; background-color: #4CAF50; color: white; font-size: 16px; cursor: pointer;">
-      Submit
-    </button>
+    <button type="submit">Submit</button>
   </form>
 </body>
 </html>
