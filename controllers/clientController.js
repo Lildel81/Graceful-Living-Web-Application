@@ -1,5 +1,23 @@
 const Client = require('../models/client'); 
-
+const testimonials = [
+    {
+        quote: "This event was excellent. I loved everything about it!",
+        name: "Vicki Carroll",
+        location: "Sacramento, CA",
+        event: "Vision Workshop"
+    },
+    {
+        quote: "The energy, wisdom and motivation the workshop gave me was what I liked most about the event.",
+        name: "Alexea Takacs",
+        location: "San Diego, CA",
+        event: "Vision Workshop"
+    },
+    {
+        quote: "The energy, wisdom and motivation the workshop gave me was what I liked most about the event.",
+        name: "Adanna Eke",
+        location: "San Diego, CA"
+    }
+];
 
 
 const getHubView = async (req,res,next) => {
@@ -42,6 +60,10 @@ const getApplicationView = async(req, res, next) => {
     res.render('application');
 }
 
+const getReviewsView = async(req, res, next) => {
+    res.render('reviews', {testimonials: testimonials});
+}
+
 module.exports = { 
     
     getHubView,
@@ -54,4 +76,5 @@ module.exports = {
     getServicesView,
     getShopView,
     getApplicationView,
+    getReviewsView
  };

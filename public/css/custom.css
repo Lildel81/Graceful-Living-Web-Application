@@ -214,6 +214,20 @@ body {
     margin:0;
 }
 
+.btn-testimonial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem auto; 
+    width: fit-content;
+    padding: 12px 24px;
+    background: #008080;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
 /* Horizontal line before footer */
 .footer-line {
     border: 0; /* Remove default border */

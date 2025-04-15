@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Testimonials</title>
+</head>
+</head>
+<body class="reviews-page">
+    <header class="hero">
+        <div class="container">
+            <h1>Client Testimonials</h1>
+            <p>Hear what people are saying about our workshops and coaching sessions</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="testimonials-grid">
+            <% testimonials.forEach(testimonial => { %>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="quote">"<%= testimonial.quote %>"</p>
+                        <% if (testimonial.event) { %>
+                            <div class="event-tag"><%= testimonial.event %></div>
+                        <% } %>
+                    </div>
+                    <div class="testimonial-author">
+                        <p class="name"><%= testimonial.name %></p>
+                        <% if (testimonial.location) { %>
+                            <p class="location"><%= testimonial.location %></p>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        </section>
+
+        <section class="event-highlights">
+            <h2>Event Highlights</h2>
+            <div class="event-grid">
+                <div class="event-card">
+                    <h3>Vision Workshop</h3>
+                    <p>Participants loved the positive energy and thought-provoking content.</p>
+                </div>
+                <div class="event-card">
+                    <h3>Sound Healing Events</h3>
+                    <p>Transformative experiences with gong baths and breathwork.</p>
+                </div>
+                <div class="event-card">
+                    <h3>Breathwork for Anxiety</h3>
+                    <p>Helping people find their center during stressful times.</p>
+                </div>
+                <div class="event-card">
+                    <h3>Kundalini Yoga</h3>
+                    <p>Well-presented sessions with effective exercises.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
