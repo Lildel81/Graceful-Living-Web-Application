@@ -1,6 +1,6 @@
 const express = require('express');
 const {getHubView,getHomeView,getAssessmentView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView,
-    getApplicationView} = require ('../controllers/clientController');
+    getApplicationView, getReviewsView} = require ('../controllers/clientController');
 
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.get('/notFound', getNotFoundView);
 router.get('/services', getServicesView);
 router.get('/shop', getShopView);
 router.get('/application', getApplicationView);
-
+router.get('/reviews', getReviewsView)
 
 
 module.exports = {
