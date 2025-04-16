@@ -33,7 +33,7 @@ const getAssessmentView = async (req, res, next) => {
 }
 
 const getAdminPortalView = async(req, res, next) => {
-    res.render('adminportal');
+    res.render('adminportal', {userName: "Needs something passed to this", upcomingSessions: "Needs something passed to this", notifications: "Needs something passed to this", recentActivities: "Needs something passed to this"});
 }
 
 const getContactView = async(req, res, next) => {
