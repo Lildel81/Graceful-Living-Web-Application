@@ -57,7 +57,7 @@ const getShopView = async(req, res, next) => {
 }
 
 const getApplicationView = async(req, res, next) => {
-    res.render('application');
+    res.render('application',{successMessage: null});
 }
 
 const getReviewsView = async(req, res, next) => {

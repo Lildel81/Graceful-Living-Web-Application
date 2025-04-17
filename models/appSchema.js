@@ -75,10 +75,10 @@ const Application = mongoose.model('Application', appSchema);
 const validateApplication = (app) => {
     const schema = Joi.object({
         fullName: Joi.string().min(1).max(50).required(),
-        age: Joi.number().integer().min(1).max(3).required(),
+        age: Joi.number().integer().min(1).max(100).required(),
         email: Joi.string().min(1).max(100).required(),
         reason: Joi.string().min(1).max(1000).required(),
-        workedWithPractitioner: Joi.string(1).min(20).max().required(),
+        workedWithPractitioner: Joi.string().min(1).max(20).required(),//moved string from (1) () to accept strings min 1 max 20
         familiarWith: Joi.string().min(1).max(100).required(),
         experience: Joi.string().min(1).max(1000).required(),
         goals: Joi.string().min(1).max(1000).required(),
