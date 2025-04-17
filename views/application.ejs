@@ -6,12 +6,15 @@
   <link rel="stylesheet" href="/css/application.css">
 </head>
 <body>
-  <form action="#" method="post">
+  <form action="/application" method="post">
     <h2>GET IN TOUCH</h2>
+    <% if (successMessage) { %>
+      <p style="color: green;"><%= successMessage %></p>
+    <% } %>
     <p class="subtext">Interested in booking a session? Please complete the form below, and we’ll be in touch with you shortly.</p>
 
-    <label for="full-name">Full Name (First and last name, please.):</label><br>
-    <input type="text" id="full-name" name="full-name" required><br><br>
+    <label for="fullName">Full Name (First and last name, please.):</label><br>
+    <input type="text" id="fullName" name="fullName" required><br><br>
 
     <label for="age">Age (How old are you?):</label><br>
     <input type="number" id="age" name="age" required><br><br>
@@ -23,41 +26,41 @@
     <textarea id="reason" name="reason" rows="5" required></textarea><br><br>
 
     <p>Have you ever worked with an energy healer, life coach, or holistic practitioner before?</p>
-    <input type="radio" id="currently" name="worked-with-practitioner" value="Currently working with one">
+    <input type="radio" id="currently" name="workedWithPractitioner" value="Currently working with one">
     <label for="currently">Yes, currently working with one</label><br>
 
-    <input type="radio" id="past" name="worked-with-practitioner" value="In the past">
+    <input type="radio" id="past" name="workedWithPractitioner" value="In the past">
     <label for="past">Yes, in the past</label><br>
 
-    <input type="radio" id="first-time" name="worked-with-practitioner" value="First time">
+    <input type="radio" id="first-time" name="workedWithPractitioner" value="First time">
     <label for="first-time">No, this is my first time</label><br>
 
-    <input type="radio" id="not-sure" name="worked-with-practitioner" value="Not sure">
+    <input type="radio" id="not-sure" name="workedWithPractitioner" value="Not sure">
     <label for="not-sure">Not sure</label><br><br>
 
     <p>Which of the following are you familiar with? (Check all that apply)</p>
     <label>
-    <input type="checkbox" id="kundalini" name="familiar-with" value="Kundalini Yoga">
+    <input type="checkbox" id="kundalini" name="familiarWith" value="Kundalini Yoga">
     Kundalini Yoga
     </label><br>
 
     <label>
-    <input type="checkbox" id="sound-baths" name="familiar-with" value="Sound Baths">
+    <input type="checkbox" id="sound-baths" name="familiarWith" value="Sound Baths">
     Sound Baths
     </label><br>
 
     <label>
-    <input type="checkbox" id="life-coaching" name="familiar-with" value="Life Coaching">
+    <input type="checkbox" id="life-coaching" name="familiarWith" value="Life Coaching">
     Life Coaching
     </label><br>
 
     <label>
-    <input type="checkbox" id="eft" name="familiar-with" value="Emotional Freedom Technique">
+    <input type="checkbox" id="eft" name="familiarWith" value="Emotional Freedom Technique">
     Emotional Freedom Technique (EFT)
     </label><br>
 
     <label>
-    <input type="checkbox" id="none" name="familiar-with" value="None of the above">
+    <input type="checkbox" id="none" name="familiarWith" value="None of the above">
     None of the above
     </label><br><br>
 
@@ -70,8 +73,8 @@
     <label for="challenges">Are there specific challenges you’re currently facing that you’d like support with?</label><br>
     <textarea id="challenges" name="challenges" rows="4"></textarea><br><br>
 
-    <label for="anything-else">Is there anything else you’d like me to know before we meet?</label><br>
-    <textarea id="anything-else" name="anything-else" rows="4"></textarea><br><br>
+    <label for="anythingElse">Is there anything else you’d like me to know before we meet?</label><br>
+    <textarea id="anythingElse" name="anythingElse" rows="4"></textarea><br><br>
 
     <button type="submit">Submit</button>
   </form>

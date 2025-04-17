@@ -8,7 +8,7 @@ body{
 
 }
 
-/**/
+/*Center the form on the page and gives it a border */
 form {
     background-color: #ffffff;
     max-width: 700px;
@@ -18,14 +18,14 @@ form {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/**/
+/*Styling for the header */
 h2 {
     text-align: center;
     margin-bottom: 30px; 
     color: black;
 }
 
-/**/
+/*styling for the subheading */
 .subtext{
   text-align: center;
   font-size: 1.0em;
@@ -34,7 +34,7 @@ h2 {
   margin-bottom: 20px; 
 }
 
-/**/
+/* styling for all the labels to prompt user for input*/
 label {
   font-weight: bold;
   display: block; 
@@ -43,7 +43,7 @@ label {
   color: #444; 
 }
 
-/**/
+/* Styles the text boxes for the inputs of email,name, number*/
 input[type="text"],
 input[type="email"],
 input[type="number"],
@@ -56,7 +56,7 @@ textarea{
     box-sizing: border-box; 
 }
 
-/**/
+/*Aligns the check boxes in with the prompt */
 label input[type="radio"],
 label input[type="checkbox"]{
     margin-right: 8px; 
@@ -65,6 +65,7 @@ label input[type="checkbox"]{
     accent-color: #4CAF50 ;
 }
 
+
 label {
     display: flex;
     align-items: center;
@@ -72,7 +73,7 @@ label {
     margin-bottom: 10px;
   }
 
-/**/
+/* Syling for the button */
 button[type="submit"]{
     display: block; 
     margin: 30px auto 0;
@@ -87,10 +88,11 @@ button[type="submit"]{
 
 }
 
-/**/
+/* Adds a darker color for the hover*/
 button[type="submit"]:hover{
     background-color: rgb(73, 122, 73); 
 }
+
 
 p{
     margin-top: 25px;
