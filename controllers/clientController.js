@@ -63,8 +63,10 @@ const getApplicationView = async(req, res, next) => {
 const getReviewsView = async(req, res, next) => {
     res.render('reviews', {testimonials: testimonials});
 }
-
-module.exports = { 
+const getContentManagementView = (req, res) => {
+    res.render('content');
+}
+module.exports = {
     
     getHubView,
     getHomeView,
@@ -76,5 +78,6 @@ module.exports = {
     getServicesView,
     getShopView,
     getApplicationView,
-    getReviewsView
- };
+    getReviewsView,
+    getContentManagementView
+};

@@ -4,25 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GracefulLiving Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Open Sans', sans-serif; /*using this font general text*/
             min-height: 100vh;
             background: url('/images/admin_background.jpg') center/cover no-repeat fixed;
         }
-        
+        .hero,
+        .overview h2,
+        .overview-box h3 {
+            font-family: 'Playfair Display', serif; /*using this font for the headers*/
+        }
+        main {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
         .hero {
             color: white;
             text-align: left;
-            padding: 100px 50px;
-            padding-top: 50px;
-            font-size: 3em;
+            padding: 50px 50px 20px;
+            font-size: 2rem; /*Welcome*/
+        }
+        .secondary-nav {
+            background-color: #dff3f4cc;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 1.2em;
+            margin-bottom: 40px; /* Add space below nav */
+        }
+        .secondary-nav a {
+            margin: 0 50px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .secondary-nav a:hover {
+            color: #1d8888;
         }
         .overview {
             background: rgba(230, 243, 248, 0.8);
-            margin: -50px auto 120px;
+            margin: 0 auto 120px;
             padding: 40px;
             width: 80%;
             text-align: center;
@@ -57,26 +82,33 @@
     </style>
 </head>
 <body>
-    
-    <div class="hero">
-        <b>Welcome <%= userName %>!</b>
-    </div>
-    <div class="overview">
-        <h2>Quick Overview</h2>
-        <div class="overview-container">
-            <div class="overview-box">
-                <h3>Upcoming Sessions</h3>
-                <div class="content-box"><%= upcomingSessions %></div>
-            </div>
-            <div class="overview-box">
-                <h3>Notifications</h3>
-                <div class="content-box"><%= notifications %></div>
-            </div>
-            <div class="overview-box">
-                <h3>Recent Activities</h3>
-                <div class="content-box"><%= recentActivities %></div>
+    <main>
+        <div class="hero">
+            <b>Welcome <%= userName %>!</b>
+        </div>
+        <div class="secondary-nav">
+            <a href="/adminportal">Home</a>
+            <a href="/content">Content Management</a>
+            <a href="/adminportal/session">Session Management</a>
+        </div>
+        <div class="overview">
+            <h2>Quick Overview</h2>
+            <div class="overview-container">
+                <div class="overview-box">
+                    <h3>Upcoming Sessions</h3>
+                    <div class="content-box"><%= upcomingSessions %></div>
+                </div>
+                <div class="overview-box">
+                    <h3>Notifications</h3>
+                    <div class="content-box"><%= notifications %></div>
+                </div>
+                <div class="overview-box">
+                    <h3>Recent Activities</h3>
+                    <div class="content-box"><%= recentActivities %></div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+
 </body>
 </html>
