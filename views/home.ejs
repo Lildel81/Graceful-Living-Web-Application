@@ -9,7 +9,7 @@
     <!--main slider start-->
     <ul data-slides>
       <!--Image cards start-->
-      <li class="slide" data-active>
+      <!-- <li class="slide" data-active>
         <img class="slide-img" src="https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bmF0dXJlJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww" alt="Nature Image #1">
         <div class="img-content">
           <h3 class="slide-title">First Image Title</h3>
@@ -34,15 +34,43 @@
           <p class="slide-content">Lorem ipsum odor amet, consectetuer adipiscing elit. Platea rhoncus mattis libero sed mollis molestie. Congue ad ut luctus ac luctus leo egestas. Tristique interdum litora ultricies eget ac purus et sagittis libero.</p>
           <button class="slide-btn">Action Button</button>
         </div>
-      </li>
+      </li> -->
+
+      <% if (slides.length === 0) { %>
+        <li class="slide" data-active>
+          <img class="slide-img" src="/images/default-fallback.jpg" alt="Slide Image">
+        </li>
+      <% } else { %>
+        <% slides.forEach((slide, index) => { %>
+          <li class="slide" <%= index === 0 ? 'data-active' : '' %>>
+            <img class="slide-img"
+                 src="<%= slide.imageUrl %>"
+                 alt="Slide Image"
+                 onerror="this.onerror=null;this.src='/images/default-fallback.jpg';">
+            <div class="img-content">
+              <h3 class="slide-title"><%= slide.title %></h3>
+              <p class="slide-content"><%= slide.description %></p>
+              <a href="<%= slide.buttonUrl %>">
+                <button class="slide-btn"><%= slide.buttonText %></button>
+              </a>
+            </div>
+          </li>
+        <% }) %>
+      <% } %>
+
       <!--Image cards end-->
     </ul>
     <!--main slider end-->
 
      <!--Radio button start-->
-     <input type="radio" name="radio-btn" id="radio1">
+     <!-- <input type="radio" name="radio-btn" id="radio1">
      <input type="radio" name="radio-btn" id="radio2">
-     <input type="radio" name="radio-btn" id="radio3">
+     <input type="radio" name="radio-btn" id="radio3"> -->
+
+    <% slides.forEach((slide, i) => { %>
+      <input type="radio" name="radio-btn" id="radio<%= i+1 %>" <%= i === 0 ? 'checked' : '' %>>
+    <% }) %>
+
      <!--Radio button end-->
 
      <!--Automatic navigation start-->
@@ -55,9 +83,14 @@
 
     <!--Mannual navigation start-->
     <div class="navigation-mannual">
-      <label for="radio1" class="mannual-btn"></label>
+      <!-- <label for="radio1" class="mannual-btn"></label>
       <label for="radio2" class="mannual-btn"></label>
-      <label for="radio3" class="mannual-btn"></label>
+      <label for="radio3" class="mannual-btn"></label> -->
+
+      <% slides.forEach((slide, i) => { %>
+        <label for="radio<%= i+1 %>" class="mannual-btn"></label>
+      <% }) %>
+
     </div>
     <!--Mannual navigation end-->
   </div>

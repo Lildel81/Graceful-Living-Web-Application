@@ -1,8 +1,8 @@
 const express = require('express');
 const {getHubView,getHomeView,getAssessmentView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView,
-    getApplicationView, getReviewsView, getContentManagementView} = require ('../controllers/clientController');
+    getApplicationView, getReviewsView} = require ('../controllers/clientController');
 
-    const { submitApplication } = require('../controllers/applicationController');
+
 const router = express.Router();
 
 router.get('/', getHomeView);
@@ -16,16 +16,8 @@ router.get('/services', getServicesView);
 router.get('/shop', getShopView);
 router.get('/application', getApplicationView);
 router.get('/reviews', getReviewsView)
-<<<<<<< HEAD
+//router.get('/login', getAdminPortalView); // This is for me to go to adminportal faster
 
-// get route for the application view 
-router.get('/application', getApplicationView);
-// POST route for application
-router.post('/application',submitApplication); 
-
-=======
-router.get('/content', getContentManagementView);
->>>>>>> 9d0f27d (aaa)
 
 module.exports = {
     routes: router
