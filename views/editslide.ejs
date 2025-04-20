@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Slide</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    input, textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #008080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Edit Slide</h2>
+
+  <form action="/adminportal/carousel/<%= slide._id %>/update" method="POST" enctype="multipart/form-data">
+    <label>Title</label>
+    <input type="text" name="title" value="<%= slide.title %>" required>
+
+    <label>Description</label>
+    <textarea name="description" rows="3" required><%= slide.description %></textarea>
+
+    <label>Button Text</label>
+    <input type="text" name="buttonText" value="<%= slide.buttonText %>" required>
+
+    <label>Button URL</label>
+    <input type="text" name="buttonUrl" value="<%= slide.buttonUrl %>" required>
+
+    <label>Image Source</label>
+    <label><input type="radio" name="imageOption" value="upload"> Upload New</label>
+    <input type="file" name="imageUpload">
+    
+    <label><input type="radio" name="imageOption" value="url" checked> Use Existing or New URL</label>
+    <input type="text" name="imageUrl" value="<%= slide.imageUrl %>">
+
+    <img src="<%= slide.imageUrl %>" alt="Current Image" style="max-width: 300px; display:block; margin-top: 10px;">
+
+    <button type="submit">Update Slide</button>
+    <a href="/adminportal/carouselmanagement"><button type="button">Cancel</button></a>
+  </form>
+</body>
+</html>

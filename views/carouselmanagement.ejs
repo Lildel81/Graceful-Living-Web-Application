@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Carousel Management</title>
+  <link rel="stylesheet" href="/css/carousel.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 2rem;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    form, table {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .form-section {
+      margin-bottom: 2rem;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .image-options {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .image-options label {
+      font-weight: normal;
+    }
+    button {
+      background-color: #008080;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #007070;
+    }
+    table {
+      margin-top: 3rem;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    .slide-img {
+      width: 150px;
+      height: auto;
+    }
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .back-link {
+      display: block;
+      margin: 2rem auto;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Manage Homepage Carousel</h2>
+
+  <!-- Add New Slide Form -->
+  <form action="/adminportal/carousel/create" method="POST" enctype="multipart/form-data">
+    <div class="form-section">
+      <label for="title">Title:</label>
+      <input type="text" name="title" id="title" required>
+
+      <label for="description">Description:</label>
+      <textarea name="description" id="description" rows="3" required></textarea>
+
+      <label for="buttonText">Button Text:</label>
+      <input type="text" name="buttonText" id="buttonText" required>
+
+      <label for="buttonUrl">Button URL:</label>
+      <input type="text" name="buttonUrl" id="buttonUrl" required>
+    </div>
+
+    <div class="form-section">
+      <label>Choose Image Source:</label>
+      <div class="image-options">
+        <label><input type="radio" name="imageOption" value="upload" checked> Upload Image</label>
+        <label><input type="radio" name="imageOption" value="url"> From URL</label>
+      </div>
+
+      <div>
+        <label for="imageUpload">Upload Image:</label>
+        <input type="file" name="imageUpload" id="imageUpload">
+      </div>
+
+      <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" name="imageUrl" id="imageUrl" placeholder="Or paste image URL here">
+      </div>
+    </div>
+
+    <button type="submit">Add New Slide</button>
+  </form>
+
+  <!-- Display Existing Slides -->
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Button</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% slides.forEach(slide => { %>
+        <tr>
+          <td><img src="<%= slide.imageUrl %>" class="slide-img" alt="Slide Image"></td>
+          <td><%= slide.title %></td>
+          <td><%= slide.description %></td>
+          <td><a href="<%= slide.buttonUrl %>" target="_blank"><%= slide.buttonText %></a></td>
+          <td>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <form action="/adminportal/carousel/<%= slide._id %>/edit" method="GET">
+                <button type="submit" style="padding: 8px 16px; background-color: #008080; color: white; border: none; border-radius: 5px;">🖊️ Edit</button>
+              </form>
+          
+              <form action="/adminportal/carousel/<%= slide._id %>/delete" method="POST">
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this slide?')" style="padding: 8px 16px; background-color: #008080; color: white; border: none; border-radius: 5px;">🗑️ Delete</button>
+              </form>
+            </div>
+          </td>
+          
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <div class="back-link">
+    <a href="/adminportal"><button>← Back to Admin Portal</button></a>
+  </div>
+
+</body>
+</html>

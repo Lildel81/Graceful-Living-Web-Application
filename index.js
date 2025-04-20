@@ -7,11 +7,29 @@ const winston = require('winston');
 const clientRoutes = require('./routes/client-routes');
 const err = require('./middleware/errors');
 const config = require('./startup/config');
+const multer = require('multer');
+const carouselRoutes = require('./routes/carousel-routes');
 
 const app = express();
 
 require('./startup/db')();
 require('./startup/validations')();
+
+app.use(carouselRoutes);
+// Set up multer for image upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/images/uploads');
+    },
+    filename: function(req, file, cb) {
+        const ext = path.extname(file.originalname);
+        const uniqueName = Date.now() + ext;
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({storage});
+app.locals.upload = upload;
 
 // ✅ Set view engine before using express-ejs-layouts
 app.set('view engine', 'ejs');
