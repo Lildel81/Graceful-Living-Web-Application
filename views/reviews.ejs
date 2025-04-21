@@ -15,25 +15,6 @@
     </header>
 
     <main class="container">
-        <section class="testimonials-grid">
-            <% testimonials.forEach(testimonial => { %>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p class="quote">"<%= testimonial.quote %>"</p>
-                        <% if (testimonial.event) { %>
-                            <div class="event-tag"><%= testimonial.event %></div>
-                        <% } %>
-                    </div>
-                    <div class="testimonial-author">
-                        <p class="name"><%= testimonial.name %></p>
-                        <% if (testimonial.location) { %>
-                            <p class="location"><%= testimonial.location %></p>
-                        <% } %>
-                    </div>
-                </div>
-            <% }); %>
-        </section>
-
         <section class="event-highlights">
             <h2>Event Highlights</h2>
             <div class="event-grid">
@@ -54,6 +35,25 @@
                     <p>Well-presented sessions with effective exercises.</p>
                 </div>
             </div>
+        </section>
+
+        <section class="testimonials-grid">
+            <% testimonials.forEach(testimonial => { %>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="quote">"<%= testimonial.quote %>"</p>
+                        <% if (testimonial.event) { %>
+                            <div class="event-tag"><%= testimonial.event %></div>
+                        <% } %>
+                    </div>
+                    <div class="testimonial-author">
+                        <p class="name"><%= testimonial.name %></p>
+                        <% if (testimonial.location) { %>
+                            <p class="location"><%= testimonial.location %></p>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
         </section>
     </main>
 </body>
