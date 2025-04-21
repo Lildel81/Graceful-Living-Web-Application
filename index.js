@@ -5,6 +5,10 @@ const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
 const winston = require('winston');
 const clientRoutes = require('./routes/client-routes');
+
+// for file uploads -- dani
+const uploadRoutes = require('./routes/uploadRoutes');
+
 const err = require('./middleware/errors');
 const config = require('./startup/config');
 const multer = require('multer');
@@ -43,6 +47,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
+
+// routes for uploads directory -- dani
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/', uploadRoutes);
 
 // ✅ Services Page Route (NEWLY ADDED)
 app.get('/services', (req, res) => {

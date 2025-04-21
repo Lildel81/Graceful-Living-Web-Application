@@ -1,3 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+
+// for file uploads 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 const Client = require('../models/client'); 
 const CarouselSlide = require('../models/carouselSlide');
 
@@ -44,8 +51,45 @@ const getAssessmentView = async (req, res, next) => {
 };
 
 const getAdminPortalView = async(req, res, next) => {
-    res.render('adminportal', {userName: "Needs something passed to this", upcomingSessions: "Needs something passed to this", notifications: "Needs something passed to this", recentActivities: "Needs something passed to this"});
-};
+    res.render('adminportal', {userName: "Needs something passed to this", upcomingSessions: "Needs something passed to this", notifications: "Needs something passed to this", recentActivities: "Needs something passed to this" });
+}
+
+
+const getGalleryView = async(req, res, next) => {
+    const uploadDir = path.join(__dirname, '..', 'uploads');
+
+  // read the uploads folder
+  fs.readdir(uploadDir, (err, files) => {
+    if (err) return res.send('Error reading uploads.');
+
+    // filter image formats
+    const imgs = files.filter(f => f.match(/\.(jpg|jpeg|png|gif)$/));
+
+    // renders the gallery page (header + footer) and passes the images array
+    res.render('gallery', { images: imgs });
+  });
+}
+
+const handleUpload = async(req, res, next) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+      }
+      res.status(200).send('File uploaded successfully.');
+}
+
+const deleteImage  = async(req, res, next) => {
+    const imageName = req.params.imageName;
+    const imagePath = path.join(__dirname, '../uploads', imageName);
+      
+    fs.unlink(imagePath, (err) => {
+        if (err) {
+            console.error('Error deleting image:', err);
+            return res.status(500).send('Error deleting image.');
+        }
+        console.log(`Deleted image: ${imageName}`);
+        res.status(200).send('Image deleted successfully.');
+    });
+}
 
 const getContactView = async(req, res, next) => {
     res.render('contact');
@@ -82,6 +126,9 @@ module.exports = {
     getHubView,
     getHomeView,
     getAssessmentView,
+    getGalleryView,
+    handleUpload,
+    deleteImage,
     getAdminPortalView,
     getContactView,
     getResourcesView,
