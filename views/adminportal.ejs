@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GracefulLiving Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- css resources page -->
+    <link rel="stylesheet" href="/css/adminportal.css">
+
+    <!-- js for resources page -->
+    <script src="/js/adminportal.js" defer></script> 
+
     <style>
         body {
             margin: 0;
@@ -82,34 +89,48 @@
     </style>
 </head>
 <body>
-    <main>
-        <div class="hero">
-            <b>Welcome <%= userName %>!</b>
-        </div>
-        <div class="secondary-nav">
-            <a href="/adminportal">Home</a>
-            <a href="/content">Content Management</a>
-            <a href="/adminportal/session">Session Management</a>
-            <a href="/adminportal/carouselmanagement">Manage Carousel</a>
-        </div>
-        <div class="overview">
-            <h2>Quick Overview</h2>
-            <div class="overview-container">
-                <div class="overview-box">
-                    <h3>Upcoming Sessions</h3>
-                    <div class="content-box"><%= upcomingSessions %></div>
-                </div>
-                <div class="overview-box">
-                    <h3>Notifications</h3>
-                    <div class="content-box"><%= notifications %></div>
-                </div>
-                <div class="overview-box">
-                    <h3>Recent Activities</h3>
-                    <div class="content-box"><%= recentActivities %></div>
-                </div>
+    
+    <div class="hero">
+        <b>Welcome <%= userName %>!</b>
+    </div> 
+    <div class="overview">
+        <h2>Quick Overview</h2>
+        <div class="overview-container">
+            <div class="overview-box">
+                <h3>Upcoming Sessions</h3>
+                <div class="content-box"><%= upcomingSessions %></div>
+            </div>
+            <div class="overview-box">
+                <h3>Notifications</h3>
+                <div class="content-box"><%= notifications %></div>
+            </div>
+            <div class="overview-box">
+                <h3>Recent Activities</h3>
+                <div class="content-box"><%= recentActivities %></div>
             </div>
         </div>
-    </main>
+    </div> 
+
+    <!-- button to open the edit resources page -->
+    <button id="openResourcesBtn">Edit Resources</button>
+
+    <!-- Resources subpage content -->
+    <div class="subpage" id="subpage">
+        <h2>Edit Resources</h2>
+        <p>Edit the contents of the Resources page</p>
+
+        <span id="closeBtn" class="close-btn">&times;</span>
+
+        <a href="/gallery"><button>View Uploaded Images</button></a>
+
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="photo" accept="image/*" required>
+        <button type="submit">Upload Image</button>
+      </form>
+      
+    <div id="uploadStatus"></div>
+    </div>
 
 </body>
 </html>

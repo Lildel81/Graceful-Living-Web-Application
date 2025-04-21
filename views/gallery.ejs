@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+
+    <!-- css resources page -->
+    <link rel="stylesheet" href="/css/adminportal.css">
+
+    <!-- js for resources page -->
+    <script src="/js/adminportal.js" defer></script> 
+</head>
+<body>
+
+    <h1>Gallery</h1>
+    <div id="gallerySection">
+        <% if (images.length === 0) { %>
+            <p>No images uploaded yet.</p>
+        <% } else { %>
+            <div class="gallery">
+                <% images.forEach(image => { %>
+                    <div class="image-item">
+                        <img src="/uploads/<%= image %>" alt="<%= image %>" width="200">
+                        <button class="delete-btn" data-image="<%= image %>">Delete</button>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div> 
+
+</body>
+</html>

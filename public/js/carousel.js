@@ -34,8 +34,21 @@ function autoSlide() {
 
 let slideInterval = setInterval(autoSlide, 5000); // Change every 5s
 
-function moveToSlide(index) {
+/*function moveToSlide(index) {
   slides.forEach(slide => delete slide.dataset.active);
+  slides[index].dataset.active = true;
+
+  updateRadioButtons(index);
+}*/
+
+// dani edited this bc it was causing issues with her adminportal.js delete-button
+function moveToSlide(index) {
+  if (!slides || !slides[index]) return; // prevent crash
+
+  slides.forEach(slide => {
+    if (slide && slide.dataset) delete slide.dataset.active;
+  });
+
   slides[index].dataset.active = true;
 
   updateRadioButtons(index);
