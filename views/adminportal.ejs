@@ -137,5 +137,32 @@
       
     <div id="uploadStatus"></div>
     </div>
+
+    <div class="overview">
+        <h2>Add a Testimonial</h2>
+        <form action="/admin/add-review" method="POST" class="testimonial-form">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="quote">Quote:</label><br>
+            <textarea id="quote" name="quote" rows="3" required></textarea><br><br>
+
+            <label for="location">Location:</label><br>
+            <input type="text" id="location" name="location" required><br><br>
+
+            <label for="event">Event:</label><br>
+            <input type="text" id="event" name="event" required><br><br>
+
+            <button type="submit">Submit Testimonial</button>
+        </form>
+    </div>
+
+    <script>
+        // Check if redirected with ?submitted=true
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('submitted') === 'true') {
+          alert('✅ Testimonial submitted successfully!');
+        }
+      </script>
 </body>
 </html>
