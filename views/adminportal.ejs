@@ -92,7 +92,13 @@
     
     <div class="hero">
         <b>Welcome <%= userName %>!</b>
-    </div> 
+    </div>
+    <div class="secondary-nav">
+        <a href="/adminportal">Home</a>
+        <a href="/content">Content Management</a>
+        <a href="/adminportal/session">Session Management</a>
+        <a href="/adminportal/carouselmanagement">Manage Carousel</a>
+    </div>
     <div class="overview">
         <h2>Quick Overview</h2>
         <div class="overview-container">
@@ -109,7 +115,7 @@
                 <div class="content-box"><%= recentActivities %></div>
             </div>
         </div>
-    </div> 
+    </div>
 
     <!-- button to open the edit resources page -->
     <button id="openResourcesBtn">Edit Resources</button>
@@ -131,6 +137,5 @@
       
     <div id="uploadStatus"></div>
     </div>
-
 </body>
 </html>

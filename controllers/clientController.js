@@ -32,7 +32,7 @@ const getAssessmentView = async (req, res, next) => {
 
 const getAdminPortalView = async(req, res, next) => {
     res.render('adminportal', {userName: "Needs something passed to this", upcomingSessions: "Needs something passed to this", notifications: "Needs something passed to this", recentActivities: "Needs something passed to this" });
-}
+};
 
 
 const getGalleryView = async(req, res, next) => {
@@ -48,14 +48,14 @@ const getGalleryView = async(req, res, next) => {
     // renders the gallery page (header + footer) and passes the images array
     res.render('gallery', { images: imgs });
   });
-}
+};
 
 const handleUpload = async(req, res, next) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
       }
       res.status(200).send('File uploaded successfully.');
-}
+};
 
 const deleteImage  = async(req, res, next) => {
     const imageName = req.params.imageName;
@@ -69,7 +69,7 @@ const deleteImage  = async(req, res, next) => {
         console.log(`Deleted image: ${imageName}`);
         res.status(200).send('Image deleted successfully.');
     });
-}
+};
 
 const getContactView = async(req, res, next) => {
     res.render('contact');
