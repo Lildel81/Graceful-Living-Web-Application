@@ -7,27 +7,7 @@ const upload = multer({ dest: 'uploads/' });
 
 const Client = require('../models/client'); 
 const CarouselSlide = require('../models/carouselSlide');
-
-const testimonials = [
-    {
-        quote: "This event was excellent. I loved everything about it!",
-        name: "Vicki Carroll",
-        location: "Sacramento, CA",
-        event: "Vision Workshop"
-    },
-    {
-        quote: "The energy, wisdom and motivation the workshop gave me was what I liked most about the event.",
-        name: "Alexea Takacs",
-        location: "San Diego, CA",
-        event: "Vision Workshop"
-    },
-    {
-        quote: "The energy, wisdom and motivation the workshop gave me was what I liked most about the event.",
-        name: "Adanna Eke",
-        location: "San Diego, CA"
-    }
-];
-
+const testimonials = require('../models/testimonialSchema');
 
 const getHubView = async (req,res,next) => {
     res.render('hub');
@@ -115,9 +95,16 @@ const getApplicationView = async(req, res, next) => {
     res.render('application',{successMessage: null});
 };
 
-const getReviewsView = async(req, res, next) => {
-    res.render('reviews', {testimonials: testimonials});
+const getReviewsView = async (req, res, next) => {
+    try {
+        const testimonialData = await testimonials.find({});
+        res.render('reviews', { testimonials: testimonialData });
+    } catch (err) {
+        console.error('Failed to fetch testimonials:', err);
+        res.status(500).send('Error retrieving testimonials');
+    }
 };
+
 const getContentManagementView = (req, res) => {
     res.render('content');
 };
