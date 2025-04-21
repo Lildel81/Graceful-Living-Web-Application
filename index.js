@@ -13,6 +13,7 @@ const err = require('./middleware/errors');
 const config = require('./startup/config');
 const multer = require('multer');
 const carouselRoutes = require('./routes/carousel-routes');
+const homeRoutes = require('./routes/homeRoutes'); // ✅ ADDED
 
 const app = express();
 
@@ -20,6 +21,7 @@ require('./startup/db')();
 require('./startup/validations')();
 
 app.use(carouselRoutes);
+
 // Set up multer for image upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -52,6 +54,9 @@ app.use(express.static('public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', uploadRoutes);
 
+// ✅ Home Page Route with Reviews
+app.use('/', homeRoutes); // ✅ ADDED
+
 // ✅ Services Page Route (NEWLY ADDED)
 app.get('/services', (req, res) => {
     res.render('services');  // Renders views/services.ejs
@@ -72,5 +77,6 @@ app.use(clientRoutes.routes);
 
 // ✅ Start the Server
 app.listen(config.port, () => winston.info('App is listening on http://localhost:' + config.port));
+
 
 
