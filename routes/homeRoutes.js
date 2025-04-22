@@ -2,10 +2,11 @@
 const express = require('express');
 const router = express.Router();
 
-// If you use slides from DB or another file, import them here
-const slides = []; // placeholder, update as needed
 
-router.get('/', (req, res) => {
+// If you use slides from DB or another file, import them here
+//const slides = []; // placeholder, update as needed
+
+/*router.get('/', (req, res) => {
   const allReviews = [
     { name: "Vicki Carroll", quote: "This event was excellent. I loved everything about it!", image: "/images/review-face1.png" },
     { name: "Claire Larke", quote: "Very engaging, interesting and charismatic. The content really got us all thinking outside the box.", image: "/images/review-face2.png" },
@@ -46,7 +47,7 @@ router.get('/', (req, res) => {
     { name: "Natalie Sanchez", quote: "Your energy is on point. There is enough of a balance for an intro class.", image: "/images/review-face1.png" },
     { name: "Kathy Wilson", quote: "Thank you for providing a safe and healing experience. You made a comfortable space for me to just be Me!", image: "/images/review-face2.png" },
   ];
-
+  
   const getRandomReviews = (list, count) => {
     const shuffled = [...list].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
@@ -55,6 +56,6 @@ router.get('/', (req, res) => {
   const selectedReviews = getRandomReviews(allReviews, 3);
 
   res.render('home', { slides, selectedReviews });
-});
+});*/
 
 module.exports = router;
