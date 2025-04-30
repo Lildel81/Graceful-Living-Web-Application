@@ -45,7 +45,7 @@ HOST_URL=http://localhost:8080
 ```
 ### 🛠 Tech Stack
 |   Layer     | Technology                                |
-|-------------|-------------------------------------------|
+|=============|===========================================|
 | Frontend    | HTML, CSS, EJS, JavaScript                |
 | Backend     | Node.js, Express.js                       |
 | Database    | MongoDB (Atlas), Mongoose ODM             |
@@ -69,3 +69,27 @@ HOST_URL=http://localhost:8080
       <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/caf5ede3d3c948f5a08439d4036e2e73-289ad99384b34766-full-play.gif">
     </a>
 </div>
+
+---
+
+## 📅  Project Timeline (Planned for CSC 191)
+
+| Sprint | Date (Est.) | Tasks |
+|========|=============|=======|
+| Sprint 5 | Aug 25 - Sep 7 | |
+| Sprint 6 | Sep 8 - Sep 21 | |
+| Sprint 7 | Sep 22 - Oct 5 | |
+| Sprint 8 | Oct 6 - Oct 19 | | 
+
+
+
+
+
+
+
+
+
+
+
+
+
