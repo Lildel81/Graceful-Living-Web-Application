@@ -101,9 +101,10 @@ HOST_URL=http://localhost:8080
 
 ---
 ## 🔗 JiRA & GitHub Repository
-### 📊 JIRA Board
-![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
-### ![image](https://github.com/user-attachments/assets/e047f2ec-8e2e-463e-9497-18c4ad75dc4e)
+### ![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
+
+
+### ![🐙 GitHub Repo](https://github.com/Lildel81/Graceful-Living-Web-Application)
 
 
 
