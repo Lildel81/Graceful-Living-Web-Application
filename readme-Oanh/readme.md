@@ -89,6 +89,14 @@ HOST_URL=http://localhost:8080
 </div>
 
 ---
+## 🔗 JiRA & GitHub Repository
+### ![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
+![Burn down chart](Burndown-chart.png)
+![Burn up chart](Burnup-chart.png)
+
+### ![🐙 GitHub Repo](https://github.com/Lildel81/Graceful-Living-Web-Application)
+
+---
 
 ## 📅  Project Timeline (Planned for CSC 191)
 
@@ -100,12 +108,16 @@ HOST_URL=http://localhost:8080
 | Sprint 8 | Oct 6 - Oct 19 | | 
 
 ---
-## 🔗 JiRA & GitHub Repository
-### ![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
+## 💬  Client Feedback
+> Client would like the ability to swap out images and testimonials on the site.
+> Requested a pre-application form for her clients before booking appointments.
+> She wants a database to store contac information from client inquiries for future email outreach.
 
-
-### ![🐙 GitHub Repo](https://github.com/Lildel81/Graceful-Living-Web-Application)
-
+---
+## 🙏 Acknowledgements
+Special thanks to:
+- Professor Kenneth Elliott
+- Coach Tay for her collaboration
 
 
 
