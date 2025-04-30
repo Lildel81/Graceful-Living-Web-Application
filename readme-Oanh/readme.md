@@ -4,6 +4,24 @@
 > **Client**: Shante Kumar "Coach Tay", Holistic Life Coach and Founder of GracefuLiving Coaching Services
 
 ---
+## 🧠 Client Problem & Our Solution
+### Problem
+Coach Tay needed an accessible, holistic platform with personalized engagement tools and admin control over content and clients.
+
+### Solution
+Team Bit-by-Bit created a scalable, mobile-friendly, admin-powered web platform tailored to her brand and goals - including Chakra wellness tools and a dynamic content system.
+
+---
+## 🙌  Team Bit-by-Bit
+- Daniela Perez
+- Terry Weatherman
+- Hadia Amiri
+- Rafael Mejia
+- Henna Sandhu
+- Jocelyn Camacho
+- Oanh Dingle
+- Cong Ho
+---
 ## 🔮 Project Synopsis
 
 GracefuLiving is a holistic wellness platform that allows users to:
@@ -81,6 +99,11 @@ HOST_URL=http://localhost:8080
 | Sprint 7 | Sep 22 - Oct 5 | |
 | Sprint 8 | Oct 6 - Oct 19 | | 
 
+---
+## 🔗 JiRA & GitHub Repository
+### 📊 JIRA Board
+![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
+### ![image](https://github.com/user-attachments/assets/e047f2ec-8e2e-463e-9497-18c4ad75dc4e)
 
 
 
