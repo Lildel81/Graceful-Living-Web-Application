@@ -1,7 +1,7 @@
 ![Website header](web-header.png)
 ## 🌿 GracefuLiving Web Application
-> Designed and developed by Team Bit-by-Bit for CSC 190 and 191 Capstone.<
-> **Client**: Shante Kumar "Coach Tay", Holistic Life Coach and Founder of GracefuLiving Coaching Services.<
+> Designed and developed by Team Bit-by-Bit for CSC 190 and 191 Capstone.<br>
+> **Client**: Shante Kumar "Coach Tay", Holistic Life Coach and Founder of GracefuLiving Coaching Services.<br>
 
 ---
 ## 🧠 Client Problem & Our Solution
@@ -109,9 +109,9 @@ HOST_URL=http://localhost:8080
 
 ---
 ## 💬  Client Feedback
-> Client would like the ability to swap out images and testimonials on the site.
-> Requested a pre-application form for her clients before booking appointments.
-> She wants a database to store contac information from client inquiries for future email outreach.
+> Client would like the ability to swap out images and testimonials on the site.<br>
+> Requested a pre-application form for her clients before booking appointments.<br>
+> She wants a database to store contac information from client inquiries for future email outreach.<br>
 
 ---
 ## 🙏 Acknowledgements
