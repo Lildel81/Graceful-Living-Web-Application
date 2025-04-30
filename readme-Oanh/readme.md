@@ -1,6 +1,7 @@
 <div>
   <img scr="readme-Oanh/website-header.png">
 </div>
+![Website header](readme-Oanh/website-header.png)
 
 ## 🌿 GracefuLiving Web Application
 > Designed and developed by Team Bit-by-Bit for CSC 190 and 191 Capstone
