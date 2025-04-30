@@ -39,3 +39,20 @@ git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git
 cd Graceful-Living-Web-Application
 npm install
 npm start
+```
+### 💾 Environment Variables (.env)
+```bash
+PORT=8080
+HOST=localhost
+HOST_URL=http://localhost:8080
+```
+### 🛠 Tech Stack
+|   Layer     | Technology                                |
+|-------------|-------------------------------------------|
+| Frontend    | HTML, CSS, EJS, JavaScript                |
+| Backend     | Node.js, Express.js                       |
+| Database    | MongoDB (Atlas), Mongoose ODM             |
+| Tools       | Multer, bcrypt, express-sessiom, Chart.js |
+| Versioning  | Git, GitHub                               |
+| API Test    | Postman                                   |
+| Hosting     | MongoDB Atlas (AWS), GoDaddy domain       |
