@@ -53,3 +53,19 @@ HOST_URL=http://localhost:8080
 | Versioning  | Git, GitHub                               |
 | API Test    | Postman                                   |
 | Hosting     | MongoDB Atlas (AWS), GoDaddy domain       |
+
+---
+
+## 🖼️ Entity Relationship Diagram (ERD)
+![ERD](ERD.png)
+
+---
+
+## 🎬 Video Walkthrough
+<div>
+    <a href="https://www.loom.com/share/caf5ede3d3c948f5a08439d4036e2e73">
+    </a>
+    <a href="https://www.loom.com/share/caf5ede3d3c948f5a08439d4036e2e73">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/caf5ede3d3c948f5a08439d4036e2e73-289ad99384b34766-full-play.gif">
+    </a>
+</div>
