@@ -1,7 +1,7 @@
 ![Website header](web-header.png)
 ## 🌿 GracefuLiving Web Application
-> Designed and developed by Team Bit-by-Bit for CSC 190 and 191 Capstone
-> **Client**: Shante Kumar "Coach Tay", Holistic Life Coach and Founder of GracefuLiving Coaching Services
+> Designed and developed by Team Bit-by-Bit for CSC 190 and 191 Capstone.
+> **Client**: Shante Kumar "Coach Tay", Holistic Life Coach and Founder of GracefuLiving Coaching Services.
 
 ---
 ## 🧠 Client Problem & Our Solution
