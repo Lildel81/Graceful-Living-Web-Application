@@ -1,7 +1,7 @@
 <div>
-  <img scr="readme-Oanh/website-header.png">
+  <img scr="readmewebsite-header.png">
 </div>
-![Website header](readme-Oanh/website-header.png)
+![Website header](website-header.png)
 
 ## 🌿 GracefuLiving Web Application
 > Designed and developed by Team Bit-by-Bit for CSC 190 and 191 Capstone
