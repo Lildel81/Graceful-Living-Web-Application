@@ -91,6 +91,7 @@ HOST_URL=http://localhost:8080
 ---
 ## 🔗 JiRA & GitHub Repository
 ### ![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
+<img src="Burnup-chart.png" alt="Burn up chart" width="300" height="300">
 ![Burn down chart](Burndown-chart.png)
 ![Burn up chart](Burnup-chart.png)
 
