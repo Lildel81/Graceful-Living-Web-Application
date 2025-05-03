@@ -1,126 +1,135 @@
-<<<<<<< HEAD
-# <strong>Graceful Living Express App with Mongo DB</strong>
-=======
-## <strong>Graceful Living Express App with Mongo DB</strong>
+![Website header](web-header.png)
+## 🌿 GracefuLiving Web Application
+> Designed and developed by Team Bit-by-Bit for CSC 190 and 191 Capstone.<br>
+> **Client**: Shante Kumar "Coach Tay", Holistic Life Coach and Founder of GracefuLiving Coaching Services.<br>
 
-### <strong>Required dependencies for development.<strong>
-<li>npm</li>
-<li>express</li>
-<li>cors</li>
-<li>body-parser</li>
-<li>mongoose</li>
-<li>joi@17.13.3</li>
-<li>joi-objectid@2.0.0</li>
-<li>winsoton@2.4.0</li>
-<li>express-ejs-layouts</li>
-<li>dotenv</li>
-<li>ejs</li>
-<li>express-async-errors</li>
-<li>nodemon</li>
+---
+## 🧠 Client Problem & Our Solution
+### Problem
+Coach Tay needed an accessible, holistic platform with personalized engagement tools and admin control over content and clients.
 
-### <strong>After npm is installed run:</strong>
-<li>npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors</li>
->>>>>>> 4fbe1f87fe858779ef9ff019c0b0e7288fd38a3a
+### Solution
+Team Bit-by-Bit created a scalable, mobile-friendly, admin-powered web platform tailored to her brand and goals - including Chakra wellness tools and a dynamic content system.
 
-<li>npm install nodemon --save-dev</li>
+---
+## 🙌  Team Bit-by-Bit
+- Daniela Perez
+- Terry Weatherman
+- Hadia Amiri
+- Rafael Mejia
+- Henna Sandhu
+- Jocelyn Camacho
+- Oanh Dingle
+- Cong Ho
+---
+## 🔮 Project Synopsis
 
-<<<<<<< HEAD
-## **ALWAYS REMEMBER TO PULL BEFORE YOU START CODING**
-### <strong>Required dependencies for development.<strong>
-<li>npm</li>
-<li>express</li>
-<li>cors</li>
-<li>body-parser</li>
-<li>mongoose</li>
-<li>joi --version 17.13.3</li>
-<li>joi-objectid --version 2.0.0</li>
-<li>winsoton --version2.4.0</li>
-<li>express-ejs-layouts</li>
-<li>dotenv</li>
-<li>ejs</li>
-<li>express-async-errors</li>
-<li>nodemon</li>
+GracefuLiving is a holistic wellness platform that allows users to:
+- Take a personalized Chakra Wellness Quiz
+- Learn about spiritual and lifestyle services
+- Schedule coaching sessions
+- Explore insightful content on health and well-being
 
-### <strong>After npm is installed run:</strong>
+### 🌟 Admin can:
+- Manage web content dynamically, such as homepage carousel, resources, testimonials,...
+- Handle session data, client contact form, and Chakra quiz
+- View and maintain a secure, cloud-hosted MongoDB database
+Our goal is to deliver a custom-built, user-friendly web experience aligned with Coach Tay's vision and brand identity.
+
+---
+
+## 🧪 Testing (Coming in CSC 191)
+
+---
+
+## 🚀 Deployment (Coming in CSC 191)
+
+---
+
+## 👩‍💻 Developer Instructions
+
+### 🔧 Local Setup
 ```bash
-npm install express cors body-parser mongoose joi@17.13.3 joi-objectid@2.0.0 winston@3.17.0 express-ejs-layouts dotenv ejs express-async-errors
-npm install nodemon --save-dev
-npm install mongodb
+git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git
+cd Graceful-Living-Web-Application
+npm install
+npm start
 ```
-=======
-<li>npm install mongodb</li>
+### 💾 Environment Variables (.env)
+```bash
+PORT=8080
+HOST=localhost
+HOST_URL=http://localhost:8080
+```
+### 🛠 Tech Stack
+|   Layer     | Technology                                |
+|-------------|-------------------------------------------|
+| Frontend    | HTML, CSS, EJS, JavaScript                |
+| Backend     | Node.js, Express.js                       |
+| Database    | MongoDB (Atlas), Mongoose ODM             |
+| Tools       | Multer, bcrypt, express-sessiom, Chart.js |
+| Versioning  | Git, GitHub                               |
+| API Test    | Postman                                   |
+| Hosting     | MongoDB Atlas (AWS), GoDaddy domain       |
 
->>>>>>> 4fbe1f87fe858779ef9ff019c0b0e7288fd38a3a
-<strong>Techinically</strong> Winston is installed, and dependencies are ready, but logging is currently not working. That still needs to be troubleshooted. 
+---
 
-### The app will be listening on <strong>127.0.0.1:8080</strong>
-### <strong>To start it (after dependencies are installed) run:</strong>
-<<<<<<< HEAD
-```bash
-npm start    #starts the batch file
+## 🖼️ Entity Relationship Diagram (ERD)
+![ERD](ERD.png)
 
-#OR
+---
 
-node index.js    #runs one time
+## 🎬 Video Walkthrough
+<div>
+    <a href="https://www.loom.com/share/caf5ede3d3c948f5a08439d4036e2e73">
+    </a>
+    <a href="https://www.loom.com/share/caf5ede3d3c948f5a08439d4036e2e73">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/caf5ede3d3c948f5a08439d4036e2e73-289ad99384b34766-full-play.gif">
+    </a>
+</div>
 
-#For error verbosity run
+---
+## 🔗 JiRA & GitHub Repository
+### ![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
+<img src="Burnup-chart.png" alt="Burn up chart" width="400" height="300">
+<img src="Burndown-chart.png" alt="Burn down chart" width="400" height="300">
 
-node --verbose index.js
-```
-### <strong> Branches: </strong>
-<li>The main branch is for fully working code</li>
-<li>The master branch is what you should push to before merging with main branch.</li>
+### ![🐙 GitHub Repo](https://github.com/Lildel81/Graceful-Living-Web-Application)
 
-## **ALWAYS REMEMBER TO PULL BEFORE YOU START CODING**
-<strong>To start coding in a new folder use: </strong>
+---
 
-```bash
-git init   # initiates the git repositories locally
-git clone https://github.com/Lildel81/Graceful-Living-Web-Application.git  #clones the repository to your local folder  **see cloning from a certain branch for more info**
-```
-<strong>To make sure your local folder is up to date with the repository use:</strong>
-```bash
-git pull --rebase origin master    #this is assuming origin is your push/fetch name if its not see "To push your work for the first time"
-```
-<strong>To push your work for the first time use:</strong>
-```bash
-git remote add origin https://github.com/Lildel81/Graceful-Living-Web-Application.git   #adds the github repository with label origin
-git push --set-upstream origin master  #sets the upstream linking your origin and the repository's master branches
-```
-<strong>After that just use:</strong>
-```bash
-git push origin   #pushes up your code to the master branch.
-```
-<strong>To clone from a certain branch, the master for example, use:</strong>
-```bash
-git clone --branch master --single-branch <repo_url>
-```
-<strong>To check which branch your going to push to use:</strong>
-```bash
-git branch
-```
-<strong>To change to the master branch use:</strong>
-```bash
-git checkout master
-```
-<strong>To set upstream to the master branch (this only needs doing once per git folder) use:
-```bash
-git branch --set-upstream-to=origin/master master
-```
-<strong>To push changes to __only__ master use:   (after you have the upstream set)
-```bash
-git push origin master
-```
-<strong>To change the default branch to only the current branch your working in (after these steps it should be master) use:
-```bash
-git config --global push.default current
-```
-=======
-<li>npm start</li>
-or
-<li>node index.js</li>
+## 📅  Project Timeline (Planned for CSC 191)
 
-### <strong>For error verbosity run:</strong>
-<li>node --verbose index.js</li>
->>>>>>> 4fbe1f87fe858779ef9ff019c0b0e7288fd38a3a
+| Sprint | Date (Est.) | Tasks |
+|--------|-------------|-------|
+| Sprint 5 | September | Finalize and update website content (text, images, links) |
+| | |Complete remaining UI design components for all public-facing pages |
+| Sprint 6 | September - October | Implement admin login and authentication system|
+| | |Develop functionality to create, store, and manage admin credentials securely |
+| Sprint 7 | October - November | Build and test admin portal features|
+| | |Add capability for admins to send emails and distribute newsletters to users|
+| Sprint 8 | November | Polish UI across all pages for consistency and responsiveness| 
+| | |Optimize database schema and clean up unused or temporary data|
+
+---
+## 💬  Client Feedback
+> Client would like the ability to swap out images and testimonials on the site.<br>
+> Requested a pre-application form for her clients before booking appointments.<br>
+> She wants a database to store contac information from client inquiries for future email outreach.<br>
+
+---
+## 🙏 Acknowledgements
+Special thanks to:
+- Professor Kenneth Elliott
+- Coach Tay for her collaboration
+
+
+
+
+
+
+
+
+
+
 
