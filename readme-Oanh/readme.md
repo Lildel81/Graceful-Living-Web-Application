@@ -102,10 +102,11 @@ HOST_URL=http://localhost:8080
 
 | Sprint | Date (Est.) | Tasks |
 |--------|-------------|-------|
-| Sprint 5 | Aug 25 - Sep 7 | |
-| Sprint 6 | Sep 8 - Sep 21 | |
-| Sprint 7 | Sep 22 - Oct 5 | |
-| Sprint 8 | Oct 6 - Oct 19 | | 
+| Sprint 5 | September | Finalize and update website content (text, images, links)
+	•	Complete remaining UI design components for all public-facing pages |
+| Sprint 6 | September - October | |
+| Sprint 7 | October - November | |
+| Sprint 8 | November | | 
 
 ---
 ## 💬  Client Feedback
