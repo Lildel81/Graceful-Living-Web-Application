@@ -91,8 +91,8 @@ HOST_URL=http://localhost:8080
 ---
 ## 🔗 JiRA & GitHub Repository
 ### ![📊 JIRA Board](https://bit-by-bit-csc190-191.atlassian.net/jira/software/c/projects/GLWA/boards/2)
-<img src="Burnup-chart.png" alt="Burn up chart" width="300" height="300">
-<img src="Burndown-chart.png" alt="Burn down chart" width="300" height="300">
+<img src="Burnup-chart.png" alt="Burn up chart" width="400" height="300">
+<img src="Burndown-chart.png" alt="Burn down chart" width="400" height="300">
 
 ### ![🐙 GitHub Repo](https://github.com/Lildel81/Graceful-Living-Web-Application)
 
