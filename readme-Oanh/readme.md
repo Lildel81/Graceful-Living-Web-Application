@@ -103,13 +103,13 @@ HOST_URL=http://localhost:8080
 | Sprint | Date (Est.) | Tasks |
 |--------|-------------|-------|
 | Sprint 5 | September | Finalize and update website content (text, images, links) |
-| | Complete remaining UI design components for all public-facing pages |
+| | |Complete remaining UI design components for all public-facing pages |
 | Sprint 6 | September - October | Implement admin login and authentication system|
-| | Develop functionality to create, store, and manage admin credentials securely |
+| | |Develop functionality to create, store, and manage admin credentials securely |
 | Sprint 7 | October - November | Build and test admin portal features|
-| | Add capability for admins to send emails and distribute newsletters to users|
+| | |Add capability for admins to send emails and distribute newsletters to users|
 | Sprint 8 | November | Polish UI across all pages for consistency and responsiveness| 
-| | Optimize database schema and clean up unused or temporary data|
+| | |Optimize database schema and clean up unused or temporary data|
 
 ---
 ## 💬  Client Feedback
