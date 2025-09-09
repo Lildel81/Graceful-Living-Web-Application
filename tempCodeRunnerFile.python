@@ -1,0 +1,24 @@
+import matplotlib.pyplot as plt
+
+# Number of voters up to 160 million in 20 million increments
+voters = list(range(0, 160_000_001, 20_000_000))
+
+# Traditional voting count time assumed fixed at ~72 hours
+traditional_time_hours = [72 for _ in voters]
+
+# Blockchain-based system estimates
+votes_per_minute = 1170  # Based on gas limit/block and 12s block time
+blockchain_time_minutes = [v / votes_per_minute for v in voters]
+blockchain_time_hours = [t / 60 for t in blockchain_time_minutes]
+
+# Plot
+plt.figure(figsize=(10, 6))
+plt.plot(voters, traditional_time_hours, label='Traditional Voting (~72 hrs)', marker='o')
+plt.plot(voters, blockchain_time_hours, label='Blockchain Voting (FHEVM-based)', marker='o')
+plt.title('Estimated Vote Counting Time: Traditional vs Blockchain Voting')
+plt.xlabel('Number of Voters (In 100 Millions)')
+plt.ylabel('Time to Final Tally (Hours)')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()

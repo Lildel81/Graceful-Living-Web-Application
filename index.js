@@ -13,7 +13,8 @@ const err = require('./middleware/errors');
 const config = require('./startup/config');
 const multer = require('multer');
 const carouselRoutes = require('./routes/carousel-routes');
-const homeRoutes = require('./routes/homeRoutes'); // ✅ ADDED
+const homeRoutes = require('./routes/homeRoutes');
+const loginController = require('./controllers/loginController');
 
 const app = express();
 
@@ -37,12 +38,13 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 app.locals.upload = upload;
 
-// ✅ Set view engine before using express-ejs-layouts
+// Set view engine before using express-ejs-layouts
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // Ensure Express looks in the correct views folder
-app.use(expressLayouts); // ✅ No parentheses!
+app.use(expressLayouts); // No parentheses!
 
-// ✅ Middleware setup order
+
+// Middleware setup order
 app.use(express.json()); // Needed for parsing JSON requests
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -54,28 +56,34 @@ app.use(express.static('public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', uploadRoutes);
 
-// ✅ Home Page Route with Reviews
-app.use('/', homeRoutes); // ✅ ADDED
+// Home Page Route with Reviews
+app.use('/', homeRoutes); 
 
-// ✅ Services Page Route (NEWLY ADDED)
+// Services Page Route 
 app.get('/services', (req, res) => {
     res.render('services');  // Renders views/services.ejs
 });
 
-// ✅ Contact Page Route
+// Contact Page Route
 app.get('/contact', (req, res) => {
     res.render('contact');
 });
 
-// ✅ About Page Route (NEWLY ADDED)
+// About Page Route 
 app.get('/about', (req, res) => {
     res.render('aboutUS'); // Renders views/about.ejs
 });
 
-// ✅ Existing Routes
+// Login logic
+app.use('/login', loginController);
+app.get('/login', (req, res) => {
+    res.render('login', {ok: req.query.ok });
+});
+
+// Existing Routes
 app.use(clientRoutes.routes);
 
-// ✅ Start the Server
+// Start the Server
 app.listen(config.port, () => winston.info('App is listening on http://localhost:' + config.port));
 
 
