@@ -152,6 +152,10 @@ const getReviewsView = async (req, res, next) => {
     }
 };
 
+const getLoginView = async(req, res, next) => {
+    res.render('login');
+}
+
 const getContentManagementView = (req, res) => {
     res.render('content-management');
 };
@@ -172,5 +176,6 @@ module.exports = {
     getApplicationView,
     getReviewsView,
     getContentManagementView,
+    getLoginView,
     router
 };
