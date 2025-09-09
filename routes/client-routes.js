@@ -1,6 +1,7 @@
 const express = require('express');
 const {getHubView,getHomeView,getAssessmentView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView,
-    getApplicationView, getReviewsView, getLoginView} = require ('../controllers/clientController');
+    getApplicationView, getReviewsView, getContentManagementView, getLoginView} = require ('../controllers/clientController');
+
 
 
 const router = express.Router();
@@ -17,6 +18,7 @@ router.get('/services', getServicesView);
 router.get('/shop', getShopView);
 router.get('/application', getApplicationView);
 router.get('/reviews', getReviewsView)
+router.get('/content-management', getContentManagementView);
 router.get('/login', getLoginView);
 //router.get('/login', getAdminPortalView); // This is for me to go to adminportal faster
 
