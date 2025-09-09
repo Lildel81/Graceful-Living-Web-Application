@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>GracefulLiving - Content Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/content-management.css">
+</head>
+<body>
+        <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <div class="hero-text">
+            <p>Create content that speaks life,<br>inspires peace, and uplifts the soul!</p>
+        </div>
+        
+        <!-- Content Hub Tabs -->
+        <nav class="tabs-nav" aria-label="Content sections">
+            <button class="tab active" data-target="panel-carousel">Carousel</button>
+            <button class="tab" data-target="panel-quote">Homepage Quote</button>
+            <button class="tab" data-target="panel-video">Intro Video</button>
+            <button class="tab" data-target="panel-services">Services</button>
+            <button class="tab" data-target="panel-voices">Voices of the Healed</button>
+            <button class="tab" data-target="panel-about">About Us</button>
+            <button class="tab" data-target="panel-quiz">Chakra Quiz</button>
+            <button class="tab" data-target="panel-resources">Resources</button>
+            <button class="tab" data-target="panel-contact">Contact</button>
+        </nav>
+
+        <div class="back-link">
+            <a href="/adminportal"><button>← Back to Admin Portal</button></a>
+        </div>
+
+
+        <!-- Panels -->
+        <section id="panel-carousel" class="panel active">
+            <h2>Carousel Management</h2>
+            <p>Manage homepage carousel images and ordering.</p>
+            <div class="iframe-container">
+                <iframe src="/adminportal/carouselmanagement" title="Carousel Manager"></iframe>
+            </div>
+        </section>
+
+        <section id="panel-quote" class="panel">
+            <h2>Homepage Quote</h2>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save homepage quote.');">
+                <label for="homepageQuote">Quote text</label>
+                <textarea id="homepageQuote" name="homepageQuote" placeholder="Enter the featured quote shown on the homepage..."></textarea>
+                <div class="actions">
+                    <button class="btn" type="submit">Save Quote</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="panel-video" class="panel">
+            <h2>Introduction Video</h2>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save intro video URL.');">
+                <label for="introVideoUrl">Video URL (YouTube, Vimeo, or MP4)</label>
+                <input type="url" id="introVideoUrl" name="introVideoUrl" placeholder="https://...">
+                <div class="actions">
+                    <button class="btn" type="submit">Save Video</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="panel-services" class="panel">
+            <h2>Services</h2>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save services content.');">
+                <label for="servicesContent">Services content (Markdown or HTML)</label>
+                <textarea id="servicesContent" name="servicesContent" placeholder="List your services, descriptions, pricing, etc."></textarea>
+                <div class="actions">
+                    <button class="btn" type="submit">Save Services</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="panel-voices" class="panel">
+            <h2>Voices of the Healed</h2>
+            <p>Manage testimonials shown on the Reviews page.</p>
+            <form action="/admin/add-review" method="POST">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="quote">Quote</label>
+                <textarea id="quote" name="quote" rows="3" required></textarea>
+
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location">
+
+                <label for="event">Event</label>
+                <input type="text" id="event" name="event">
+
+                <div class="actions">
+                    <button class="btn" type="submit">Add Testimonial</button>
+                    <a class="btn secondary" href="/reviews">View All Testimonials</a>
+                </div>
+            </form>
+        </section>
+
+        <section id="panel-about" class="panel">
+            <h2>About Us</h2>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save About Us content.');">
+                <label for="aboutContent">About content (Markdown or HTML)</label>
+                <textarea id="aboutContent" name="aboutContent" placeholder="Tell your story, mission, and team..."></textarea>
+                <div class="actions">
+                    <button class="btn" type="submit">Save About</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="panel-quiz" class="panel">
+            <h2>Chakra Quiz</h2>
+            <p>Manage copy, intro text, or link to the quiz.</p>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save Chakra Quiz content.');">
+                <label for="quizIntro">Quiz intro/description</label>
+                <textarea id="quizIntro" name="quizIntro" placeholder="Short intro displayed before the quiz..."></textarea>
+                <div class="actions">
+                    <a class="btn secondary" href="/assessment">Open Quiz</a>
+                    <button class="btn" type="submit">Save Quiz Content</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="panel-resources" class="panel">
+            <h2>Resources</h2>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save Resources content.');">
+                <label for="resourcesContent">Resources content (Markdown or HTML)</label>
+                <textarea id="resourcesContent" name="resourcesContent" placeholder="Links, downloads, and descriptions..."></textarea>
+                <div class="actions">
+                    <button class="btn" type="submit">Save Resources</button>
+                    <a class="btn secondary" href="/gallery">Manage Uploaded Images</a>
+                </div>
+            </form>
+        </section>
+
+        <section id="panel-contact" class="panel">
+            <h2>Contact</h2>
+            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save Contact info.');">
+                <label for="contactEmail">Email</label>
+                <input type="text" id="contactEmail" name="contactEmail" placeholder="hello@example.com">
+
+                <label for="contactPhone">Phone</label>
+                <input type="text" id="contactPhone" name="contactPhone" placeholder="(555) 555-5555">
+
+                <label for="contactAddress">Address</label>
+                <textarea id="contactAddress" name="contactAddress" placeholder="Street, City, State, ZIP"></textarea>
+
+                <div class="actions">
+                    <button class="btn" type="submit">Save Contact</button>
+                </div>
+            </form>
+        </section>
+
+        <div class="back-link">
+            <a href="/adminportal"><button>← Back to Admin Portal</button></a>
+        </div>
+
+        <script src="/js/content-management.js" defer></script>
+    
+    </main>
+</body>
+</html>

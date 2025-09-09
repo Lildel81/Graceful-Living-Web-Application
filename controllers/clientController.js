@@ -157,7 +157,7 @@ const getLoginView = async(req, res, next) => {
 }
 
 const getContentManagementView = (req, res) => {
-    res.render('content');
+    res.render('content-management');
 };
 module.exports = {
     
