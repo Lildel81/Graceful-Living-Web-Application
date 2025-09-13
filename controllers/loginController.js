@@ -10,7 +10,7 @@ const passwdSchema = new mongoose.Schema(
     username: { type: String, required: true, trim: true, unique: true },
     hash:     {type: String, required: true },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 const Passwd = mongoose.models.Passwd || mongoose.model('Passwd', passwdSchema);
@@ -29,13 +29,33 @@ router.post('/', async (req, res) => {
   try {
     const hash = await bcrypt.hash(value.password, 12);
 
-    await Passwd.findOneAndUpdate(
-      { username: value.username },
-      { username: value.username, hash },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    const user = await Passwd.findOne({ username: value.username });
+    if (user) {
+      const storedHash = user.hash;
+      console.log("User exists and hash is: ", storedHash);
 
-    return res.redirect('/login?ok=1');
+      const match = await bcrypt.compare(value.password, storedHash);
+        if (match){
+          console.log("Password correct");
+          return res.redirect('/adminportal');
+        } else {
+          return res.redirect('/login')
+          
+          return;
+        }
+      
+    } else {
+      console.log("User not found");
+    }
+
+
+    // await Passwd.findOneAndUpdate(
+    //   { username: value.username },
+    //   { username: value.username, hash },
+    //   { upsert: true, new: true, setDefaultsOnInsert: true }
+    // );
+
+
   } catch (err) {
     console.error('DB error: ', err);
     return res.status(500).send('Database error');
