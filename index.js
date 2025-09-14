@@ -15,6 +15,8 @@ const multer = require('multer');
 const carouselRoutes = require('./routes/carousel-routes');
 const homeRoutes = require('./routes/homeRoutes');
 const loginController = require('./controllers/loginController');
+const quizRoutes = require('./routes/quizRoutes')
+const chakraRoutes = require('./routes/chakraRoutes');
 
 const app = express();
 
@@ -58,6 +60,12 @@ app.use('/', uploadRoutes);
 
 // Home Page Route with Reviews
 app.use('/', homeRoutes); 
+
+// quiz routes (for getting to know you)
+app.use('/quiz', quizRoutes);
+
+// assessment routes (for chakra assessment)
+app.use('/assessment', chakraRoutes);
 
 // Services Page Route 
 app.get('/services', (req, res) => {
