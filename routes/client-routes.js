@@ -6,6 +6,10 @@ const {getHubView,getHomeView,getAssessmentView,getIntroductionView,getGettingTo
 const router = express.Router();
 const Testimonial = require('../models/testimonial');
 
+// application routes 
+const { submitApplication } = require('../controllers/applicationController');
+
+
 router.get('/', getHomeView);
 router.get('/hub', getHubView);
 router.get('/intro', getIntroductionView)
@@ -21,6 +25,9 @@ router.get('/application', getApplicationView);
 router.get('/reviews', getReviewsView)
 router.get('/content-management', getContentManagementView);
 router.get('/login', getLoginView);
+
+router.post('/application', submitApplication);
+
 //router.get('/login', getAdminPortalView); // This is for me to go to adminportal faster
 
 router.post('/admin/add-review', async (req, res) => {
