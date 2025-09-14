@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
+    background: url('/public/images/admin_background.jpg') no-repeat center center/cover;
+    color: #333;
+}
+.hero {
+    color: white;
+    text-align: left;
+    padding: 50px 50px 20px;
+    font-size: 2rem; /*Energy Leak Assessment*/
+}
+.secondary-nav {
+    background-color: #dff3f4cc;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 1.2em;
+    margin-bottom: 40px; /* Add space below nav */
+}
+.secondary-nav a {
+    margin: 0 50px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+.secondary-nav a:hover {
+    color: #1d8888;
+}
+
+
+.dashboard {
+    padding: 2rem;
+    background: #dff3f4cc;
+}
+
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background: #f8f8f8;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.charts {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.chart {
+    background: #f8f8f8;
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.table-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.table-section th,
+.table-section td {
+    border: 1px solid #ccc;
+    padding: 0.75rem;
+    text-align: center;
+}
