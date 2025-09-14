@@ -1,6 +1,6 @@
 const express = require('express');
 const {getHubView,getHomeView,getAssessmentView,getIntroductionView,getGettingToKnowYouView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView,
-    getApplicationView, getReviewsView, getContentManagementView, getLoginView} = require ('../controllers/clientController');
+    getApplicationView, getReviewsView, getContentManagementView, getResourcesManagementView, getLoginView} = require ('../controllers/clientController');
 
 
 const router = express.Router();
@@ -25,6 +25,7 @@ router.get('/application', getApplicationView);
 router.get('/reviews', getReviewsView)
 router.get('/content-management', getContentManagementView);
 router.get('/login', getLoginView);
+router.get('/adminportal/resourcesmanagement', getResourcesManagementView);
 
 router.post('/application', submitApplication);
 

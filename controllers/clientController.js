@@ -10,6 +10,7 @@ const upload = multer({ dest: 'uploads/' });
 const Client = require('../models/client'); 
 const CarouselSlide = require('../models/carouselSlide');
 const testimonials = require('../models/testimonialSchema');
+const ResourcesImage = require('../models/resourcesImage');
 
 const getHubView = async (req,res,next) => {
     res.render('hub');
@@ -130,7 +131,15 @@ const getContactView = async(req, res, next) => {
 };
 
 const getResourcesView = async(req, res, next) =>{
-    res.render('resources');
+    // res.render('resources');
+
+    try {
+        const resources = await ResourcesImage.find().sort({ createdAt: -1 });
+        res.render('resources', { resources });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading resources");
+    }
 };
 
 const getNotFoundView = async(req, res, next) => {
@@ -166,6 +175,17 @@ const getLoginView = async(req, res, next) => {
 const getContentManagementView = (req, res) => {
     res.render('content-management');
 };
+
+
+const getResourcesManagementView = (req, res) => {
+    res.render('resourcesmanagement');
+};
+
+const getEditResourcesImageView = async (req, res) => {
+    const resource = await ResourcesImage.findById(req.params.id);
+    res.render('editresourcesimage', { resource }); // ✅ layout.ejs wraps it
+};
+
 module.exports = {
     
     getHubView,
@@ -185,6 +205,8 @@ module.exports = {
     getApplicationView,
     getReviewsView,
     getContentManagementView,
+    getResourcesManagementView,
+    getEditResourcesImageView,
     getLoginView,
     router
 };

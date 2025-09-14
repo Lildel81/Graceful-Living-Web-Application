@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resources Page</title>
 
-    <!--css page-->
+    <!-- css page -->
     <link rel="stylesheet" href="/css/resources.css">
-    <!--inter font for p-->
+    <!-- inter font for p -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <!--playfair display font for h-->
+    <!-- playfair display font for h -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
 </head>
 <body>
     <h1>Resources</h1>
@@ -38,21 +37,26 @@
         </div>
     </div> 
 
+    <!-- Dynamic Resources Images -->
     <div class="downloads_container">
-        <div class="downloads_wrapper">
-            <div class="image-item">
-                <img src="/images/download-image-tree-with-fog.jpg" alt="Guide for Living Image" class="image">
-                <div class="text-overlay">Guide for Living (pdf)</div>
-                <button class="image-button">DOWNLOAD</button>
-            </div>
+    <div class="downloads_wrapper">
+        <% resources.forEach(resource => { %>
+        <div class="image-item">
+            <img src="<%= resource.imageUrl %>" alt="Resource Image" class="image">
 
-            <div class="image-item">
-                <img src="/images/download-image-woman-meditating.jpg" alt="10 successful Image" class="image">
-                <div class="text-overlay">10 Success Principles from the World's Most Successful People (pdf)</div>
-                <button class="image-button">DOWNLOAD</button>
-            </div>
+            <% if (resource.overlayText) { %>
+            <div class="text-overlay"><%= resource.overlayText %></div>
+            <% } %>
+
+            <% if (resource.buttonText && resource.buttonUrl) { %>
+            <a href="<%= resource.buttonUrl %>" target="_blank">
+                <button class="image-button"><%= resource.buttonText %></button>
+            </a>
+            <% } %>
         </div>
-
+        <% }) %>
     </div>
+</div>
+
 </body>
 </html>
