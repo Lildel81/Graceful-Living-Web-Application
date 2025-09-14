@@ -13,6 +13,7 @@ const err = require('./middleware/errors');
 const config = require('./startup/config');
 const multer = require('multer');
 const carouselRoutes = require('./routes/carousel-routes');
+const resourcesRoutes = require('./routes/resources-routes');
 const homeRoutes = require('./routes/homeRoutes');
 const loginController = require('./controllers/loginController');
 const quizRoutes = require('./routes/quizRoutes')
@@ -24,6 +25,7 @@ require('./startup/db')();
 require('./startup/validations')();
 
 app.use(carouselRoutes);
+app.use(resourcesRoutes);
 
 // Set up multer for image upload
 const storage = multer.diskStorage({
