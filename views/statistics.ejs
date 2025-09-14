@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Energy Leak Assessment</title>
+        <link rel="stylesheet" href="/css/statistics.css">
+    </head>
+
+    <body>
+        <!-- Page Header/Title -->
+        <div class="hero">
+            <b>Energy Leak Assessment</b>
+        </div>
+
+        <!-- Navbar -->
+        <div class="secondary-nav">
+            <a href="/adminportal">Home</a>
+            <a href="/content">Content Management</a>
+            <a href="/adminportal/session">Session Management</a>
+            <a href="/adminportal/carouselmanagement">Assessment Statistics</a>
+        </div>
+
+        <!-- Page Content -->
+        <main class="dashboard">
+            
+            <!-- Stats Cards -->
+            <section class="stats-cards">
+                <div class="card">
+                    Total Submissions: <%= totalSubmissions %>
+                </div>
+                <div class="card">
+                    Avg. Chakra Balance: <%= avgChakraBalance %>
+                </div>
+                <div class="card">
+                    Avg. Quadrant Balance: <%= avgQuadrantBalance %>
+                </div>
+                <div class="card">
+                    Most Imbalanced: <%= mostImbalanced %>
+                </div>
+            </section>
+
+            <!-- Charts -->
+            <section class="charts">
+                <div class="chart">
+                    Average Chakra Scores
+                    <!-- Might render a chart library here later -->
+                </div>
+                <div class="chart">
+                    Score Distribution
+                    <!-- Placeholder for chart -->
+                </div>
+            </section>
+
+            <!-- Table -->
+            <section class="table-section">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Submission ID</th>
+                            <th>Date</th>
+                            <th>Root</th>
+                            <th>Sacral</th>
+                            <th>Solar Plexus</th>
+                            <th>Heart</th>
+                            <th>Throat</th>
+                            <th>Third Eye</th>
+                            <th>Crown</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <!-- Loop through submissions table -->
+                        <% submissions.forEach(sub => { %>
+                            <tr>
+                            <td><%= sub.id %></td>
+                            <td><%= sub.date %></td>
+                            <td><%= sub.root %></td>
+                            <td><%= sub.sacral %></td>
+                            <td><%= sub.solar %></td>
+                            <td><%= sub.heart %></td>
+                            <td><%= sub.throat %></td>
+                            <td><%= sub.thirdEye %></td>
+                            <td><%= sub.crown %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </body>
+</html>
