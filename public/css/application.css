@@ -47,6 +47,7 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="number"],
+input[type="tel"],
 textarea{
     width: 100%;
     padding: 10px;
@@ -54,24 +55,38 @@ textarea{
     border: 1px solid#ccc; 
     font-size: 16px;
     box-sizing: border-box; 
+    font-family: Arial, sans-serif;
 }
+
+
 
 /*Aligns the check boxes in with the prompt */
 label input[type="radio"],
 label input[type="checkbox"]{
     margin-right: 8px; 
-    margin-top: 10px; 
+    /*margin-top: 10px; */
+    position: relative;
     vertical-align: middle;
+    top: -1px;
     accent-color: #4CAF50 ;
 }
 
-
+/* Make checkbox labels alligned  */
 label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: inline-flex;
+    align-items: center;    
+    gap: 8px;
     margin-bottom: 10px;
-  }
+    font-weight: normal;     
+}
+
+/* add spacing */
+input[type="radio"] + label,
+input[type="checkbox"] + label{
+    margin-top: 10px;
+    margin-left: 6px;
+    font-weight: normal;
+}
 
 /* Syling for the button */
 button[type="submit"]{
@@ -91,10 +106,4 @@ button[type="submit"]{
 /* Adds a darker color for the hover*/
 button[type="submit"]:hover{
     background-color: rgb(73, 122, 73); 
-}
-
-
-p{
-    margin-top: 25px;
-    font-weight: bold; 
 }
