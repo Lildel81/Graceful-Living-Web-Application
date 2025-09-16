@@ -4,8 +4,16 @@ const {validate} = require('../models/appSchema');
 
 // handles the application form submission
 const submitApplication = async (req, res) => {
+    //Checkbox
+    const toArray = (v) => (Array.isArray(v) ? v : v ? [v] : []);
+
     console.log("Application received:", req.body); 
     const { error } = validate(req.body);
+
+    // 
+    req.body.familiarWith = toArray(req.body.familiarWith);
+    req.body.challenges  = toArray(req.body.challenges);
+
     
     // validate the data on the form with joi
     if (error){
@@ -22,7 +30,7 @@ const submitApplication = async (req, res) => {
         console.log(JSON.stringify(application, null, 2));
 
         // render the same page with a success message
-        res.render('application',{successMessage:" Application Submitte Successfully! "});
+        res.render('application',{successMessage:" Application Submitted Successfully! "});
 
         // incase team wants to make a thank you page for after submission 
         //res.redirect('/thank-you'); 

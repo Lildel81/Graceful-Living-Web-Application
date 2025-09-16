@@ -114,12 +114,68 @@
                 <div class="content-box"><%= recentActivities %></div>
             </div>
         </div>
-    </div>
+    </div> 
 
-    <!-- button to open the edit resources page -->
+    <div class="overview">
+  <h2>User List</h2>
+
+  <input id="userFilter" type="text" placeholder="Filter by name or email" style="padding:8px; width:60%; max-width:420px; margin:10px auto 20px; display:block;">
+
+  <div style="overflow-x:auto;">
+    <table id="usersTable" style="width:100%; border-collapse:collapse; background:#fff;">
+      <thead>
+        <tr style="background:#eaf5f8;">
+          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">First Name</th>
+          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Last Name</th>
+          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Phone</th>
+          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Email</th>
+          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Closed Chakra</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (typeof users !== 'undefined' && users.length) { %>
+          <% users.forEach(function(u){ %>
+            <tr>
+              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.firstname %></td>
+              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.lastname %></td>
+              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.phonenumber %></td>
+              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.email %></td>
+              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.closedChakra %></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr><td colspan="5" style="padding:12px;">No users found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // simple client-side filter
+  const filter = document.getElementById('userFilter');
+  const table = document.getElementById('usersTable');
+  if (filter && table) {
+    filter.addEventListener('input', () => {
+      const q = filter.value.toLowerCase();
+      for (const row of table.tBodies[0].rows) {
+        const name = (row.cells[0].textContent + ' ' + row.cells[1].textContent).toLowerCase();
+        const email = row.cells[3].textContent.toLowerCase();
+        row.style.display = (name.includes(q) || email.includes(q)) ? '' : 'none';
+      }
+    });
+  }
+</script>
+
+
+    <!--edit the resources page -->
+    <a href="/adminportal/resourcesmanagement"><button>Manage Resources</button></a>
+
+
+    <!-- from last sprint, delete 
     <button id="openResourcesBtn">Edit Resources</button>
 
-    <!-- Resources subpage content -->
+    
     <div class="subpage" id="subpage">
         <h2>Edit Resources</h2>
         <p>Edit the contents of the Resources page</p>
@@ -135,7 +191,7 @@
     </form>
     
     <div id="uploadStatus"></div>
-    </div>
+    </div> -->
 
     <div class="overview">
         <h2>Add a Testimonial</h2>
