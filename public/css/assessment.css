@@ -1,91 +1,141 @@
-/* -------------- assessment.css ------------------- */
-.quiz-wrapper {
-    background-image: url('/images/quiz-background.png');
-    background-size: cover;
-    background-position: top center;
-    color: white;
-    padding: 150px 20px 200px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.quiz-container {
-    max-width: 800px;
-    margin-bottom: 40px;
-}
-
-.quiz-container h1 {
-    font-size: 3em;
-    margin-bottom: 15px;
-}
-
-.quiz-container p {
-    font-size: 1.2em;
-    line-height: 1.6;
-}
-
-.form-container {
-    background-color: rgba(201, 197, 188, 0.95);
-    padding: 40px;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0px;
-    max-width: 600px;
+.section-page {
+    font-family: sans-serif;
     color: black;
+    line-height: 1.6;
+    background-color: #f5f6fa;
 }
 
-.quiz-container .question-box {
-    position: absolute;
-    background: #e09b78;
-    padding: 50px 50px;
-    border-radius: 50px;
-    font-size: 1.3em;
-    transform: translate(-120%, -60%);
+.section-page .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
 }
 
-.quiz-container form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    width: 100%;
+.section-page .hero {
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.quiz-container .options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px 20px;
-    text-align: left;
+/* Example chakra hero colors */
+.section-page .hero.chakra-root {
+    background: linear-gradient(135deg, #e75c5c, #fe9b9b); /* red */
 }
 
-.quiz-container .options label {
-    display: flex;
-    align-items: center;
-    margin: 10px 50px;
-    font-size: 1.1em;
-    cursor: pointer;
+.section-page .hero.chakra-sacral {
+    background: linear-gradient(135deg, #f2945f, #fbb76c); /* orange */
 }
 
-.quiz-container .options label input[type="radio"] {
-    margin-right: 10px;
+.section-page .hero.chakra-solar {
+    background: linear-gradient(135deg, #f9d64c, #ffe478); /* yellow */
 }
 
-.quiz-container button {
-    background: #5a5a5a;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 15px;
-    font-size: 1em;
-    cursor: pointer;
-    align-self: center;
-    transition: background 0.3s ease;
+/* Add for all chakras */
+.section-page .hero.chakra-heart {
+    background: linear-gradient(135deg, #76d98f, #a8e3b1); /* green */
 }
 
-.quiz-container button:hover {
-    background: #3e3e3e;
-} 
+.section-page .hero.chakra-throat {
+    background: linear-gradient(135deg, #5cc0e7, #8bd8f4); /* blue */
+}
+
+.section-page .hero.chakra-third-eye {
+    background: linear-gradient(135deg, #a66ff1, #c39af6); /* indigo */
+}
+
+.section-page .hero.chakra-crown {
+    background: linear-gradient(135deg, #e3c8f9, #f1d9fc); /* violet */
+}
+
+/* Single color for life quadrant */
+.section-page .hero.life-quadrant {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe); /* example color */
+}
+
+
+.section-page .hero h1 {
+    font-family: serif;
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.section-page .hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Form container */
+form#assessment-form {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Labels & inputs */
+form label {
+  display: block;
+  margin: 1rem 0 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Fieldsets for grouped inputs */
+fieldset {
+  border: none;
+  margin: 1.5rem 0;
+  padding: 0;
+}
+
+legend {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* Radio & checkboxes inline */
+fieldset label {
+  display: block;
+  margin: 0.5rem 0;
+  font-weight: normal;
+}
+
+.chakra-section {
+  display: none;
+}
+.chakra-section.active {
+  display: block;
+}
+
+.next-btn,
+.prev-btn,
+.submit-btn {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.2rem;
+  background: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.submit-btn:hover,
+.next-btn:hover,
+.prev-btn:hover {
+  background: #574fd6;
+  transform: translateY(-2px);
+}
+
+.prev-btn {
+  background: #aaa;
+}
+.prev-btn:hover {
+  background: #888;
+}

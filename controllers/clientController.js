@@ -10,6 +10,18 @@ const upload = multer({ dest: 'uploads/' });
 const Client = require('../models/client'); 
 const CarouselSlide = require('../models/carouselSlide');
 const testimonials = require('../models/testimonialSchema');
+const ResourcesImage = require('../models/resourcesImage'); 
+
+
+const MOCK_USERS = [
+  { firstname: 'Ava',  lastname: 'Ng',    phonenumber: '(555) 010-1001', email: 'ava.ng@example.com',  closedChakra: 'heart' },
+  { firstname: 'Liam', lastname: 'Patel', phonenumber: '(555) 010-1002', email: 'liam.patel@example.com', closedChakra: 'throat' },
+  { firstname: 'Noah', lastname: 'Kim',   phonenumber: '(555) 010-1003', email: 'noah.kim@example.com',  closedChakra: 'root' },
+  { firstname: 'Mia',  lastname: 'Khan',  phonenumber: '(555) 010-1004', email: 'mia.khan@example.com',  closedChakra: 'solarPlexus' },
+  { firstname: 'Zoe',  lastname: 'Lopez', phonenumber: '(555) 010-1005', email: 'zoe.lopez@example.com', closedChakra: 'thirdEye' },
+  { firstname: 'Omar', lastname: 'Ali',   phonenumber: '(555) 010-1006', email: 'omar.ali@example.com',  closedChakra: 'crown' }
+];
+
 
 const getHubView = async (req,res,next) => {
     res.render('hub');
@@ -71,15 +83,58 @@ const getHomeView = async (req, res, next) => {
       res.render('home', { slides: [], selectedReviews: [] });
     }
   };
-  
+
+const getIntroductionView = async (req, res, next) => {
+    res.render('quiz/intro')
+}
+
+const getGettingToKnowYouView = async (req, res, next) => {
+    res.render('quiz/getting-to-know-you')
+}
 
 const getAssessmentView = async (req, res, next) => {
-    res.render('assessment');
+    res.render('quiz/assessment');
 };
 
-const getAdminPortalView = async(req, res, next) => {
-    res.render('adminportal', {userName: "Needs something passed to this", upcomingSessions: "Needs something passed to this", notifications: "Needs something passed to this", recentActivities: "Needs something passed to this" });
+const getAdminPortalView = async (req, res, next) => {
+  // turn on mock data with ?mock=1 or env var MOCK_USERS=true
+  const forceMock = req.query.mock === '1' || process.env.MOCK_USERS === 'true';
+
+  try {
+    let users = [];
+
+    if (!forceMock) {
+      // try to load from DB first
+      users = await Client
+        .find({}, 'firstname lastname phonenumber email closedChakra')
+        .lean();
+    }
+
+    // fallback to mocks if forced, DB errored, or DB is empty
+    if (forceMock || !users || users.length === 0) {
+      users = MOCK_USERS;
+    }
+
+    res.render('adminportal', {
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+      upcomingSessions: '',
+      notifications: '',
+      recentActivities: '',
+      users
+    });
+  } catch (err) {
+    console.error('Failed to load admin portal:', err.message);
+    res.render('adminportal', {
+      userName: 'Admin',
+      upcomingSessions: '',
+      notifications: '',
+      recentActivities: '',
+      users: MOCK_USERS // hard fallback so page still shows data
+    });
+  }
 };
+
+
 
 
 const getGalleryView = async(req, res, next) => {
@@ -123,7 +178,15 @@ const getContactView = async(req, res, next) => {
 };
 
 const getResourcesView = async(req, res, next) =>{
-    res.render('resources');
+    // res.render('resources');
+
+    try {
+        const resources = await ResourcesImage.find().sort({ createdAt: -1 });
+        res.render('resources', { resources });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading resources");
+    }
 };
 
 const getNotFoundView = async(req, res, next) => {
@@ -159,11 +222,24 @@ const getLoginView = async(req, res, next) => {
 const getContentManagementView = (req, res) => {
     res.render('content-management');
 };
+
+
+const getResourcesManagementView = (req, res) => {
+    res.render('resourcesmanagement');
+};
+
+const getEditResourcesImageView = async (req, res) => {
+    const resource = await ResourcesImage.findById(req.params.id);
+    res.render('editresourcesimage', { resource }); // ✅ layout.ejs wraps it
+};
+
 module.exports = {
     
     getHubView,
     getHomeView,
     getAssessmentView,
+    getIntroductionView,
+    getGettingToKnowYouView,
     getGalleryView,
     handleUpload,
     deleteImage,
@@ -176,6 +252,8 @@ module.exports = {
     getApplicationView,
     getReviewsView,
     getContentManagementView,
+    getResourcesManagementView,
+    getEditResourcesImageView,
     getLoginView,
     router
 };

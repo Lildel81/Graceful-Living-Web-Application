@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Resource Image</title>
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/carousel-mangement.css">
+</head>
+<body>
+  <h2>Edit Resource Image</h2>
+
+  <form action="/adminportal/resources/<%= resource._id %>/update" method="POST" enctype="multipart/form-data">
+    <div class="form-section">
+      <label>Current Image:</label><br>
+      <img src="<%= resource.imageUrl %>" class="slide-img" alt="Current Resource Image">
+    </div>
+
+    <div class="form-section">
+      <label for="overlayText">Overlay Text:</label>
+      <input type="text" name="overlayText" id="overlayText" value="<%= resource.overlayText || '' %>">
+
+      <label for="buttonText">Button Text:</label>
+      <input type="text" name="buttonText" id="buttonText" value="<%= resource.buttonText || '' %>">
+
+      <label for="buttonUrl">Button URL:</label>
+      <input type="text" name="buttonUrl" id="buttonUrl" value="<%= resource.buttonUrl || '' %>">
+    </div>
+
+    <div class="form-section">
+      <label>Choose New Image Source:</label>
+      <label><input type="radio" name="imageOption" value="upload"> Upload New Image</label>
+      <label><input type="radio" name="imageOption" value="url"> Replace with URL</label>
+
+      <div>
+        <label for="imageUpload">Upload New Image:</label>
+        <input type="file" name="imageUpload" id="imageUpload">
+      </div>
+
+      <div>
+        <label for="imageUrl">New Image URL:</label>
+        <input type="text" name="imageUrl" id="imageUrl" placeholder="Or paste new image URL here">
+      </div>
+    </div>
+
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <a href="/adminportal/resourcesmanagement"><button>⬅ Back</button></a>
+</body>
+</html>

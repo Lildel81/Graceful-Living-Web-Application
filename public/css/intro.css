@@ -1,0 +1,64 @@
+.intro-page {
+    font-family: sans-serif;
+    color: black;
+    line-height: 1.6;
+    background-color: #f5f6fa;
+}
+
+.intro-page .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.intro-page .hero {
+    background: linear-gradient(135deg, #5cade7, #9bd1fe);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.intro-page .hero h1 {
+    font-family: serif;
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.intro-page .hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.intro-page .body {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.btn-next {
+  display: block;
+  width: fit-content;
+  margin: 1.5rem auto 0 auto;
+  padding: 0.8rem 1.2rem;
+  background: #6c63ff;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.btn-next:hover {
+  background: #574fd6;
+  transform: translateY(-2px);
+}
+
+.btn-next:active {
+  transform: translateY(0);
+}
