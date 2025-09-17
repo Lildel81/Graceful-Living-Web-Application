@@ -46,7 +46,70 @@
       </p>
     </div>
 
-    <a href="/getting-to-know-you" class="btn-next"> Start Assessment </a>
+</section>
+
+    <button id="start-assessment-btn" class="btn-next" type="button">Start Assessment</button>
+
+    <!-- Terms & Conditions Modal -->
+    <div id="terms-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+      <div style="background:#fff; max-width:500px; width:90%; margin:auto; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.2); padding:24px; position:relative;">
+        <h2 style="margin-top:0;">Terms &amp; Conditions</h2>
+        <div id="terms-scroll" style="max-height:200px; overflow-y:auto; border:1px solid #ccc; padding:12px; margin-bottom:16px;">
+          <p>
+            By proceeding with this assessment, you acknowledge and agree to the following terms:
+          </p>
+          <ul>
+            <li>This assessment is for informational and educational purposes only and does not constitute medical advice.</li>
+            <li>Your responses are confidential and will be used solely to provide you with personalized guidance.</li>
+            <li>You are responsible for any actions you take based on the results of this assessment.</li>
+            <li>If you are experiencing any physical or mental health issues, please consult with a qualified healthcare provider.</li>
+            <li>By continuing, you consent to the collection and use of your responses as described above.</li>
+          </ul>
+          <p>
+            Please read these terms carefully before proceeding.
+          </p>
+        </div>
+        <div style="margin-bottom:16px;">
+          <input type="checkbox" id="terms-checkbox" disabled>
+          <label for="terms-checkbox">I have read and agree to the Terms &amp; Conditions</label>
+        </div>
+        <button id="continue-btn" type="button" class="btn-next" style="width:100%;" disabled>Continue</button>
+        <button id="close-modal-btn" type="button" style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.2em;cursor:pointer;" aria-label="Close">&times;</button>
+      </div>
+    </div>
+
+    <script>
+      // Show modal on button click
+      document.getElementById('start-assessment-btn').onclick = function() {
+        document.getElementById('terms-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      };
+      // Close modal
+      document.getElementById('close-modal-btn').onclick = function() {
+        document.getElementById('terms-modal').style.display = 'none';
+        document.body.style.overflow = '';
+        // Reset modal state
+        document.getElementById('terms-checkbox').checked = false;
+        document.getElementById('terms-checkbox').disabled = true;
+        document.getElementById('continue-btn').disabled = true;
+        document.getElementById('terms-scroll').scrollTop = 0;
+      };
+      // Enable checkbox after scrolling to bottom
+      document.getElementById('terms-scroll').addEventListener('scroll', function() {
+        var el = this;
+        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 2) {
+          document.getElementById('terms-checkbox').disabled = false;
+        }
+      });
+      // Enable continue button when checkbox is checked
+      document.getElementById('terms-checkbox').addEventListener('change', function() {
+        document.getElementById('continue-btn').disabled = !this.checked;
+      });
+      // Continue button navigates to original destination
+      document.getElementById('continue-btn').onclick = function() {
+        window.location.href = '/getting-to-know-you';
+      };
+    </script>
 </section>
 
 </html>
