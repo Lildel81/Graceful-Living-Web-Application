@@ -27,26 +27,72 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    const hash = await bcrypt.hash(value.password, 12);
 
     const user = await Passwd.findOne({ username: value.username });
-    if (user) {
-      const storedHash = user.hash;
-      console.log("User exists and hash is: ", storedHash);
-
-      const match = await bcrypt.compare(value.password, storedHash);
-        if (match){
-          console.log("Password correct");
-          return res.redirect('/adminportal');
-        } else {
-          return res.redirect('/login')
-          
-          return;
-        }
-      
-    } else {
-      console.log("User not found");
+    if (!user) {
+      return res.status(401).redirect('/login?ok=false');
     }
+
+    const match = await bcrypt.compare(value.password, user.hash);
+    if (!match) {
+      return res.status(401).redirect('/login?ok=false');
+    }
+
+    req.session.regenerate(err => {
+      if (err) return res.status(500).send('session error');
+
+      req.session.isAdmin = true;
+      req.session.username = user.username;
+
+      const redirectTo = req.session.returnTo || '/adminportal';
+      delete req.session.returnTo;
+
+      req.session.save(err2 => {
+        if (err2) return res.status(500).send('session save error');
+        return res.redirect(redirectTo);
+      });
+    });
+  }catch (e) {
+    console.error('DB error: ', e);
+    return res.status(500).send('Database error');
+  }
+
+    // const hash = await bcrypt.hash(value.password, 12);
+
+    // const user = await Passwd.findOne({ username: value.username });
+    // if (user) {
+    //   const storedHash = user.hash;
+    //   console.log("User exists and hash is: ", storedHash);
+
+    //   const match = await bcrypt.compare(value.password, storedHash);
+    //     if (match){
+    //       console.log("Password correct");
+    //       req.session.regenerate(err => {
+    //         if (err) return res.status(500).send('session error');
+
+    //         req.session.isAdmin = true;
+    //         req.session.username = user.username;
+
+    //         const redirectTo = req.session.returnTo || '/adminportal';
+    //         delete req.session.returnTo;
+
+    //         req.session.save(err2 => {
+    //           if (err2) return res.status(500).send('session save error');
+    //           res.redirect(redirectTo);
+    //         });
+    //       });
+
+    //       res.json({ ok: true });
+    //       return res.redirect('/adminportal');
+    //     } else {
+    //       return res.redirect('/login')
+          
+    //       return;
+    //     }
+      
+    // } else {
+      console.log("User not found");
+    });
 
 
     // await Passwd.findOneAndUpdate(
@@ -56,12 +102,7 @@ router.post('/', async (req, res) => {
     // );
 
 
-  } catch (err) {
-    console.error('DB error: ', err);
-    return res.status(500).send('Database error');
-  }
-    
-});
+
 
 module.exports = router;
 
