@@ -56,6 +56,34 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
 
+const session = require('express-session')
+
+//constructor for each session cookie
+app.use(
+    session({
+        name: 'sid',
+        secret: 'super-secret-change-me',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false,
+            maxAge: 1000*60*60*2 //2 hours for each session before reset
+        },
+    })
+);
+
+//creates an anon id for each new conection to the site
+
+app.use((req, res, next) => {
+    if (req.session.userId) {
+        req.session.pageViews = 0;
+    }
+    next();
+});
+
+
 // routes for uploads directory -- dani
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', uploadRoutes);
@@ -90,11 +118,10 @@ app.get('/login', (req, res) => {
     res.render('login', {ok: req.query.ok });
 });
 
+
 // Existing Routes
 app.use(clientRoutes.routes);
 
 // Start the Server
 app.listen(config.port, () => winston.info('App is listening on http://localhost:' + config.port));
-
-
 
