@@ -475,7 +475,15 @@ const getShopView = async (req, res, next) => {
 };
 
 const getApplicationView = async (req, res, next) => {
-  res.render("application", { successMessage: null });
+  res.render("prequiz/application", { successMessage: null });
+};
+
+const getPreAppView = (req, res) =>{
+  res.render('prequiz/pre-app'); 
+};
+
+const getApplicationSuccessView = (req, res) =>{
+  res.render('prequiz/app-success');
 };
 
 const getReviewsView = async (req, res, next) => {
@@ -521,6 +529,8 @@ module.exports = {
   getServicesView,
   getShopView,
   getApplicationView,
+  getPreAppView,
+  getApplicationSuccessView,
   getReviewsView,
   getContentManagementView,
   getResourcesManagementView,

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Application | Graceful Living</title>
+    
+    <link rel="stylesheet" href="/css/pre-app.css">
+</head>
+
+<body class="pre-app">
+  <header class="hero">
+    <div class="container">
+      <h1>Graceful Living Pre-Application</h1>
+      <p>
+        ** write intro **
+      </p>
+    </div>
+  </header>
+
+  <div class="body">
+    <p><em><strong>Thank you for your interest in working together!</strong></em></p>
+
+    <p>
+      The pre-application takes about <strong>3–5 minutes</strong>. Your responses are kept confidential and used only to tailor your experience.
+    </p>
+
+    <p><u>What you can expect</u>:</p>
+    <ul>
+      <li>Share your top goals and what’s feeling heavy or stuck right now.</li>
+      <li>Tell me your preferred pace, support style, and availability.</li>
+      <li>Get matched with the right next step (resources, session type, or custom plan).</li>
+    </ul>
+
+    <p>Many blessings,</p>
+    <p>Shante “Coach Tay” Kumar</p>
+
+    <p>
+      <em>
+        Take a deep breath in… hold… release. <br>
+        When you’re ready, let’s begin. <br>
+      </em>
+    </p>
+  </div>
+
+  <button id="start-preapp-btn" class="btn-next" type="button">Start Pre-Application</button>
+
+  <!-- Terms & Conditions Modal -->
+  <div id="terms-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#fff; max-width:520px; width:92%; margin:auto; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.2); padding:24px; position:relative;">
+      <h2 style="margin-top:0;">Terms &amp; Conditions</h2>
+      <div id="terms-scroll" style="max-height:220px; overflow-y:auto; border:1px solid #ddd; padding:12px; margin-bottom:16px;">
+        <p>By proceeding, you acknowledge and agree:</p>
+        <ul>
+          <li>This pre-application is for informational and intake purposes only—it is not medical, legal, or financial advice.</li>
+          <li>Your responses are confidential and used to personalize recommendations and services.</li>
+          <li>You are responsible for actions taken based on any guidance provided.</li>
+          <li>If you are experiencing a medical or mental-health emergency, contact a qualified professional or emergency services.</li>
+          <li>By continuing, you consent to the collection and use of your responses for scheduling and service matching.</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <input type="checkbox" id="terms-checkbox" disabled>
+        <label for="terms-checkbox">I have read and agree to the Terms &amp; Conditions</label>
+      </div>
+
+      <button id="continue-btn" type="button" class="btn-next" style="width:100%;" disabled>Continue</button>
+      <button id="close-modal-btn" type="button" style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.2em;cursor:pointer;" aria-label="Close">&times;</button>
+    </div>
+  </div>
+
+  <script>
+    // Open modal
+    document.getElementById('start-preapp-btn').onclick = function () {
+      document.getElementById('terms-modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    };
+
+    // Close modal 
+    document.getElementById('close-modal-btn').onclick = function () {
+      document.getElementById('terms-modal').style.display = 'none';
+      document.body.style.overflow = '';
+      document.getElementById('terms-checkbox').checked = false;
+      document.getElementById('terms-checkbox').disabled = true;
+      document.getElementById('continue-btn').disabled = true;
+      document.getElementById('terms-scroll').scrollTop = 0;
+    };
+
+    // Enable checkbox when scrolled to bottom
+    document.getElementById('terms-scroll').addEventListener('scroll', function () {
+      var el = this;
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 2) {
+        document.getElementById('terms-checkbox').disabled = false;
+      }
+    });
+
+    // Enable continue when checked
+    document.getElementById('terms-checkbox').addEventListener('change', function () {
+      document.getElementById('continue-btn').disabled = !this.checked;
+    });
+
+    // Continue go to actual application form
+    document.getElementById('continue-btn').onclick = function () {
+      window.location.href = '/application';
+    };
+  </script>
+</body>
+
+</html>

@@ -65,6 +65,24 @@ const appSchema = new mongoose.Schema({
         required: true
     },
 
+    // Healthcare worker fields
+    isHealthcareWorker: { 
+        type: String,
+        enum: ['Yes','No'], 
+        required: true 
+    },
+
+    healthcareRole: { 
+        type: String, 
+        minlength: 1, 
+        maxlength: 100 
+    }, // req only if yes 
+
+    healthcareYears: { 
+        type: Number, 
+        min: 0 
+    },
+
     // Job Title 
     jobTitle:{
         type: String, 
@@ -85,7 +103,7 @@ const appSchema = new mongoose.Schema({
         type: [String],
         enum:FAMILIAR_WITH_ENUM,
         required: true,
-        defualt:[]
+        default:[]
     },
 
     // Experience (optional textarea)
@@ -129,6 +147,20 @@ const validateApplication = (app) => {
         fullName: Joi.string().min(1).max(50).required(),
         contactNumber:Joi.string().min(10).max(20).required(),
         ageBracket: Joi.string().valid(...AGE_BRACKETS).required(),
+
+        // healthcare worker validation if yes or no is selected 
+        isHealthcareWorker: Joi.string().valid('Yes','No').required(),
+        healthcareRole: Joi.alternatives().conditional('isHealthcareWorker', {
+        is: 'Yes',
+        then: Joi.string().min(1).max(100).required(),
+        otherwise: Joi.string().allow('', null)
+        }),
+        healthcareYears: Joi.alternatives().conditional('isHealthcareWorker', {
+        is: 'Yes',
+        then: Joi.number().integer().min(0).max(80).required(),
+        otherwise: Joi.any().optional()
+        }),
+
         jobTitle: Joi.string().max(100).required(),
 
         workedWithPractitioner: Joi.string()
