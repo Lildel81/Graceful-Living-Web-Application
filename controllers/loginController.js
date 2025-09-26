@@ -30,12 +30,14 @@ router.post('/', async (req, res) => {
 
     const user = await Passwd.findOne({ username: value.username });
     if (!user) {
-      return res.status(401).redirect('/login?ok=false');
+  return res.status(401).json({ ok: false, error: 'invalid credentials' });
     }
+
+    
 
     const match = await bcrypt.compare(value.password, user.hash);
     if (!match) {
-      return res.status(401).redirect('/login?ok=false');
+  return res.status(401).json({ ok: false, error: 'invalid credentials' });
     }
 
     req.session.regenerate(err => {

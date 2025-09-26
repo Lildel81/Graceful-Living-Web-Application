@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
 const winston = require('winston');
 const clientRoutes = require('./routes/client-routes');
+require('dotenv').config();
+
 
 // for file uploads -- dani
 const uploadRoutes = require('./routes/uploadRoutes');
@@ -117,6 +119,10 @@ app.use('/login', loginController);
 app.get('/login', (req, res) => {
     res.render('login', {ok: req.query.ok });
 });
+
+// nodmailer password reset routes
+const passwordResetRoutes = require('./routes/passwordReset');
+app.use('/auth/reset', passwordResetRoutes);
 
 
 // Existing Routes
