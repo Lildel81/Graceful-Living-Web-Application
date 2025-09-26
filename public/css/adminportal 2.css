@@ -58,7 +58,7 @@ button:hover {
 /* NEW CSS*/
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
     background: #f4f4f4;
     padding: 20px;
     text-align: center;

@@ -1,9 +1,14 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
   background: #f0f8ff;
   padding: 2rem;
 }
-h2 { text-align: center; margin-bottom: 2rem; }
+h2 { 
+  text-align: center; 
+  margin-bottom: 2rem; 
+  font-family: 'Source Serif Pro', 'Playfair Display', serif;
+  font-weight: 600;
+}
 
 form, table {
   max-width: 900px;
@@ -12,6 +17,8 @@ form, table {
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 input[type="text"], textarea {
@@ -20,11 +27,26 @@ input[type="text"], textarea {
   margin-bottom: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
-.form-section { margin-bottom: 2rem; }
-label { font-weight: bold; display: block; margin-bottom: 0.3rem; }
+.form-section { 
+  margin-bottom: 2rem; 
+  overflow: hidden;
+  width: 100%;
+}
+label { 
+  font-weight: bold; 
+  display: block; 
+  margin-bottom: 0.3rem; 
+}
 .image-options { display: flex; gap: 1rem; margin-bottom: 1rem; }
 .image-options label { font-weight: normal; }
+
+/* Add gap between upload image and image URL sections */
+.form-section > div:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
 
 button {
   background-color: #008080;

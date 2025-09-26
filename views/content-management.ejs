@@ -4,10 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>GracefulLiving - Content Management</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/content-management.css">
 </head>
 <body>
+        <!-- Fixed Back Button -->
+        <div class="fixed-back-button">
+            <a href="/adminportal"><button>Back to Admin Portal</button></a>
+        </div>
+
         <!-- Main Content -->
     <main>
         <!-- Hero Section -->
@@ -21,17 +26,12 @@
             <button class="tab" data-target="panel-quote">Homepage Quote</button>
             <button class="tab" data-target="panel-video">Intro Video</button>
             <button class="tab" data-target="panel-services">Services</button>
-            <button class="tab" data-target="panel-voices">Voices of the Healed</button>
+            <button class="tab" data-target="panel-voices">Testimonial</button>
             <button class="tab" data-target="panel-about">About Us</button>
             <button class="tab" data-target="panel-quiz">Chakra Quiz</button>
             <button class="tab" data-target="panel-resources">Resources</button>
             <button class="tab" data-target="panel-contact">Contact</button>
         </nav>
-
-        <div class="back-link">
-            <a href="/adminportal"><button>← Back to Admin Portal</button></a>
-        </div>
-
 
         <!-- Panels -->
         <section id="panel-carousel" class="panel active">
@@ -76,7 +76,7 @@
         </section>
 
         <section id="panel-voices" class="panel">
-            <h2>Voices of the Healed</h2>
+            <h2>Testimonials</h2>
             <p>Manage testimonials shown on the Reviews page.</p>
             <form action="/admin/add-review" method="POST">
                 <label for="name">Name</label>
@@ -124,14 +124,10 @@
 
         <section id="panel-resources" class="panel">
             <h2>Resources</h2>
-            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save Resources content.');">
-                <label for="resourcesContent">Resources content (Markdown or HTML)</label>
-                <textarea id="resourcesContent" name="resourcesContent" placeholder="Links, downloads, and descriptions..."></textarea>
-                <div class="actions">
-                    <button class="btn" type="submit">Save Resources</button>
-                    <a class="btn secondary" href="/gallery">Manage Uploaded Images</a>
-                </div>
-            </form>
+            <p>Manage resources shown on the Resources page.</p>
+            <div class="iframe-container">
+                <iframe src="/adminportal/resourcesmanagement" title="Resources Manager"></iframe>
+            </div>
         </section>
 
         <section id="panel-contact" class="panel">
@@ -152,11 +148,14 @@
             </form>
         </section>
 
-        <div class="back-link">
-            <a href="/adminportal"><button>← Back to Admin Portal</button></a>
-        </div>
-
         <script src="/js/content-management.js" defer></script>
+        <!-- <script>
+            // Check if redirected with ?submitted=true
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('submitted') === 'true') {
+              alert('✅ Testimonial submitted successfully!');
+            }
+          </script> -->
     
     </main>
 </body>
