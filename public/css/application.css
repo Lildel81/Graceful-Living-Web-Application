@@ -2,7 +2,7 @@
 
 body{
     background-color: #008080;
-    font-family: Arial, sans-serif;
+    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
     margin: 0; 
     padding: 0; 
 
@@ -36,11 +36,22 @@ h2 {
 
 /* styling for all the labels to prompt user for input*/
 label {
-  font-weight: bold;
   display: block; 
-  margin-top: 20px; 
-  margin-bottom: 5px; 
-  color: #444; 
+  margin: 1rem 0 0.5rem;  
+  color: #333; 
+  font-weight: normal;
+}
+
+/*Field Labels*/
+label[for]{
+    font-weight: 600;
+}
+
+/*Red star for the req text*/
+.required {
+    color: #d93025;
+    font-weight: 700;
+    margin-left: 0.2rem;
 }
 
 /* Styles the text boxes for the inputs of email,name, number*/
@@ -55,7 +66,7 @@ textarea{
     border: 1px solid#ccc; 
     font-size: 16px;
     box-sizing: border-box; 
-    font-family: Arial, sans-serif;
+    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
 }
 
 
@@ -86,6 +97,14 @@ input[type="checkbox"] + label{
     margin-top: 10px;
     margin-left: 6px;
     font-weight: normal;
+}
+
+/*healthcare details block*/
+#healthcare-details {
+  margin-top: 10px;
+}
+#healthcare-details label[for] {
+  margin-top: 0.75rem;
 }
 
 /* Syling for the button */
