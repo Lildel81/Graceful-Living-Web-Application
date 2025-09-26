@@ -508,6 +508,12 @@ const getResourcesManagementView = (req, res) => {
   res.render("resourcesmanagement");
 };
 
+const getClientManagementView = (req, res) => {
+  res.render('clientmanagement');
+};
+
+
+
 const getEditResourcesImageView = async (req, res) => {
   const resource = await ResourcesImage.findById(req.params.id);
   res.render("editresourcesimage", { resource }); // ✅ layout.ejs wraps it
@@ -536,5 +542,6 @@ module.exports = {
   getResourcesManagementView,
   getEditResourcesImageView,
   getLoginView,
+  getClientManagementView,
   router,
 };
