@@ -123,6 +123,8 @@ app.get('/login', (req, res) => {
 // nodmailer password reset routes
 const passwordResetRoutes = require('./routes/passwordReset');
 app.use('/auth/reset', passwordResetRoutes);
+const resetPageRoutes = require('./routes/resetPage');
+app.use('/reset', resetPageRoutes);
 
 
 // Existing Routes

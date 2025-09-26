@@ -59,52 +59,9 @@ router.post('/', async (req, res) => {
     return res.status(500).send('Database error');
   }
 
-    // const hash = await bcrypt.hash(value.password, 12);
-
-    // const user = await Passwd.findOne({ username: value.username });
-    // if (user) {
-    //   const storedHash = user.hash;
-    //   console.log("User exists and hash is: ", storedHash);
-
-    //   const match = await bcrypt.compare(value.password, storedHash);
-    //     if (match){
-    //       console.log("Password correct");
-    //       req.session.regenerate(err => {
-    //         if (err) return res.status(500).send('session error');
-
-    //         req.session.isAdmin = true;
-    //         req.session.username = user.username;
-
-    //         const redirectTo = req.session.returnTo || '/adminportal';
-    //         delete req.session.returnTo;
-
-    //         req.session.save(err2 => {
-    //           if (err2) return res.status(500).send('session save error');
-    //           res.redirect(redirectTo);
-    //         });
-    //       });
-
-    //       res.json({ ok: true });
-    //       return res.redirect('/adminportal');
-    //     } else {
-    //       return res.redirect('/login')
-          
-    //       return;
-    //     }
-      
-    // } else {
+   
       console.log("User not found");
     });
-
-
-    // await Passwd.findOneAndUpdate(
-    //   { username: value.username },
-    //   { username: value.username, hash },
-    //   { upsert: true, new: true, setDefaultsOnInsert: true }
-    // );
-
-
-
 
 module.exports = router;
 

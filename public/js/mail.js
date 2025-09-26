@@ -7,7 +7,7 @@ document.getElementById('forgot-password').addEventListener('click', async (e) =
       const res = await fetch('/auth/reset/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // If you later collect an email from the user, add it here:
+        //add the email of the user here when were ready to go live
         // body: JSON.stringify({ email: document.getElementById('email').value })
       });
 

@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const { sendResetEmail } = require('../mail/mailer');
 const crypto = require('crypto');
+const PasswordResetToken = require('../models/PasswordResetToken');
+
 
 const HARD_CODED_RECIPIENT = process.env.RESET_EMAIL_RECIPIENT || 'terry.weatherman8112@gmail.com';
 
@@ -33,7 +35,11 @@ await PasswordResetToken.create({
       expiresAt,
     });
 
-    const resetURL = `${process.env.PUBLIC_BASE_URL || 'http://localhost:8080'}/reset?token=${token}`;
+    //const resetURL = `${process.env.PUBLIC_BASE_URL || 'http://localhost:8080'}/reset?token=${token}`;
+
+    const base = process.env.HOST_URL || `http://localhost:${process.env.PORT || 8080}`;
+    const resetURL = `${base}/reset/${token}`;   // <-- path style
+    console.log('[reset] email link:', resetURL);
 
     const subject = 'Password Reset Request';
     const html = `
@@ -41,7 +47,7 @@ await PasswordResetToken.create({
       <p><strong>Reset link (placeholder):</strong> <a href="${resetURL}">${resetURL}</a></p>
       <p><strong>Token:</strong> ${token}</p>
     `;
-    const text = `Reset link (valid ${ttlMinutes} mins): ${resetUrl}`;
+    const text = `Reset link (valid ${ttlMinutes} mins): ${resetURL}`;
 
     const to = process.env.RESET_EMAIL_RECIPIENT || 'tweatherman8112@gmail.com';
     const info = await sendResetEmail({ to, subject, html, text });
