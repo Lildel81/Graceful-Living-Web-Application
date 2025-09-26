@@ -1,20 +1,25 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
+}
+
+/* Consistent heading fonts */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Source Serif Pro', 'Playfair Display', serif;
 }
 
 h1{
     text-align: center;
     padding-top: 6rem;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Source Serif Pro', 'Playfair Display', serif;
     font-weight: normal;
 }
 
 .intro_paragraph{
     text-align: center;
     padding: 2rem 5rem 0rem;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Futura', 'Inter', sans-serif;
 }
 
 .video_wrapper{
@@ -84,7 +89,7 @@ h1{
 }
 
 .text-overlay {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Source Serif Pro', 'Playfair Display', serif;
 
     position: absolute;
     top: 10%;  

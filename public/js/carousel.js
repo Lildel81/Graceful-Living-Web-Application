@@ -25,6 +25,7 @@ let counter = 0;
 const slides = document.querySelectorAll(".slide");
 const totalSlides = slides.length;
 const autoRadios = document.querySelectorAll('input[name="radio-btn"]');
+const manualDots = document.querySelectorAll('.navigation-mannual .mannual-btn');
 
 function autoSlide() {
   counter++;
@@ -68,4 +69,10 @@ function updateRadioButtons(index) {
   autoRadios.forEach((radio, i) => {
     radio.checked = i === index;
   });
+  if (manualDots && manualDots.length) {
+    manualDots.forEach((dot, i) => {
+      if (i === index) dot.classList.add('active');
+      else dot.classList.remove('active');
+    });
+  }
 }

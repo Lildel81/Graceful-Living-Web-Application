@@ -67,7 +67,7 @@
      <input type="radio" name="radio-btn" id="radio2">
      <input type="radio" name="radio-btn" id="radio3"> -->
 
-    <% slides.forEach((slide, i) => { %>
+   <% slides.forEach((slide, i) => { %>
       <input type="radio" name="radio-btn" id="radio<%= i+1 %>" <%= i === 0 ? 'checked' : '' %>>
     <% }) %>
 
@@ -75,9 +75,9 @@
 
      <!--Automatic navigation start-->
     <div class="navigation-auto">
-      <div class="auto-btn-1"></div>
-      <div class="auto-btn-2"></div>
-      <div class="auto-btn-3"></div>
+      <% slides.forEach((slide, i) => { %>
+        <div class="auto-btn-<%= i+1 %>"></div>
+      <% }) %>
     </div>
     <!--Automatic navigation end-->
 
@@ -97,14 +97,17 @@
 </section>
 <!--/*------------------------Carousel Section End------------------------------------*/-->
 <div class="home-container">
-  <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
-  <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
-  <h2>Hi!</h2>
-  <p>Let me introduce myself to you.</p>
 
+  <div class="quote-container">
+    <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
+    <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
+  </div>
+
+  <div>
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Hi!</h2>
+    <p style="font-size: 18px; margin-bottom: 20px; color: #003366;">Let me introduce myself to you.</p>
+  </div>
   <div class="video-container">
-    
-
     <iframe 
       width="560" 
       height="315" 
@@ -155,7 +158,7 @@
   <!-- ✅ Services Section Ends Here -->
 
   <div class="review-section">
-    <h3>Voices of the Healed</h3>
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Voices of the Healed</h2>
   
     <% selectedReviews.forEach((review, i) => { %>
       <div class="review" style="background: url('/images/review-background<%= (i % 3) + 1 %>.png') no-repeat center center / cover;">
