@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Energy Consult Application</title>
+  <link rel="stylesheet" href="/css/application.css">
+</head>
+<body>
+  <form action="/application" method="post">
+    <h2>Getting To Know You</h2>
+    <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+      <p style="color:#b00020; font-weight:600; margin:8px 0 16px;"><%= errorMessage %></p>
+    <% } %>
+
+    <p class="subtext">Interested in booking a session? Please complete the form below, and we’ll be in touch with you shortly.</p>
+    
+    <!--EMAIL ADRESSS-->
+    <label for="email">Email Address:<span class="required"> *</span></label>
+    <input type="email" id="email" name="email" placeholder="your@email.com" required><br><br>
+
+    <!--FULL NAME-->
+    <label for="fullName">Full Name:<span class="required"> *</span></label><br>
+    <input type="text" id="fullName" name="fullName" placeholder="First and Last Name" required><br><br>
+    
+    <!--CONTACT NUMBER-->
+    <label for="contactNumber">Please provide your contact number:<span class="note"> (Only used for appointment-related communications.)</span></label><br>
+    <input type="text" id="contactNumber" name="contactNumber" placeholder="(###) ###-####" required><br><br>
+    
+    <!--AGE-->
+    <p>What age bracket best represents your age group?<span class="required"> *</span></p>
+    <input type="radio" id="20-30" name="ageBracket" value="20-30" required>
+    <label for="20-30">20-30</label><br>
+    <input type="radio" id="30-40" name="ageBracket" value="30-40" required>
+    <label for="30-40">30-40</label><br>
+    <input type="radio" id="40-50" name="ageBracket" value="40-50" required>
+    <label for="40-50">40-50</label><br>
+    <input type="radio" id="50+" name="ageBracket" value="50+" required>
+    <label for="50+">50+</label><br><br>
+
+    <!--HEALTHCARE WORKER-->
+    <p>Are you a healthcare worker?<span class="required"> *</span></p>
+    <input type="radio" id="hc-yes" name="isHealthcareWorker" value="Yes" required>
+    <label for="hc-yes">Yes</label><br>
+
+    <input type="radio" id="hc-no" name="isHealthcareWorker" value="No" required checked>
+    <label for="hc-no">No</label><br>
+
+    <div id="healthcare-details" style="display:none; margin-top:10px;">
+      <label for="healthcareRole">If yes, what kind?</label><br>
+      <input type="text" id="healthcareRole" name="healthcareRole"><br><br>
+
+      <label for="healthcareYears">How many years in that role?</label><br>
+      <input type="number" id="healthcareYears" name="healthcareYears" min="0" step="1"><br><br>
+    </div>
+
+    <!--logic for healthcare worker quesiton-->
+    <script>
+      (function () {
+        function toggleHC() {
+          var isYes = document.getElementById('hc-yes').checked;
+          var box = document.getElementById('healthcare-details');
+          box.style.display = isYes ? 'block' : 'none';
+          document.getElementById('healthcareRole').required = isYes;
+          document.getElementById('healthcareYears').required = isYes;
+        }
+        document.getElementById('hc-yes').addEventListener('change', toggleHC);
+        document.getElementById('hc-no').addEventListener('change', toggleHC);
+        toggleHC(); 
+      })();
+    </script>
+
+
+    <!--JOB TITLE-->
+    <label for="jobTitle">Job Title: What is your current occupation or role?<span class="required"> *</span></label><br>
+    <input type="text" id="jobTitle" name="jobTitle" placeholder="Your current occupation/role" required><br><br>
+
+    <!--CURRENT HEALER QUESTION-->
+    <p>Have you ever worked with an energy healer, life coach, or holistic practitioner before?</p>
+    <input type="radio" id="currently" name="workedWithPractitioner" value="Currently working with one">
+    <label for="currently">Yes, currently working with one</label><br>
+
+    <input type="radio" id="past" name="workedWithPractitioner" value="In the past">
+    <label for="past">Yes, in the past</label><br>
+
+    <input type="radio" id="first-time" name="workedWithPractitioner" value="First time">
+    <label for="first-time">No, this is my first time</label><br>
+
+    <input type="radio" id="not-sure" name="workedWithPractitioner" value="Not sure">
+    <label for="not-sure">Not sure</label><br><br>
+
+    <input type="radio" id="other" name="workedWithPractitioner" value="Other">
+    <label for="other">Other</label><br><br>
+
+    
+    <!--FAMILIAR QUESITON-->
+    <p>Which of the following are you familiar with? (Check all that apply)<span class="required"> *</span></p>
+    <label><input type="checkbox" id="kundalini" name="familiarWith" value="Kundalini Yoga">Kundalini Yoga</label>
+    <br>
+    <label><input type="checkbox" id="sound-baths" name="familiarWith" value="Sound Baths">Sound Baths</label>
+    <br>
+    <label><input type="checkbox" id="life-coaching" name="familiarWith" value="Life Coaching">Life Coaching</label>
+    <br>
+    <label><input type="checkbox" id="eft" name="familiarWith" value="Emotional Freedom Technique">Emotional Freedom Technique (EFT)</label>
+    <br>
+    <label><input type="checkbox" id="none" name="familiarWith" value="None of the above">None of the above</label>
+    <br><br>
+
+    
+    <!--PAST EXPERIENCE-->
+    <label for="experience">If you selected any practices above, please share a little about your experience.What did you notice or gain from them?:</label><br>
+    <textarea id="experience" name="experience" rows="4" placeholder="What did you notice or gain from them, if anything?"></textarea><br><br>
+
+    <!--GOALS-->
+    <label for="goals">What are your top 1–2 goals or intentions for improving your energy health?<span class="required"> *</span></label><br>
+    <textarea id="goals" name="goals" rows="4" required placeholder='Ex: "I want to feel more energized and sleep better"'></textarea><br><br>
+
+    <!--CURRENT CHALLENGES-->
+    <p>Are there specific challenges you’re currently facing that you’d like support with?(Select all that apply):<span class="required"> *</span></p>
+    <label><input type="checkbox" id="physical" name="challenges" value="Physical">Physical (fatigue, pain, chronic issues)</label><br>
+    <label><input type="checkbox" id="emotional" name="challenges" value="Emotional">Emotional (stress, anxiety, emotional overwhelm)</label><br>
+    <label><input type="checkbox" id="mental" name="challenges" value="Mental">Mental (overthinking, lack of focus, burnout)</label><br>
+    <label><input type="checkbox" id="spiritual" name="challenges" value="Spiritual">Spiritual (disconnection, lack of clarity, seeking purpose)</label><br>
+    <label><input type="checkbox" id="otherChallenge" name="challenges" value="Other">Other</label><br><br>
+    <input type="text" name="challengesOtherText" placeholder="Please specify"><br><br>
+
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

@@ -53,7 +53,7 @@ form#login-form {
 }
 
 .login_button{
-  font-family: Arial, sans-serif;
+  font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
   background-color: #E0F2F1;
   color: rgb(0, 0, 0);
   padding: 12px 20px;

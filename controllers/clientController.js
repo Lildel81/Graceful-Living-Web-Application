@@ -475,7 +475,15 @@ const getShopView = async (req, res, next) => {
 };
 
 const getApplicationView = async (req, res, next) => {
-  res.render("application", { successMessage: null });
+  res.render("prequiz/application", { successMessage: null });
+};
+
+const getPreAppView = (req, res) =>{
+  res.render('prequiz/pre-app'); 
+};
+
+const getApplicationSuccessView = (req, res) =>{
+  res.render('prequiz/app-success');
 };
 
 const getReviewsView = async (req, res, next) => {
@@ -500,6 +508,12 @@ const getResourcesManagementView = (req, res) => {
   res.render("resourcesmanagement");
 };
 
+const getClientManagementView = (req, res) => {
+  res.render('clientmanagement');
+};
+
+
+
 const getEditResourcesImageView = async (req, res) => {
   const resource = await ResourcesImage.findById(req.params.id);
   res.render("editresourcesimage", { resource }); // ✅ layout.ejs wraps it
@@ -521,10 +535,13 @@ module.exports = {
   getServicesView,
   getShopView,
   getApplicationView,
+  getPreAppView,
+  getApplicationSuccessView,
   getReviewsView,
   getContentManagementView,
   getResourcesManagementView,
   getEditResourcesImageView,
   getLoginView,
+  getClientManagementView,
   router,
 };

@@ -7,36 +7,40 @@ const submitApplication = async (req, res) => {
     //Checkbox
     const toArray = (v) => (Array.isArray(v) ? v : v ? [v] : []);
 
-    console.log("Application received:", req.body); 
-    const { error } = validate(req.body);
+    // submitted form becomes object, and make checkboxes arrays
+   const payload = {
+    ...req.body,
+    familiarWith: toArray(req.body.familiarWith),
+    challenges: toArray(req.body.challenges),
+   };
 
-    // 
-    req.body.familiarWith = toArray(req.body.familiarWith);
-    req.body.challenges  = toArray(req.body.challenges);
+   // validate the data with schema joi
+   const {error, value } = validate(payload); 
 
     
     // validate the data on the form with joi
     if (error){
-        console.log("Validation Error:", error.details[0].message);
-        return res.status(400).render('application', {successMessage: null}); // if fails restart the form 
-    }
+        return res.status(400).render('prequiz/application',{
+            successMessage: null,
+            errorMessage: error.details[0].message,
+            form: payload,
+        });
+    }    
 
     try{
-        const application = new Application(req.body);
+        const application = new Application(value);
         await application.save(); // save to Mongo 
         
-        // log data in a json format 
-        console.log("New application received:");
-        console.log(JSON.stringify(application, null, 2));
-
-        // render the same page with a success message
-        res.render('application',{successMessage:" Application Submitted Successfully! "});
-
-        // incase team wants to make a thank you page for after submission 
-        //res.redirect('/thank-you'); 
+      
+        // Go to success page
+        return res.redirect(303, '/app-success');
+   
     } catch (err){
-        console.error("Error Saving Application ", err.message);
-        res.status(500).render('application',{successMessage: null}); // if fails rerender
+        return res.status(500).render('prequiz/application',{
+            successMessage: null,
+            errrorMessage: 'Something went wrong saving your application. Please try again',
+            form: payload,
+        });
     }
 };
 

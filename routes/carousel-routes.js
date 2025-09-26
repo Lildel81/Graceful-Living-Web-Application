@@ -1,7 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('multer')({dest: 'public/images/uploads'});
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
 const carousel = require('../controllers/carouselController');
+
+// Ensure upload directory exists and configure storage
+const uploadDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => {
+    const base = path.basename(file.originalname).replace(/[^a-zA-Z0-9._-]/g, '_');
+    cb(null, `${Date.now()}-${base}`);
+  }
+});
+
+const allowed = new Set(['image/jpeg','image/png','image/gif','image/webp', 'image/heic']);
+const upload = multer({
+  storage,
+  limits: { fileSize: 8 * 1024 * 1024, files: 1 },
+  fileFilter: (req, file, cb) => {
+    if (allowed.has(file.mimetype)) cb(null, true); else cb(new Error('Invalid image type'));
+  }
+});
 
 router.get('/adminportal/carouselmanagement', carousel.getCarouselManagement);
 router.get('/adminportal/carousel/:id/edit', carousel.getEditSlideView);

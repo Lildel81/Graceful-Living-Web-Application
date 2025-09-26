@@ -58,10 +58,131 @@ button:hover {
 /* NEW CSS*/
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  padding: 20px;
+  margin: 0;
+  font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+  background: url('/images/admin_background.jpg') center/cover no-repeat fixed;
+}
+
+/* Consistent heading fonts */
+.hero,
+.overview h2,
+.overview-box h3 {
+  font-family: 'Source Serif Pro', 'Playfair Display', serif;
+}
+
+main {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.hero {
+  color: white;
+  text-align: left;
+  padding: 50px 50px 20px;
+  font-size: 2rem;
+}
+
+.secondary-nav {
+  background-color: #dff3f4cc;
   text-align: center;
+  padding: 15px 0;
+  font-size: 1.2em;
+  margin-bottom: 40px;
+}
+
+.secondary-nav a {
+  appearance: none;
+  background: transparent;
+  border: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  margin: 0 20px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #253a52;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.secondary-nav a:hover {
+  background:#1d8888;
+  color:white;
+}
+
+.overview {
+  background: rgba(230, 243, 248, 0.8);
+  margin: 0 auto 120px;
+  padding: 40px;
+  width: 80%;
+  text-align: center;
+  border-radius: 0px;
+}
+
+.overview-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.overview-box {
+  background: white;
+  padding: 1px;
+  width: 30%;
+  border-radius: 0px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.211);
+}
+
+.overview-box h3 {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.content-box {
+  padding: 15px;
+  height: 150px;
+  border-radius: 5px;
+  overflow-y: auto;
+}
+
+.overview h2 {
+  font-weight: 500;
+}
+
+/* User List Styles */
+#userFilter {
+  padding: 8px;
+  width: 60%;
+  max-width: 420px;
+  margin: 10px auto 20px;
+  display: block;
+}
+
+.user-table-container {
+  overflow-x: auto;
+}
+
+#usersTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+#usersTable thead tr {
+  background: #eaf5f8;
+}
+
+#usersTable th {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+#usersTable td {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 form {
