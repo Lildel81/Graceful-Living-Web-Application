@@ -9,16 +9,7 @@ body {
 
 main { padding-top: 5rem; padding-bottom: 5rem; }
 
-button {
-  background-color: #008080;
-  color: white;
-  border: none;
-  padding: 0.7rem 1.2rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-button:hover { background-color: #007070; }
+
 
 .hero-text {
   text-align: left;

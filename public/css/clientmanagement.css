@@ -1,0 +1,103 @@
+/* Background */
+body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    color: #333;
+    background: url('/images/admin_background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+main { padding-top: 5rem; padding-bottom: 5rem; }
+
+
+/* Page title */
+.hero {
+    margin-top: 90px; 
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 3rem 5rem 1rem;
+}
+
+
+/* Client management Links in Nav bar */
+.client-mgmt_links {                     
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #dff3f4cc;            
+    padding: 1rem;                          
+    margin-bottom: 20px;
+    border-radius: 8px;  
+    position: relative;
+    flex-direction: row;
+
+}
+
+/* Links inside the bar  */
+.client-mgmt_links a,
+.client-mgmt_links a:link,
+.client-mgmt_links a:visited {
+    text-decoration: none;
+    color: #253a52;                          
+    font-weight: 700;
+    padding:10px 14px;
+    border-radius: 999px;                   
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
+
+.client-mgmt_links a:hover {
+    color: #1d8888;
+    background: rgba(37,58,82,0.08);
+}
+
+/* Back Admin button */
+.back-link { text-align: center; }
+button {
+    display: inline-block;
+    margin: 1rem auto;  
+    background-color: #008080;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    text-decoration: none;
+}
+button:hover { background-color: #007070; }
+
+/* Main panel (search bar ??)*/
+.overview {
+    background: rgba(240, 248, 255, 0.9);
+    width: 80%;
+    max-width: 1000px;
+    margin: 2rem auto 80px;
+    padding: 2rem; 
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex; 
+    min-height: 260px;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.overview h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    margin: 0 0 16px;
+    color: #253a52;
+}
+
+           
+
+
