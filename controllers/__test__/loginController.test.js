@@ -1,200 +1,192 @@
+/**
+ * @file __tests__/loginController.test.js
+ */
+const path = require('path');
+jest.mock('express-rate-limit', () => () => (req, res, next) => next()); // no-op for tests
+jest.mock('bcrypt', () => ({ compare: jest.fn() })); // controllable compare
+
 const request = require('supertest');
 const express = require('express');
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const session = require('express-session');
-const router = require('../loginController');
 
-// Mock mongoose
-jest.mock('mongoose', () => {
-  const actualMongoose = jest.requireActual('mongoose');
-  const mockPasswdModel = {
-    findOne: jest.fn(),
-  };
-  return {
-    ...actualMongoose,
-    model: jest.fn(() => mockPasswdModel),
-    models: { Passwd: mockPasswdModel },
-  };
-});
+const LOCK_MS = 15 * 60 * 1000;
+const NOW = 1700000000000; // fixed time for deterministic tests
 
-jest.mock('bcrypt', () => ({
-  compare: jest.fn(),
-}));
+describe('loginController', () => {
+  let app, controller, Passwd;
 
-jest.mock('express-session', () => {
-  const mockSession = jest.fn((options) => (req, res, next) => {
-    req.session = {
-      regenerate: jest.fn((cb) => cb(null)),
-      save: jest.fn((cb) => cb(null)),
-      isAdmin: false,
-      username: null,
-      returnTo: null,
-    };
-    next();
-  });
-  return mockSession;
-});
+  const makeApp = (opts = {}) => {
+    const a = express();
+    a.use(express.urlencoded({ extended: true }));
+    a.use(express.json());
 
-describe('POST /', () => {
-  let app;
-  let mockRegenerate;
-  let mockSave;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-
-    app = express();
-    app.use(express.json());
-    app.use(session({
-      secret: 'test-secret',
-      resave: false,
-      saveUninitialized: false,
-    }));
-    app.use(router);
-
-    mockRegenerate = jest.fn((cb) => cb(null));
-    mockSave = jest.fn((cb) => cb(null));
-
-    session.mockImplementation(() => (req, res, next) => {
+    // fake session so controller can call regenerate/save
+    a.use((req, res, next) => {
       req.session = {
-        regenerate: mockRegenerate,
-        save: mockSave,
-        isAdmin: false,
-        username: null,
         returnTo: null,
+        regenerate: (cb) => (opts.sessionError ? cb(new Error('regen fail')) : cb(null)),
+        save: (cb) => (opts.sessionSaveError ? cb(new Error('save fail')) : cb(null)),
       };
       next();
     });
-  });
-  //302 tests
-  test('should redirect to /adminportal with 302 status on valid credentials', async () => {
-    mongoose.models.Passwd.findOne.mockResolvedValue({
-      username: 'testuser',
-      hash: 'hashedpassword',
+
+    // hijack res.render -> send JSON so we can assert easily
+    a.use((req, res, next) => {
+      const origStatus = res.status.bind(res);
+      res.status = (code) => (res.__status = code, origStatus(code));
+      res.render = (view, data = {}) => {
+        const code = res.__status || 200;
+        return res.status(code).json({ view, ...data });
+      };
+      next();
     });
+
+    a.use('/login', controller);
+    return a;
+  };
+
+  beforeAll(() => {
+    jest.spyOn(Date, 'now').mockReturnValue(NOW);
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // fresh require to ensure we get the router + exported model
+    controller = require(path.join('..', '..', 'controllers', 'loginController'));
+    Passwd = controller.Passwd;
+
+    // default mocks
+    jest.spyOn(Passwd, 'findOne');
+    jest.spyOn(Passwd, 'updateOne').mockResolvedValue({ acknowledged: true, modifiedCount: 1 });
+
+    app = makeApp();
+  });
+
+  const makeUser = (overrides = {}) => ({
+    _id: 'u1',
+    username: 'alice',
+    hash: 'hashed',
+    failedLoginCount: 0,
+    failWindowStart: null,
+    lockUntil: null,
+    isLocked() { return !!(this.lockUntil && this.lockUntil > Date.now()); },
+    ...overrides,
+  });
+
+  test('GET /login renders the view with defaults', async () => {
+    const res = await request(app).get('/login');
+    expect(res.status).toBe(200);
+    expect(res.body.view).toBe('login');
+    expect(res.body.ok).toBe(false);
+    expect(res.body.error).toBe(null);
+    expect(res.body.username).toBe('');
+  });
+
+  test('POST /login with missing fields -> 400 with validation error', async () => {
+    const res = await request(app).post('/login').type('form').send({}); // no fields
+    expect(res.status).toBe(400);
+    expect(res.body.view).toBe('login');
+    expect(res.body.error).toBe('Please fill in both fields.');
+  });
+
+  test('POST /login unknown user -> 401 generic invalid credentials', async () => {
+    Passwd.findOne.mockResolvedValue(null);
+    const res = await request(app).post('/login').type('form').send({ username: 'alice', password: 'x' });
+    expect(Passwd.findOne).toHaveBeenCalledWith({ username: 'alice' });
+    expect(res.status).toBe(401);
+    expect(res.body.view).toBe('login');
+    expect(res.body.error).toBe('Invalid username or password.');
+  });
+
+  test('POST /login locked user -> 429 with lock message', async () => {
+    Passwd.findOne.mockResolvedValue(
+      makeUser({ lockUntil: new Date(NOW + 10 * 60 * 1000) }) // locked for 10 more mins
+    );
+    const res = await request(app).post('/login').type('form').send({ username: 'alice', password: 'x' });
+    expect(res.status).toBe(429);
+    expect(res.body.view).toBe('login');
+    expect(res.body.error).toMatch(/Too many failed attempts/);
+  });
+
+  test('POST /login wrong password -> increments fail count within window (401)', async () => {
+    const userState = makeUser({ failedLoginCount: 0, failWindowStart: null });
+    Passwd.findOne.mockResolvedValue(userState);
+    bcrypt.compare.mockResolvedValue(false); // wrong
+
+    const res = await request(app).post('/login').type('form').send({ username: 'alice', password: 'bad' });
+    expect(res.status).toBe(401);
+    const set = Passwd.updateOne.mock.calls[0][1].$set;
+    expect(set.failedLoginCount).toBe(1);
+    expect(set.failWindowStart).toEqual(new Date(NOW));
+  });
+
+  test('POST /login wrong password reaching MAX_FAILS -> 429 and lockUntil set', async () => {
+    const userState = makeUser({
+      failedLoginCount: 4,                   // already 4 fails in window
+      failWindowStart: new Date(NOW - 60e3), // inside the same 15-min window
+    });
+    Passwd.findOne.mockResolvedValue(userState);
+    bcrypt.compare.mockResolvedValue(false); // wrong
+
+    const res = await request(app).post('/login').type('form').send({ username: 'alice', password: 'bad' });
+    expect(res.status).toBe(429);
+    const set = Passwd.updateOne.mock.calls[0][1].$set;
+    expect(set.failedLoginCount).toBe(0);
+    expect(set.failWindowStart).toBeNull();
+    expect(set.lockUntil instanceof Date).toBe(true);
+    expect(set.lockUntil.getTime()).toBe(NOW + LOCK_MS);
+  });
+
+  test('POST /login correct password -> resets counters and redirects', async () => {
+    Passwd.findOne.mockResolvedValue(makeUser());
+    bcrypt.compare.mockResolvedValue(true); // correct
+
+    const res = await request(app).post('/login').type('form').send({ username: 'alice', password: 'good' });
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toBe('/adminportal');
+
+    const set = Passwd.updateOne.mock.calls[0][1].$set;
+    expect(set).toEqual({ failedLoginCount: 0, failWindowStart: null, lockUntil: null });
+  });
+
+  test('POST /login session regenerate error -> 500 and error message', async () => {
+    // rebuild app to simulate session error
+    controller = require(path.join('..', '..', 'controllers', 'loginController'));
+    Passwd = controller.Passwd;
+    jest.spyOn(Passwd, 'findOne').mockResolvedValue(makeUser());
+    jest.spyOn(Passwd, 'updateOne').mockResolvedValue({ acknowledged: true });
     bcrypt.compare.mockResolvedValue(true);
 
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'testuser', password: 'testpass' })
-      .expect(302);
+    const appWithSessErr = (() => {
+      const a = express();
+      a.use(express.urlencoded({ extended: true }));
+      a.use(express.json());
+      a.use((req, res, next) => {
+        req.session = {
+          regenerate: (cb) => cb(new Error('regen fail')),
+          save: (cb) => cb(null),
+        };
+        next();
+      });
+      a.use((req, res, next) => {
+        res.status = ((orig) => (code) => (res.__status = code, orig.call(res, code)))(res.status);
+        res.render = (view, data = {}) => {
+          const code = res.__status || 200;
+          return res.status(code).json({ view, ...data });
+        };
+        next();
+      });
+      a.use('/login', controller);
+      return a;
+    })();
 
-    expect(response.headers.location).toBe('/adminportal');
-    expect(mongoose.models.Passwd.findOne).toHaveBeenCalledWith({ username: 'testuser' });
-    expect(bcrypt.compare).toHaveBeenCalledWith('testpass', 'hashedpassword');
-    expect(response.status).toBe(302);
-  });
-
-  test('should redirect to /adminportal with 302 status when returnTo is not set', async () => {
-    mongoose.models.Passwd.findOne.mockResolvedValue({
-      username: 'testuser',
-      hash: 'hashedpassword',
-    });
-    bcrypt.compare.mockResolvedValue(true);
-
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'testuser', password: 'testpass' })
-      .expect(302);
-
-    expect(response.headers.location).toBe('/adminportal');
-    expect(response.status).toBe(302);
-  });
-  //401 tests
-  test('should return 401 when user is not found', async () => {
-    mongoose.models.Passwd.findOne.mockResolvedValue(null);
-
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'nonexistentuser', password: 'testpass' })
-      .expect(401);
-
-    expect(response.body).toEqual({ ok: false, error: 'invalid credentials' });
-    expect(mongoose.models.Passwd.findOne).toHaveBeenCalledWith({ username: 'nonexistentuser' });
-    expect(bcrypt.compare).not.toHaveBeenCalled(); 
-  });
-
-  test('should return 401 when password does not match', async () => {
-    mongoose.models.Passwd.findOne.mockResolvedValue({
-      username: 'testuser',
-      hash: 'hashedpassword',
-    });
-    bcrypt.compare.mockResolvedValue(false);
-
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'testuser', password: 'wrongpass' })
-      .expect(401);
-
-    expect(response.body).toEqual({ ok: false, error: 'invalid credentials' });
-    expect(mongoose.models.Passwd.findOne).toHaveBeenCalledWith({ username: 'testuser' });
-    expect(bcrypt.compare).toHaveBeenCalledWith('wrongpass', 'hashedpassword');
-  });
-
-  test('should return 401 when password is incorrect even with valid user', async () => {
-    mongoose.models.Passwd.findOne.mockResolvedValue({
-      username: 'anotheruser',
-      hash: 'differenthash',
-    });
-    bcrypt.compare.mockResolvedValue(false);
-
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'anotheruser', password: 'incorrect' })
-      .expect(401);
-
-    expect(response.body).toEqual({ ok: false, error: 'invalid credentials' });
-    expect(mongoose.models.Passwd.findOne).toHaveBeenCalledWith({ username: 'anotheruser' });
-    expect(bcrypt.compare).toHaveBeenCalledWith('incorrect', 'differenthash');
-  });
-
-  // 500 tests
-  test('should return 500 on database error', async () => {
-    mongoose.models.Passwd.findOne.mockRejectedValue(new Error('DB connection failed'));
-
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'testuser', password: 'testpass' })
-      .expect(500);
-
-    expect(response.text).toBe('Database error');
-    expect(mongoose.models.Passwd.findOne).toHaveBeenCalledWith({ username: 'testuser' });
-    expect(bcrypt.compare).not.toHaveBeenCalled();
-  });
-
-  test('should return 500 on session regenerate error', async () => {
-    // Mock findOne to return a user
-    mongoose.models.Passwd.findOne.mockResolvedValue({
-      username: 'testuser',
-      hash: 'hashedpassword',
-    });
-    bcrypt.compare.mockResolvedValue(true);
-    mockRegenerate.mockImplementation((cb) => cb(new Error('Session regenerate failed')));
-
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'testuser', password: 'testpass' })
-      .expect(500);
-
-    expect(response.text).toBe('session error');
-    expect(mockRegenerate).toHaveBeenCalled();
-  });
-
-  test('should return 500 on session save error', async () => {
-    mongoose.models.Passwd.findOne.mockResolvedValue({
-      username: 'testuser',
-      hash: 'hashedpassword',
-    });
-    bcrypt.compare.mockResolvedValue(true);
-    mockSave.mockImplementation((cb) => cb(new Error('Session save failed')));
-
-    const response = await request(app)
-      .post('/')
-      .send({ username: 'testuser', password: 'testpass' })
-      .expect(500);
-
-    expect(response.text).toBe('session save error');
-    expect(mockSave).toHaveBeenCalled();
+    const res = await request(appWithSessErr).post('/login').type('form').send({ username: 'alice', password: 'good' });
+    expect(res.status).toBe(500);
+    expect(res.body.view).toBe('login');
+    expect(res.body.error).toBe('Session error. Please try again.');
   });
 });

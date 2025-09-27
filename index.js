@@ -6,6 +6,7 @@ const expressLayouts = require('express-ejs-layouts');
 const winston = require('winston');
 const clientRoutes = require('./routes/client-routes');
 require('dotenv').config();
+const helmet = require('helmet');
 
 
 // for file uploads -- dani
@@ -17,7 +18,6 @@ const multer = require('multer');
 const carouselRoutes = require('./routes/carousel-routes');
 const resourcesRoutes = require('./routes/resources-routes');
 const homeRoutes = require('./routes/homeRoutes');
-const loginController = require('./controllers/loginController');
 const quizRoutes = require('./routes/quizRoutes')
 const chakraRoutes = require('./routes/chakraRoutes');
 
@@ -25,6 +25,25 @@ const app = express();
 
 require('./startup/db')();
 require('./startup/validations')();
+
+const mongoose = require('mongoose');
+mongoose.connection.once('open', async () => {
+  try {
+    const col = mongoose.connection.collection('passwordresettokens');
+    // Drop old non-TTL index if it exists
+    await col.dropIndex('expiresAt_1').catch(e => {
+      if (e?.codeName !== 'IndexNotFound') throw e;
+    });
+
+    // Recreate indexes defined in your schema (won’t drop others)
+    await require('./models/PasswordResetToken').createIndexes();
+
+    console.log('[indexes] PasswordResetToken OK');
+  } catch (err) {
+    console.error('[indexes] PasswordResetToken error:', err.message);
+    // don’t throw here — keep the app running
+  }
+});
 
 app.use(carouselRoutes);
 app.use(resourcesRoutes);
@@ -67,12 +86,8 @@ app.use(
         secret: 'super-secret-change-me',
         resave: false,
         saveUninitialized: false,
-        cookie: {
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: false,
-            maxAge: 1000*60*60*2 //2 hours for each session before reset
-        },
+        cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 1000*60*60*2 },
+
     })
 );
 
@@ -115,16 +130,34 @@ app.get('/about', (req, res) => {
 });
 
 // Login logic
+const loginController = require('./controllers/loginController');
 app.use('/login', loginController);
 app.get('/login', (req, res) => {
     res.render('login', {ok: req.query.ok });
 });
+
+
+
 
 // nodmailer password reset routes
 const passwordResetRoutes = require('./routes/passwordReset');
 app.use('/auth/reset', passwordResetRoutes);
 const resetPageRoutes = require('./routes/resetPage');
 app.use('/reset', resetPageRoutes);
+
+// Rate Limiting for Password Reset Requests
+const rateLimit = require('express-rate-limit');
+const resetLimiter = rateLimit({ windowMs: 15*60*1000, max: 5 }); // 5 req/15min per IP Address
+app.use('/auth/reset/request', resetLimiter);
+app.use(helmet());
+app.disable('x-powered-by');
+
+
+//require('./models/PasswordResetToken').syncIndexes?.();
+
+
+
+
 
 
 // Existing Routes
