@@ -12,7 +12,7 @@ const PasswordResetTokenSchema = new mongoose.Schema({
     usedAt: { type: Date },
 });
 
-PasswordResetTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+PasswordResetTokenSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 
 module.exports = mongoose.model('PasswordResetToken', PasswordResetTokenSchema);
