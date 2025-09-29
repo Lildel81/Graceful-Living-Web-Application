@@ -312,25 +312,75 @@ const getAssessmentView = async (req, res, next) => {
   res.render("quiz/assessment");
 };
 
-const getAdminPortalView = async (req, res, next) => {
-  // turn on mock data with ?mock=1 or env var MOCK_USERS=true
-  const forceMock = req.query.mock === "1" || process.env.MOCK_USERS === "true";
-
+const postCreateClient = async (req, res) => {
   try {
-    let users = [];
+    const payload = {
+      firstname:   (req.body.firstname || '').trim(),
+      lastname:    (req.body.lastname  || '').trim(),
+      phonenumber: (req.body.phonenumber || '').trim(),
+      email:       (req.body.email || '').trim(),
+      closedChakra:(req.body.closedChakra || '').trim(),
+      currentDate: new Date().toISOString()
+    };
 
-    if (!forceMock) {
-      // try to load from DB first
-      users = await Client.find(
-        {},
-        "firstname lastname phonenumber email closedChakra"
-      ).lean();
+    // Validate with your existing Joi validator if exported
+    if (typeof Client.validate === 'function') {
+      const { error } = Client.validate(payload);
+      if (error) {
+        return res.status(400).render('client-add', {
+          formError: error.details?.[0]?.message || 'Validation error',
+          formValues: payload
+        });
+      }
     }
 
-    // fallback to mocks if forced, DB errored, or DB is empty
-    if (forceMock || !users || users.length === 0) {
-      users = MOCK_USERS;
+    // Optional: prevent duplicate emails
+    const existing = await Client.findOne({ email: payload.email }).lean();
+    if (existing) {
+      return res.status(400).render('client-add', {
+        formError: 'A client with this email already exists.',
+        formValues: payload
+      });
     }
+
+    await Client.create(payload);
+    return res.redirect('/adminportal?created=1'); // back to the list with success flag
+  } catch (err) {
+    console.error('Failed to create client:', err);
+    return res.status(500).render('client-add', {
+      formError: 'Something went wrong creating the client.',
+      formValues: req.body
+    });
+  }
+};
+
+
+const getAdminPortalView = async (req, res) => {
+  try {
+    const users = await Client
+      .find({}, 'firstname lastname phonenumber email closedChakra')
+      .sort({ firstname: 1, lastname: 1 })
+      .lean();
+
+    res.render('adminportal', {
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+      upcomingSessions: '',
+      notifications: '',
+      recentActivities: '',
+      users
+    });
+  } catch (err) {
+    console.error('Failed to load admin portal:', err);
+    res.render('adminportal', {
+      userName: 'Admin',
+      upcomingSessions: '',
+      notifications: '',
+      recentActivities: '',
+      users: []           // no mock — just empty if DB fails
+    });
+  }
+};
+
 
     // old quizresponses query logic retained for reference
     /*
@@ -551,6 +601,7 @@ module.exports = {
   handleUpload,
   deleteImage,
   getAdminPortalView,
+  postCreateClient,
   getContactView,
   getResourcesView,
   getNotFoundView,

@@ -1,7 +1,7 @@
 const express = require('express');
 const {getHubView,getHomeView,getAssessmentView,getIntroductionView,getGettingToKnowYouView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView,
     getApplicationView, getPreAppView, getReviewsView, getContentManagementView, getResourcesManagementView, getLoginView,
-    getApplicationSuccessView,getClientManagementView} = require ('../controllers/clientController');
+    getApplicationSuccessView,getClientManagementView,postCreateClient} = require ('../controllers/clientController');
 
 
 const router = express.Router();
@@ -29,7 +29,11 @@ router.get('/reviews', getReviewsView)
 router.get('/content-management', requireAdmin, getContentManagementView);
 router.get('/login', getLoginView);
 router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagementView);
-router.get('/clientmanagement', requireAdmin, getClientManagementView);
+router.get('/clientmanagement', requireAdmin, getClientManagementView); 
+router.get('/clientmanagement/add', requireAdmin, (req, res) => {
+  res.render('client-add', { formError: null, formValues: {} });
+});
+router.post('/admin/clients', requireAdmin, postCreateClient);
 
 // Pre application 
 
