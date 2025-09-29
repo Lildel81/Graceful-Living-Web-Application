@@ -28,5 +28,5 @@ document
   });
 // Continue button navigates to original destination
 document.getElementById("continue-btn").onclick = function () {
-  window.location.href = "/getting-to-know-you";
+  window.location.href = "/assessment";
 };
