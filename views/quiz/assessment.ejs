@@ -1,106 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chakra Assessment</title>
-  <link rel="stylesheet" href="/css/assessment.css">
-  <script src="/js/assessment.js" defer></script>
-</head>
-<body class="section-page">
-  <header class="hero">
-    <div class="container">
-      <h1 id="chakraHeader">Getting To Know You</h1>
-      <p id="chakraDescription">
-        General questions to get a basic idea of who you are and your experience with energy healing modalities.
-      </p>
-      <div class="progress-bar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chakra Assessment</title>
+    <link rel="stylesheet" href="/css/assessment.css" />
+    <script src="/js/assessment.js" defer></script>
+  </head>
+  <body class="section-page">
+    <header class="hero">
+      <div class="container">
+        <h1 id="chakraHeader">Getting To Know You</h1>
+        <p id="chakraDescription">
+          General questions to get a basic idea of who you are and your
+          experience with energy healing modalities.
+        </p>
+        <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p class="progress-text">
+          Section <span id="currentSectionSpan">1</span> of 13
+        </p>
       </div>
-      <p class="progress-text">Section <span id="currentSectionSpan">1</span> of 13</p>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <form id="assessment-form" action="/assessment/save" method="POST">
+    <main>
+      <form
+        id="assessment-form"
+        action="/assessment/save"
+        method="POST"
+        novalidate
+      >
         <!-- getting to know you questions -->
-        <div class="chakra-section active" id="gettingToKnowYou"
-            data-title="Getting To Know You"
-            data-description="General questions to get a basic idea of who you are and your experience with energy healing modalities.">
-          
-          <label for="fullName">Full Name: <span class="required">*</span></label>
-          <input type="text" id="fullName" name="fullName" placeholder="First and Last Name" required />
+        <div
+          class="chakra-section active"
+          id="gettingToKnowYou"
+          data-title="Getting To Know You"
+          data-description="General questions to get a basic idea of who you are and your experience with energy healing modalities."
+        >
+          <label for="fullName"
+            >Full Name: <span class="required">*</span></label
+          >
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="First and Last Name"
+            required
+          />
 
           <label for="email">Email: <span class="required">*</span></label>
-          <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+          />
 
-          <label for="contactNumber">Please provide your contact number: <span class="required">*</span>
-            <span class="note">(Only used for appointment-related communications.)</span>
+          <label for="contactNumber"
+            >Please provide your contact number: <span class="required">*</span>
+            <span class="note"
+              >(Only used for appointment-related communications.)</span
+            >
           </label>
           <input type="tel" id="contactNumber" name="contactNumber" required />
 
           <fieldset>
-            <legend>What age bracket best represents your age group? <span class="required">*</span></legend>
-            <label><input type="radio" name="ageBracket" value="20-30" required /> 20-30</label>
-            <label><input type="radio" name="ageBracket" value="30-40" /> 30-40</label>
-            <label><input type="radio" name="ageBracket" value="40-50" /> 40-50</label>
-            <label><input type="radio" name="ageBracket" value="50+" /> 50+</label>
+            <legend>
+              What age bracket best represents your age group?
+              <span class="required">*</span>
+            </legend>
+            <label
+              ><input type="radio" name="ageBracket" value="20-30" required />
+              20-30</label
+            >
+            <label
+              ><input type="radio" name="ageBracket" value="30-40" />
+              30-40</label
+            >
+            <label
+              ><input type="radio" name="ageBracket" value="40-50" />
+              40-50</label
+            >
+            <label
+              ><input type="radio" name="ageBracket" value="50+" /> 50+</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you work in healthcare? <span class="required">*</span></legend>
-            <label><input type="radio" name="healthcareWorker" value="yes" required> Yes</label>
-            <label><input type="radio" name="healthcareWorker" value="no"> No</label>
+            <legend>
+              Do you work in healthcare? <span class="required">*</span>
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="healthcareWorker"
+                value="yes"
+                required
+              />
+              Yes</label
+            >
+            <label
+              ><input type="radio" name="healthcareWorker" value="no" />
+              No</label
+            >
           </fieldset>
 
           <fieldset id="healthCareYearsFieldset">
-            <legend>If yes, how many years have you worked in healthcare?</legend>
-            <input type="number" id="healthcareYears" name="healthcareYears" min="0" disabled />
+            <legend>
+              If yes, how many years have you worked in healthcare?
+            </legend>
+            <input
+              type="number"
+              id="healthcareYears"
+              name="healthcareYears"
+              min="0"
+              disabled
+            />
           </fieldset>
 
-          <label for="jobTitle">What is your job title: <span class="required">*</span></label>
+          <label for="jobTitle"
+            >What is your job title: <span class="required">*</span></label
+          >
           <input type="text" id="jobTitle" name="jobTitle" required />
 
           <fieldset>
-            <legend>Have you ever worked with an energy healer, life coach, or holistic practitioner before? <span class="required">*</span></legend>
-            <label><input type="radio" name="experience" value="current" required /> Yes, currently working with one</label>
-            <label><input type="radio" name="experience" value="past" /> Yes, in the past</label>
-            <label><input type="radio" name="experience" value="no" /> No, this is my first time</label>
-            <label><input type="radio" name="experience" value="notSure" /> Not sure</label>
+            <legend>
+              Have you ever worked with an energy healer, life coach, or
+              holistic practitioner before? <span class="required">*</span>
+            </legend>
+            <label
+              ><input type="radio" name="experience" value="current" required />
+              Yes, currently working with one</label
+            >
+            <label
+              ><input type="radio" name="experience" value="past" /> Yes, in the
+              past</label
+            >
+            <label
+              ><input type="radio" name="experience" value="no" /> No, this is
+              my first time</label
+            >
+            <label
+              ><input type="radio" name="experience" value="notSure" /> Not
+              sure</label
+            >
             <label>
-              <input type="radio" name="experience" value="other" id="experienceOther" />
+              <input
+                type="radio"
+                name="experience"
+                value="other"
+                id="experienceOther"
+              />
               Other:
-              <input type="text" name="experienceOtherText" id="experienceOtherText" placeholder="Please specify" disabled />
+              <input
+                type="text"
+                name="experienceOtherText"
+                id="experienceOtherText"
+                placeholder="Please specify"
+                disabled
+              />
             </label>
           </fieldset>
 
           <fieldset id="familiarWithFieldset">
-            <legend>Which of the following are you familiar with? <span class="required">*</span></legend>
-            <label><input type="checkbox" name="familiarWith" value="kundalini" /> Kundalini Yoga</label>
-            <label><input type="checkbox" name="familiarWith" value="soundBaths" /> Sound Baths</label>
-            <label><input type="checkbox" name="familiarWith" value="lifeCoaching" /> Life Coaching</label>
-            <label><input type="checkbox" name="familiarWith" value="eft" /> Emotional Freedom Technique (EFT)</label>
-            <label><input type="checkbox" name="familiarWith" value="none" id="noneCheckbox" /> None of the above</label>
+            <legend>
+              Which of the following are you familiar with?
+              <span class="required">*</span>
+            </legend>
+            <label
+              ><input type="checkbox" name="familiarWith" value="kundalini" />
+              Kundalini Yoga</label
+            >
+            <label
+              ><input type="checkbox" name="familiarWith" value="soundBaths" />
+              Sound Baths</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="familiarWith"
+                value="lifeCoaching"
+              />
+              Life Coaching</label
+            >
+            <label
+              ><input type="checkbox" name="familiarWith" value="eft" />
+              Emotional Freedom Technique (EFT)</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="familiarWith"
+                value="none"
+                id="noneCheckbox"
+              />
+              None of the above</label
+            >
           </fieldset>
 
-          <label for="experienceDetails">If you selected any practices above, please share a little about your experience:</label>
-          <textarea id="experienceDetails" name="experienceDetails" rows="4" 
-                    placeholder="What did you notice or gain from them, if anything?"></textarea>
+          <label for="experienceDetails"
+            >If you selected any practices above, please share a little about
+            your experience:</label
+          >
+          <textarea
+            id="experienceDetails"
+            name="experienceDetails"
+            rows="4"
+            placeholder="What did you notice or gain from them, if anything?"
+          ></textarea>
 
-          <label for="goals">What are your top 1-2 goals or intentions for improving your energy health? <span class="required">*</span></label>
-          <textarea id="goals" name="goals" rows="4" 
-                    placeholder='Ex: "I want to feel more energized and sleep better"' required></textarea>
+          <label for="goals"
+            >What are your top 1-2 goals or intentions for improving your energy
+            health? <span class="required">*</span></label
+          >
+          <textarea
+            id="goals"
+            name="goals"
+            rows="4"
+            placeholder='Ex: "I want to feel more energized and sleep better"'
+            required
+          ></textarea>
 
           <fieldset id="challengesFieldset">
-            <legend>Are there specific challenges you're currently facing that you'd like support with? <span class="required">*</span></legend>
-            <label><input type="checkbox" name="challenges" value="physical" /> Physical (fatigue, pain, chronic issues)</label>
-            <label><input type="checkbox" name="challenges" value="emotional" /> Emotional (stress, anxiety, overwhelm)</label>
-            <label><input type="checkbox" name="challenges" value="mental" /> Mental (overthinking, lack of focus, burnout)</label>
-            <label><input type="checkbox" name="challenges" value="spiritual" /> Spiritual (disconnection, lack of clarity, seeking purpose)</label>
+            <legend>
+              Are there specific challenges you're currently facing that you'd
+              like support with? <span class="required">*</span>
+            </legend>
+            <label
+              ><input type="checkbox" name="challenges" value="physical" />
+              Physical (fatigue, pain, chronic issues)</label
+            >
+            <label
+              ><input type="checkbox" name="challenges" value="emotional" />
+              Emotional (stress, anxiety, overwhelm)</label
+            >
+            <label
+              ><input type="checkbox" name="challenges" value="mental" /> Mental
+              (overthinking, lack of focus, burnout)</label
+            >
+            <label
+              ><input type="checkbox" name="challenges" value="spiritual" />
+              Spiritual (disconnection, lack of clarity, seeking purpose)</label
+            >
             <label>
-              <input type="checkbox" name="challenges" value="other" id="challengesOther" />
+              <input
+                type="checkbox"
+                name="challenges"
+                value="other"
+                id="challengesOther"
+              />
               Other:
-              <input type="text" name="challengeOtherText" id="challengeOtherText" placeholder="Please specify" disabled />
+              <input
+                type="text"
+                name="challengeOtherText"
+                id="challengeOtherText"
+                placeholder="Please specify"
+                disabled
+              />
             </label>
           </fieldset>
 
@@ -108,129 +266,381 @@
         </div>
 
         <!-- root chakra questions -->
-        <div class="chakra-section" id="rootChakra"
-            data-title='Muladhara "Root" Chakra'
-            data-description="Located at the base of the spine, the Root Chakra represents your foundation, safety, and connection to the physical world. It governs feelings of stability, security, and belonging.">
+        <div
+          class="chakra-section"
+          id="rootChakra"
+          data-title='Muladhara "Root" Chakra'
+          data-description="Located at the base of the spine, the Root Chakra represents your foundation, safety, and connection to the physical world. It governs feelings of stability, security, and belonging."
+        >
+          <fieldset>
+            <legend>
+              Do you trust that your basic needs (food, shelter, finances) will
+              be met?
+            </legend>
+            <label
+              ><input type="radio" name="root_needs" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="root_needs" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="root_needs" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="root_needs" value="Always" />
+              Always</label
+            >
+          </fieldset>
 
-            <fieldset>
-                <legend>Do you trust that your basic needs (food, shelter, finances) will be met?</legend>
-                <label><input type="radio" name="root_needs" value="Never" required> Never</label>
-                <label><input type="radio" name="root_needs" value="Sometimes"> Sometimes</label>
-                <label><input type="radio" name="root_needs" value="Often"> Often</label>
-                <label><input type="radio" name="root_needs" value="Always"> Always</label>
-            </fieldset>
+          <fieldset>
+            <legend>
+              How well do you take care of your physical body with adequate
+              movement, rest, and nourishment?
+            </legend>
+            <label
+              ><input type="radio" name="root_bodycare" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="root_bodycare" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="root_bodycare" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="root_bodycare" value="Excellent" />
+              Excellent</label
+            >
+          </fieldset>
 
-            <fieldset>
-                <legend>How well do you take care of your physical body with adequate movement, rest, and nourishment?</legend>
-                <label><input type="radio" name="root_bodycare" value="Poor" required> Poor</label>
-                <label><input type="radio" name="root_bodycare" value="Fair"> Fair</label>
-                <label><input type="radio" name="root_bodycare" value="Good"> Good</label>
-                <label><input type="radio" name="root_bodycare" value="Excellent"> Excellent</label>
-            </fieldset>
+          <fieldset>
+            <legend>Do you feel connected with the earth and nature?</legend>
+            <label
+              ><input type="radio" name="root_nature" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="root_nature" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="root_nature" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="root_nature" value="Always" />
+              Always</label
+            >
+          </fieldset>
 
-            <fieldset>
-                <legend>Do you feel connected with the earth and nature?</legend>
-                <label><input type="radio" name="root_nature" value="Never" required> Never</label>
-                <label><input type="radio" name="root_nature" value="Sometimes"> Sometimes</label>
-                <label><input type="radio" name="root_nature" value="Often"> Often</label>
-                <label><input type="radio" name="root_nature" value="Always"> Always</label>
-            </fieldset>
+          <fieldset>
+            <legend>
+              How would you rate your relationship with money and work?
+            </legend>
+            <label
+              ><input type="radio" name="root_money" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="root_money" value="Fair" /> Fair</label
+            >
+            <label
+              ><input type="radio" name="root_money" value="Good" /> Good</label
+            >
+            <label
+              ><input type="radio" name="root_money" value="Excellent" />
+              Excellent</label
+            >
+          </fieldset>
 
-            <fieldset>
-            <legend>How would you rate your relationship with money and work?</legend>
-                <label><input type="radio" name="root_money" value="Poor" required> Poor</label>
-                <label><input type="radio" name="root_money" value="Fair"> Fair</label>
-                <label><input type="radio" name="root_money" value="Good"> Good</label>
-                <label><input type="radio" name="root_money" value="Excellent"> Excellent</label>
-            </fieldset>
+          <fieldset>
+            <legend>
+              Do you feel safe expressing who you are, even when others might
+              not agree?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="root_expression"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="root_expression" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="root_expression" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="root_expression" value="Always" />
+              Always</label
+            >
+          </fieldset>
 
-            <fieldset>
-                <legend>Do you feel safe expressing who you are, even when others might not agree?</legend>
-                <label><input type="radio" name="root_expression" value="Never" required> Never</label>
-                <label><input type="radio" name="root_expression" value="Sometimes"> Sometimes</label>
-                <label><input type="radio" name="root_expression" value="Often"> Often</label>
-                <label><input type="radio" name="root_expression" value="Always"> Always</label>
-            </fieldset>
+          <fieldset>
+            <legend>
+              Do you feel a sense of belonging in your family, community, or
+              environment?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="root_belonging"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="root_belonging" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="root_belonging" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="root_belonging" value="Always" />
+              Always</label
+            >
+          </fieldset>
 
-            <fieldset>
-                <legend>Do you feel a sense of belonging in your family, community, or environment?</legend>
-                <label><input type="radio" name="root_belonging" value="Never" required> Never</label>
-                <label><input type="radio" name="root_belonging" value="Sometimes"> Sometimes</label>
-                <label><input type="radio" name="root_belonging" value="Often"> Often</label>
-                <label><input type="radio" name="root_belonging" value="Always"> Always</label>
-            </fieldset>
+          <fieldset>
+            <legend>
+              Do you trust that your life is on the right path and that you are
+              supported by the universe?
+            </legend>
+            <label
+              ><input type="radio" name="root_trust" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="root_trust" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="root_trust" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="root_trust" value="Always" />
+              Always</label
+            >
+          </fieldset>
 
-            <fieldset>
-                <legend>Do you trust that your life is on the right path and that you are supported by the universe?</legend>
-                <label><input type="radio" name="root_trust" value="Never" required> Never</label>
-                <label><input type="radio" name="root_trust" value="Sometimes"> Sometimes</label>
-                <label><input type="radio" name="root_trust" value="Often"> Often</label>
-                <label><input type="radio" name="root_trust" value="Always"> Always</label>
-            </fieldset>
-
-            <button type="button" class="prev-btn">Previous</button>
-            <button type="button" class="next-btn">Next</button>
+          <button type="button" class="prev-btn">Previous</button>
+          <button type="button" class="next-btn">Next</button>
         </div>
 
         <!-- sacral root questions -->
-        <div class="chakra-section" id="sacralChakra"
-            data-title='Svadhisthana "Sacral" Chakra'
-            data-description="Situated below the navel, the Sacral Chakra is the center of emotion, pleasure, sensuality, and creativity. It influences how you connect with others and embrace joy.">
-
+        <div
+          class="chakra-section"
+          id="sacralChakra"
+          data-title='Svadhisthana "Sacral" Chakra'
+          data-description="Situated below the navel, the Sacral Chakra is the center of emotion, pleasure, sensuality, and creativity. It influences how you connect with others and embrace joy."
+        >
           <fieldset>
-            <legend>How comfortable are you with allowing yourself to feel the full range of your emotions without guilt or judgment?</legend>
-            <label><input type="radio" name="sacral_emotions" value="Poor" required> Poor</label>
-            <label><input type="radio" name="sacral_emotions" value="Fair"> Fair</label>
-            <label><input type="radio" name="sacral_emotions" value="Good"> Good</label>
-            <label><input type="radio" name="sacral_emotions" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you with allowing yourself to feel the full
+              range of your emotions without guilt or judgment?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="sacral_emotions"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="sacral_emotions" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="sacral_emotions" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="sacral_emotions" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you make space for fun, creativity, or spontaneous activities in your life?</legend>
-            <label><input type="radio" name="sacral_creativity" value="Never" required> Never</label>
-            <label><input type="radio" name="sacral_creativity" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="sacral_creativity" value="Often"> Often</label>
-            <label><input type="radio" name="sacral_creativity" value="Always"> Always</label>
+            <legend>
+              How often do you make space for fun, creativity, or spontaneous
+              activities in your life?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="sacral_creativity"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="sacral_creativity" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="sacral_creativity" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="sacral_creativity" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you with exploring your desires and expressing your sensuality?</legend>
-            <label><input type="radio" name="sacral_sensuality" value="Poor" required> Poor</label>
-            <label><input type="radio" name="sacral_sensuality" value="Fair"> Fair</label>
-            <label><input type="radio" name="sacral_sensuality" value="Good"> Good</label>
-            <label><input type="radio" name="sacral_sensuality" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you with exploring your desires and expressing
+              your sensuality?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="sacral_sensuality"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="sacral_sensuality" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="sacral_sensuality" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="sacral_sensuality" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you in nurturing your relationships with balance, giving and receiving love equally?</legend>
-            <label><input type="radio" name="sacral_relationships" value="Poor" required> Poor</label>
-            <label><input type="radio" name="sacral_relationships" value="Fair"> Fair</label>
-            <label><input type="radio" name="sacral_relationships" value="Good"> Good</label>
-            <label><input type="radio" name="sacral_relationships" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you in nurturing your relationships with
+              balance, giving and receiving love equally?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="sacral_relationships"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="sacral_relationships" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="sacral_relationships" value="Good" />
+              Good</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="sacral_relationships"
+                value="Excellent"
+              />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well are you at embracing change and adaptability in your personal life?</legend>
-            <label><input type="radio" name="sacral_change" value="Poor" required> Poor</label>
-            <label><input type="radio" name="sacral_change" value="Fair"> Fair</label>
-            <label><input type="radio" name="sacral_change" value="Good"> Good</label>
-            <label><input type="radio" name="sacral_change" value="Excellent"> Excellent</label>
+            <legend>
+              How well are you at embracing change and adaptability in your
+              personal life?
+            </legend>
+            <label
+              ><input type="radio" name="sacral_change" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="sacral_change" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="sacral_change" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="sacral_change" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you intentionally set healthy emotional and energetic boundaries in relationships (partnerships, friendships, etc.)?</legend>
-            <label><input type="radio" name="sacral_boundaries" value="Never" required> Never</label>
-            <label><input type="radio" name="sacral_boundaries" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="sacral_boundaries" value="Often"> Often</label>
-            <label><input type="radio" name="sacral_boundaries" value="Always"> Always</label>
+            <legend>
+              Do you intentionally set healthy emotional and energetic
+              boundaries in relationships (partnerships, friendships, etc.)?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="sacral_boundaries"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="sacral_boundaries" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="sacral_boundaries" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="sacral_boundaries" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you feel comfortable forming emotional and/or physical intimate ties with others?</legend>
-            <label><input type="radio" name="sacral_intimacy" value="Never" required> Never</label>
-            <label><input type="radio" name="sacral_intimacy" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="sacral_intimacy" value="Often"> Often</label>
-            <label><input type="radio" name="sacral_intimacy" value="Always"> Always</label>
+            <legend>
+              Do you feel comfortable forming emotional and/or physical intimate
+              ties with others?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="sacral_intimacy"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="sacral_intimacy" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="sacral_intimacy" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="sacral_intimacy" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -238,64 +648,183 @@
         </div>
 
         <!-- solar plexus chakra questions -->
-        <div class="chakra-section" id="solarPlexusChakra"
-            data-title='Manipura "Solar Plexus" Chakra'
-            data-description="Found in the upper abdomen, the Solar Plexus Chakra is the seat of personal power, confidence, and motivation. It drives your sense of purpose, willpower, and self-worth.">
-
+        <div
+          class="chakra-section"
+          id="solarPlexusChakra"
+          data-title='Manipura "Solar Plexus" Chakra'
+          data-description="Found in the upper abdomen, the Solar Plexus Chakra is the seat of personal power, confidence, and motivation. It drives your sense of purpose, willpower, and self-worth."
+        >
           <fieldset>
-            <legend>Do you overextend yourself in time and/or energy in service of others or to complete tasks you set for yourself?</legend>
-            <label><input type="radio" name="solar_overextend" value="Never" required> Never</label>
-            <label><input type="radio" name="solar_overextend" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="solar_overextend" value="Often"> Often</label>
-            <label><input type="radio" name="solar_overextend" value="Always"> Always</label>
+            <legend>
+              Do you overextend yourself in time and/or energy in service of
+              others or to complete tasks you set for yourself?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="solar_overextend"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="solar_overextend" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="solar_overextend" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="solar_overextend" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
             <legend>Do you trust your gut instinct when making choices?</legend>
-            <label><input type="radio" name="solar_gut" value="Never" required> Never</label>
-            <label><input type="radio" name="solar_gut" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="solar_gut" value="Often"> Often</label>
-            <label><input type="radio" name="solar_gut" value="Always"> Always</label>
+            <label
+              ><input type="radio" name="solar_gut" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="solar_gut" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="solar_gut" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="solar_gut" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you celebrate your successes and own your accomplishments without others' encouragement to do so?</legend>
-            <label><input type="radio" name="solar_celebrate" value="Never" required> Never</label>
-            <label><input type="radio" name="solar_celebrate" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="solar_celebrate" value="Often"> Often</label>
-            <label><input type="radio" name="solar_celebrate" value="Always"> Always</label>
+            <legend>
+              Do you celebrate your successes and own your accomplishments
+              without others' encouragement to do so?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="solar_celebrate"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="solar_celebrate" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="solar_celebrate" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="solar_celebrate" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you take action on your goals even when you feel fear or resistance?</legend>
-            <label><input type="radio" name="solar_action" value="Never" required> Never</label>
-            <label><input type="radio" name="solar_action" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="solar_action" value="Often"> Often</label>
-            <label><input type="radio" name="solar_action" value="Always"> Always</label>
+            <legend>
+              Do you take action on your goals even when you feel fear or
+              resistance?
+            </legend>
+            <label
+              ><input type="radio" name="solar_action" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="solar_action" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="solar_action" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="solar_action" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you with expressing your power and leadership in a group setting?</legend>
-            <label><input type="radio" name="solar_power" value="Poor" required> Poor</label>
-            <label><input type="radio" name="solar_power" value="Fair"> Fair</label>
-            <label><input type="radio" name="solar_power" value="Good"> Good</label>
-            <label><input type="radio" name="solar_power" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you with expressing your power and leadership
+              in a group setting?
+            </legend>
+            <label
+              ><input type="radio" name="solar_power" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="solar_power" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="solar_power" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="solar_power" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How connected do you feel to your sense of purpose or your personal mission?</legend>
-            <label><input type="radio" name="solar_purpose" value="Poor" required> Poor</label>
-            <label><input type="radio" name="solar_purpose" value="Fair"> Fair</label>
-            <label><input type="radio" name="solar_purpose" value="Good"> Good</label>
-            <label><input type="radio" name="solar_purpose" value="Excellent"> Excellent</label>
+            <legend>
+              How connected do you feel to your sense of purpose or your
+              personal mission?
+            </legend>
+            <label
+              ><input type="radio" name="solar_purpose" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="solar_purpose" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="solar_purpose" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="solar_purpose" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you have a strong inner belief in your ability to manifest your goals and desires?</legend>
-            <label><input type="radio" name="solar_manifest" value="Never" required> Never</label>
-            <label><input type="radio" name="solar_manifest" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="solar_manifest" value="Often"> Often</label>
-            <label><input type="radio" name="solar_manifest" value="Always"> Always</label>
+            <legend>
+              Do you have a strong inner belief in your ability to manifest your
+              goals and desires?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="solar_manifest"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="solar_manifest" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="solar_manifest" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="solar_manifest" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -303,64 +832,183 @@
         </div>
 
         <!-- heart chakra questions -->
-        <div class="chakra-section" id="heartChakra"
-            data-title='Anahata "Heart" Chakra'
-            data-description="Located in the center of the chest, the Heart Chakra bridges the physical and spiritual through love, compassion, and connection. It governs your capacity to give and receive love freely.">
-
+        <div
+          class="chakra-section"
+          id="heartChakra"
+          data-title='Anahata "Heart" Chakra'
+          data-description="Located in the center of the chest, the Heart Chakra bridges the physical and spiritual through love, compassion, and connection. It governs your capacity to give and receive love freely."
+        >
           <fieldset>
-            <legend>How is your ability to openly express love, kindness, and appreciation to others?</legend>
-            <label><input type="radio" name="heart_express" value="Poor" required> Poor</label>
-            <label><input type="radio" name="heart_express" value="Fair"> Fair</label>
-            <label><input type="radio" name="heart_express" value="Good"> Good</label>
-            <label><input type="radio" name="heart_express" value="Excellent"> Excellent</label>
+            <legend>
+              How is your ability to openly express love, kindness, and
+              appreciation to others?
+            </legend>
+            <label
+              ><input type="radio" name="heart_express" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="heart_express" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="heart_express" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="heart_express" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you feel emotionally connected and supported in your relationships? (partnerships, friendships, etc.)</legend>
-            <label><input type="radio" name="heart_connected" value="Never" required> Never</label>
-            <label><input type="radio" name="heart_connected" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="heart_connected" value="Often"> Often</label>
-            <label><input type="radio" name="heart_connected" value="Always"> Always</label>
+            <legend>
+              Do you feel emotionally connected and supported in your
+              relationships? (partnerships, friendships, etc.)
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="heart_connected"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="heart_connected" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="heart_connected" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="heart_connected" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you allow yourself to be vulnerable, even when it feels uncomfortable?</legend>
-            <label><input type="radio" name="heart_vulnerable" value="Never" required> Never</label>
-            <label><input type="radio" name="heart_vulnerable" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="heart_vulnerable" value="Often"> Often</label>
-            <label><input type="radio" name="heart_vulnerable" value="Always"> Always</label>
+            <legend>
+              Do you allow yourself to be vulnerable, even when it feels
+              uncomfortable?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="heart_vulnerable"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="heart_vulnerable" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="heart_vulnerable" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="heart_vulnerable" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well are you at allowing yourself to experience joy and love in your life without fear or hesitation?</legend>
-            <label><input type="radio" name="heart_joy" value="Poor" required> Poor</label>
-            <label><input type="radio" name="heart_joy" value="Fair"> Fair</label>
-            <label><input type="radio" name="heart_joy" value="Good"> Good</label>
-            <label><input type="radio" name="heart_joy" value="Excellent"> Excellent</label>
+            <legend>
+              How well are you at allowing yourself to experience joy and love
+              in your life without fear or hesitation?
+            </legend>
+            <label
+              ><input type="radio" name="heart_joy" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="heart_joy" value="Fair" /> Fair</label
+            >
+            <label
+              ><input type="radio" name="heart_joy" value="Good" /> Good</label
+            >
+            <label
+              ><input type="radio" name="heart_joy" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you with receiving love and support from others?</legend>
-            <label><input type="radio" name="heart_receive" value="Poor" required> Poor</label>
-            <label><input type="radio" name="heart_receive" value="Fair"> Fair</label>
-            <label><input type="radio" name="heart_receive" value="Good"> Good</label>
-            <label><input type="radio" name="heart_receive" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you with receiving love and support from
+              others?
+            </legend>
+            <label
+              ><input type="radio" name="heart_receive" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="heart_receive" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="heart_receive" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="heart_receive" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well are you with forgiving past hurts from others?</legend>
-            <label><input type="radio" name="heart_forgive" value="Poor" required> Poor</label>
-            <label><input type="radio" name="heart_forgive" value="Fair"> Fair</label>
-            <label><input type="radio" name="heart_forgive" value="Good"> Good</label>
-            <label><input type="radio" name="heart_forgive" value="Excellent"> Excellent</label>
+            <legend>
+              How well are you with forgiving past hurts from others?
+            </legend>
+            <label
+              ><input type="radio" name="heart_forgive" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="heart_forgive" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="heart_forgive" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="heart_forgive" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>What is your ability to feel love and compassion for yourself when you make mistakes?</legend>
-            <label><input type="radio" name="heart_selflove" value="Poor" required> Poor</label>
-            <label><input type="radio" name="heart_selflove" value="Fair"> Fair</label>
-            <label><input type="radio" name="heart_selflove" value="Good"> Good</label>
-            <label><input type="radio" name="heart_selflove" value="Excellent"> Excellent</label>
+            <legend>
+              What is your ability to feel love and compassion for yourself when
+              you make mistakes?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="heart_selflove"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="heart_selflove" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="heart_selflove" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="heart_selflove" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -368,56 +1016,156 @@
         </div>
 
         <!-- throat chakra questions -->
-        <div class="chakra-section" id="throatChakra"
-            data-title='Vishuddha "Throat" Chakra'
-            data-description="Positioned at the throat, this chakra governs communication, self-expression, and truth. It empowers you to speak authentically and listen deeply.">
-
+        <div
+          class="chakra-section"
+          id="throatChakra"
+          data-title='Vishuddha "Throat" Chakra'
+          data-description="Positioned at the throat, this chakra governs communication, self-expression, and truth. It empowers you to speak authentically and listen deeply."
+        >
           <fieldset>
-            <legend>How do you feel about yourself when you hold back from speaking your mind due to fear of judgment or rejection?</legend>
-            <label><input type="radio" name="throat_holdback" value="Poor" required> Poor</label>
-            <label><input type="radio" name="throat_holdback" value="Fair"> Fair</label>
-            <label><input type="radio" name="throat_holdback" value="Good"> Good</label>
-            <label><input type="radio" name="throat_holdback" value="Excellent"> Excellent</label>
+            <legend>
+              How do you feel about yourself when you hold back from speaking
+              your mind due to fear of judgment or rejection?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="throat_holdback"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="throat_holdback" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="throat_holdback" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="throat_holdback" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you feel confident expressing your creativity through writing, art, or other forms of communication?</legend>
-            <label><input type="radio" name="throat_creativity" value="Never" required> Never</label>
-            <label><input type="radio" name="throat_creativity" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="throat_creativity" value="Often"> Often</label>
-            <label><input type="radio" name="throat_creativity" value="Always"> Always</label>
+            <legend>
+              Do you feel confident expressing your creativity through writing,
+              art, or other forms of communication?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="throat_creativity"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="throat_creativity" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="throat_creativity" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="throat_creativity" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you feel heard and understood when you express your thoughts to others?</legend>
-            <label><input type="radio" name="throat_heard" value="Never" required> Never</label>
-            <label><input type="radio" name="throat_heard" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="throat_heard" value="Often"> Often</label>
-            <label><input type="radio" name="throat_heard" value="Always"> Always</label>
+            <legend>
+              Do you feel heard and understood when you express your thoughts to
+              others?
+            </legend>
+            <label
+              ><input type="radio" name="throat_heard" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="throat_heard" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="throat_heard" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="throat_heard" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well do you listen deeply to others and allow them to share their truth without interruption?</legend>
-            <label><input type="radio" name="throat_listen" value="Poor" required> Poor</label>
-            <label><input type="radio" name="throat_listen" value="Fair"> Fair</label>
-            <label><input type="radio" name="throat_listen" value="Good"> Good</label>
-            <label><input type="radio" name="throat_listen" value="Excellent"> Excellent</label>
+            <legend>
+              How well do you listen deeply to others and allow them to share
+              their truth without interruption?
+            </legend>
+            <label
+              ><input type="radio" name="throat_listen" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="throat_listen" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="throat_listen" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="throat_listen" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>What is your ability to feel safe saying “no” without guilt or over-explaining?</legend>
-            <label><input type="radio" name="throat_no" value="Poor" required> Poor</label>
-            <label><input type="radio" name="throat_no" value="Fair"> Fair</label>
-            <label><input type="radio" name="throat_no" value="Good"> Good</label>
-            <label><input type="radio" name="throat_no" value="Excellent"> Excellent</label>
+            <legend>
+              What is your ability to feel safe saying “no” without guilt or
+              over-explaining?
+            </legend>
+            <label
+              ><input type="radio" name="throat_no" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="throat_no" value="Fair" /> Fair</label
+            >
+            <label
+              ><input type="radio" name="throat_no" value="Good" /> Good</label
+            >
+            <label
+              ><input type="radio" name="throat_no" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well do you trust that your opinion, your Voice, matters and deserves to be heard?</legend>
-            <label><input type="radio" name="throat_trust" value="Poor" required> Poor</label>
-            <label><input type="radio" name="throat_trust" value="Fair"> Fair</label>
-            <label><input type="radio" name="throat_trust" value="Good"> Good</label>
-            <label><input type="radio" name="throat_trust" value="Excellent"> Excellent</label>
+            <legend>
+              How well do you trust that your opinion, your Voice, matters and
+              deserves to be heard?
+            </legend>
+            <label
+              ><input type="radio" name="throat_trust" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="throat_trust" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="throat_trust" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="throat_trust" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -425,64 +1173,230 @@
         </div>
 
         <!-- third eye chakra questions -->
-        <div class="chakra-section" id="thirdEyeChakra"
-            data-title='Ajna "Third Eye" Chakra'
-            data-description="Located between the eyebrows, the Third Eye Chakra is the center of intuition, inner wisdom, and clarity. It supports insight, vision, and the ability to see beyond the physical.">
-
+        <div
+          class="chakra-section"
+          id="thirdEyeChakra"
+          data-title='Ajna "Third Eye" Chakra'
+          data-description="Located between the eyebrows, the Third Eye Chakra is the center of intuition, inner wisdom, and clarity. It supports insight, vision, and the ability to see beyond the physical."
+        >
           <fieldset>
-            <legend>How well do you reflect on your patterns or behaviors with curiosity and awareness?</legend>
-            <label><input type="radio" name="thirdEye_reflection" value="Poor" required> Poor</label>
-            <label><input type="radio" name="thirdEye_reflection" value="Fair"> Fair</label>
-            <label><input type="radio" name="thirdEye_reflection" value="Good"> Good</label>
-            <label><input type="radio" name="thirdEye_reflection" value="Excellent"> Excellent</label>
+            <legend>
+              How well do you reflect on your patterns or behaviors with
+              curiosity and awareness?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_reflection"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_reflection" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_reflection" value="Good" />
+              Good</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_reflection"
+                value="Excellent"
+              />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you actively seek clarity rather than staying in confusion or self-doubt?</legend>
-            <label><input type="radio" name="thirdEye_clarity" value="Never" required> Never</label>
-            <label><input type="radio" name="thirdEye_clarity" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="thirdEye_clarity" value="Often"> Often</label>
-            <label><input type="radio" name="thirdEye_clarity" value="Always"> Always</label>
+            <legend>
+              Do you actively seek clarity rather than staying in confusion or
+              self-doubt?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_clarity"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_clarity" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_clarity" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_clarity" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well do you notice synchronicities or signs that guide you in life?</legend>
-            <label><input type="radio" name="thirdEye_synchronicities" value="Poor" required> Poor</label>
-            <label><input type="radio" name="thirdEye_synchronicities" value="Fair"> Fair</label>
-            <label><input type="radio" name="thirdEye_synchronicities" value="Good"> Good</label>
-            <label><input type="radio" name="thirdEye_synchronicities" value="Excellent"> Excellent</label>
+            <legend>
+              How well do you notice synchronicities or signs that guide you in
+              life?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_synchronicities"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_synchronicities"
+                value="Fair"
+              />
+              Fair</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_synchronicities"
+                value="Good"
+              />
+              Good</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_synchronicities"
+                value="Excellent"
+              />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you with trusting your dreams or visions as sources of insight?</legend>
-            <label><input type="radio" name="thirdEye_dreams" value="Poor" required> Poor</label>
-            <label><input type="radio" name="thirdEye_dreams" value="Fair"> Fair</label>
-            <label><input type="radio" name="thirdEye_dreams" value="Good"> Good</label>
-            <label><input type="radio" name="thirdEye_dreams" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you with trusting your dreams or visions as
+              sources of insight?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_dreams"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_dreams" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_dreams" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_dreams" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you engage in practices that help you connect with your inner wisdom (e.g., meditation, journaling)?</legend>
-            <label><input type="radio" name="thirdEye_practices" value="Never" required> Never</label>
-            <label><input type="radio" name="thirdEye_practices" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="thirdEye_practices" value="Often"> Often</label>
-            <label><input type="radio" name="thirdEye_practices" value="Always"> Always</label>
+            <legend>
+              How often do you engage in practices that help you connect with
+              your inner wisdom (e.g., meditation, journaling)?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_practices"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_practices"
+                value="Sometimes"
+              />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_practices" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_practices" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you in trusting your intuition when making decisions?</legend>
-            <label><input type="radio" name="thirdEye_intuition" value="Poor" required> Poor</label>
-            <label><input type="radio" name="thirdEye_intuition" value="Fair"> Fair</label>
-            <label><input type="radio" name="thirdEye_intuition" value="Good"> Good</label>
-            <label><input type="radio" name="thirdEye_intuition" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you in trusting your intuition when making
+              decisions?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_intuition"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_intuition" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_intuition" value="Good" />
+              Good</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_intuition"
+                value="Excellent"
+              />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you feel a deep sense of inner knowing and clarity when it comes to your life path?</legend>
-            <label><input type="radio" name="thirdEye_knowing" value="Never" required> Never</label>
-            <label><input type="radio" name="thirdEye_knowing" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="thirdEye_knowing" value="Often"> Often</label>
-            <label><input type="radio" name="thirdEye_knowing" value="Always"> Always</label>
+            <legend>
+              Do you feel a deep sense of inner knowing and clarity when it
+              comes to your life path?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="thirdEye_knowing"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_knowing" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_knowing" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="thirdEye_knowing" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -490,64 +1404,211 @@
         </div>
 
         <!-- crown chakra questions -->
-        <div class="chakra-section" id="crownChakra"
-            data-title='Sahasrara "Crown" Chakra'
-            data-description="Situated at the top of the head, the Crown Chakra represents spiritual connection, higher consciousness, and universal awareness. It aligns you with divine wisdom and your soul's purpose.">
-
+        <div
+          class="chakra-section"
+          id="crownChakra"
+          data-title='Sahasrara "Crown" Chakra'
+          data-description="Situated at the top of the head, the Crown Chakra represents spiritual connection, higher consciousness, and universal awareness. It aligns you with divine wisdom and your soul's purpose."
+        >
           <fieldset>
-            <legend>How well do you surrender to the flow of life and trust in divine timing?</legend>
-            <label><input type="radio" name="crown_surrender" value="Poor" required> Poor</label>
-            <label><input type="radio" name="crown_surrender" value="Fair"> Fair</label>
-            <label><input type="radio" name="crown_surrender" value="Good"> Good</label>
-            <label><input type="radio" name="crown_surrender" value="Excellent"> Excellent</label>
+            <legend>
+              How well do you surrender to the flow of life and trust in divine
+              timing?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="crown_surrender"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="crown_surrender" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="crown_surrender" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="crown_surrender" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you experience moments of awe, peace, or transcendence easily?</legend>
-            <label><input type="radio" name="crown_transcendence" value="Never" required> Never</label>
-            <label><input type="radio" name="crown_transcendence" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="crown_transcendence" value="Often"> Often</label>
-            <label><input type="radio" name="crown_transcendence" value="Always"> Always</label>
+            <legend>
+              Do you experience moments of awe, peace, or transcendence easily?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="crown_transcendence"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="crown_transcendence"
+                value="Sometimes"
+              />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="crown_transcendence" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="crown_transcendence" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well do you allow space for silence and stillness in your daily life?</legend>
-            <label><input type="radio" name="crown_stillness" value="Poor" required> Poor</label>
-            <label><input type="radio" name="crown_stillness" value="Fair"> Fair</label>
-            <label><input type="radio" name="crown_stillness" value="Good"> Good</label>
-            <label><input type="radio" name="crown_stillness" value="Excellent"> Excellent</label>
+            <legend>
+              How well do you allow space for silence and stillness in your
+              daily life?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="crown_stillness"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="crown_stillness" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="crown_stillness" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="crown_stillness" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you feel connected to others on a soul or energetic level?</legend>
-            <label><input type="radio" name="crown_connection" value="Never" required> Never</label>
-            <label><input type="radio" name="crown_connection" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="crown_connection" value="Often"> Often</label>
-            <label><input type="radio" name="crown_connection" value="Always"> Always</label>
+            <legend>
+              Do you feel connected to others on a soul or energetic level?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="crown_connection"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="crown_connection" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="crown_connection" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="crown_connection" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you feel a sense of purpose or meaning in your life?</legend>
-            <label><input type="radio" name="crown_purpose" value="Never" required> Never</label>
-            <label><input type="radio" name="crown_purpose" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="crown_purpose" value="Often"> Often</label>
-            <label><input type="radio" name="crown_purpose" value="Always"> Always</label>
+            <legend>
+              Do you feel a sense of purpose or meaning in your life?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="crown_purpose"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="crown_purpose" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="crown_purpose" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="crown_purpose" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you regularly engage in spiritual or contemplative practices (prayer, meditation, nature, etc.)?</legend>
-            <label><input type="radio" name="crown_practices" value="Never" required> Never</label>
-            <label><input type="radio" name="crown_practices" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="crown_practices" value="Often"> Often</label>
-            <label><input type="radio" name="crown_practices" value="Always"> Always</label>
+            <legend>
+              Do you regularly engage in spiritual or contemplative practices
+              (prayer, meditation, nature, etc.)?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="crown_practices"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="crown_practices" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="crown_practices" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="crown_practices" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you with believing you are part of a larger unfolding that you may not fully understand?</legend>
-            <label><input type="radio" name="crown_larger_unfolding" value="Poor" required> Poor</label>
-            <label><input type="radio" name="crown_larger_unfolding" value="Fair"> Fair</label>
-            <label><input type="radio" name="crown_larger_unfolding" value="Good"> Good</label>
-            <label><input type="radio" name="crown_larger_unfolding" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you with believing you are part of a larger
+              unfolding that you may not fully understand?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="crown_larger_unfolding"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="crown_larger_unfolding" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="crown_larger_unfolding" value="Good" />
+              Good</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="crown_larger_unfolding"
+                value="Excellent"
+              />
+              Excellent</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -555,18 +1616,27 @@
         </div>
 
         <!-- intro for Four Major Life Quadrants -->
-        <div class="chakra-section" id="lifeQuadrantsIntro"
-            data-title='Four Major Life Quadrants'
-            data-description="Health & Wellness, Love & Relationships, Career/Job, Time & Money Freedom">
-
+        <div
+          class="chakra-section"
+          id="lifeQuadrantsIntro"
+          data-title="Four Major Life Quadrants"
+          data-description="Health & Wellness, Love & Relationships, Career/Job, Time & Money Freedom"
+        >
           <div class="info-block">
             <p>
-              Each question helps you explore: <br>
-              <strong>How you are showing up in the Four Major Life Quadrants.</strong> <br>
+              Each question helps you explore: <br />
+              <strong
+                >How you are showing up in the Four Major Life
+                Quadrants.</strong
+              >
+              <br />
             </p>
             <ul>
               <li><em>Light</em>: your growth, alignment, fulfillment</li>
-              <li><em>Shadow</em>: where fear, avoidance, or wounding may be unconsciously leaking energy</li>
+              <li>
+                <em>Shadow</em>: where fear, avoidance, or wounding may be
+                unconsciously leaking energy
+              </li>
             </ul>
           </div>
 
@@ -575,48 +1645,136 @@
         </div>
 
         <!-- health & wellness questions -->
-        <div class="chakra-section" id="healthWellness"
-            data-title='Health & Wellness'
-            data-description="How you relate to your body, energy, and self-care">
-
+        <div
+          class="chakra-section"
+          id="healthWellness"
+          data-title="Health & Wellness"
+          data-description="How you relate to your body, energy, and self-care"
+        >
           <fieldset>
-            <legend>How often do you push yourself to keep going, even when your body is asking you to rest?</legend>
-            <label><input type="radio" name="hw_pushThrough" value="Never" required> Never</label>
-            <label><input type="radio" name="hw_pushThrough" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="hw_pushThrough" value="Often"> Often</label>
-            <label><input type="radio" name="hw_pushThrough" value="Always"> Always</label>
+            <legend>
+              How often do you push yourself to keep going, even when your body
+              is asking you to rest?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="hw_pushThrough"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="hw_pushThrough" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="hw_pushThrough" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="hw_pushThrough" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you use food, screens, or other distractions to avoid feeling your emotions or physical discomfort?</legend>
-            <label><input type="radio" name="hw_distractions" value="Never" required> Never</label>
-            <label><input type="radio" name="hw_distractions" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="hw_distractions" value="Often"> Often</label>
-            <label><input type="radio" name="hw_distractions" value="Always"> Always</label>
+            <legend>
+              How often do you use food, screens, or other distractions to avoid
+              feeling your emotions or physical discomfort?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="hw_distractions"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="hw_distractions" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="hw_distractions" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="hw_distractions" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How would you rate the level of care and reverence you offer your body?</legend>
-            <label><input type="radio" name="hw_selfCare" value="Poor" required> Poor</label>
-            <label><input type="radio" name="hw_selfCare" value="Fair"> Fair</label>
-            <label><input type="radio" name="hw_selfCare" value="Good"> Good</label>
-            <label><input type="radio" name="hw_selfCare" value="Excellent"> Excellent</label>
+            <legend>
+              How would you rate the level of care and reverence you offer your
+              body?
+            </legend>
+            <label
+              ><input type="radio" name="hw_selfCare" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="hw_selfCare" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="hw_selfCare" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="hw_selfCare" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you rely on routines or others' approval before honoring your own wellness needs?</legend>
-            <label><input type="radio" name="hw_approval" value="Never" required> Never</label>
-            <label><input type="radio" name="hw_approval" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="hw_approval" value="Often"> Often</label>
-            <label><input type="radio" name="hw_approval" value="Always"> Always</label>
+            <legend>
+              How often do you rely on routines or others' approval before
+              honoring your own wellness needs?
+            </legend>
+            <label
+              ><input type="radio" name="hw_approval" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="hw_approval" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="hw_approval" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="hw_approval" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How good are you at being more motivated by desire (longevity, vitality, joy) when it comes to your health than by fear (illness, aging, judgment)?</legend>
-            <label><input type="radio" name="hw_motivation" value="Poor" required> Poor</label>
-            <label><input type="radio" name="hw_motivation" value="Fair"> Fair</label>
-            <label><input type="radio" name="hw_motivation" value="Good"> Good</label>
-            <label><input type="radio" name="hw_motivation" value="Excellent"> Excellent</label>
+            <legend>
+              How good are you at being more motivated by desire (longevity,
+              vitality, joy) when it comes to your health than by fear (illness,
+              aging, judgment)?
+            </legend>
+            <label
+              ><input type="radio" name="hw_motivation" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="hw_motivation" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="hw_motivation" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="hw_motivation" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -624,48 +1782,169 @@
         </div>
 
         <!-- love & relationships quadrant -->
-        <div class="chakra-section" id="loveRelationships"
-            data-title='Love & Relationships'
-            data-description="How you show up in romantic, familial, and close interpersonal dynamics">
-
+        <div
+          class="chakra-section"
+          id="loveRelationships"
+          data-title="Love & Relationships"
+          data-description="How you show up in romantic, familial, and close interpersonal dynamics"
+        >
           <fieldset>
-            <legend>How often do you prioritize others' emotional needs while ignoring your own?</legend>
-            <label><input type="radio" name="love_prioritize_others" value="Never" required> Never</label>
-            <label><input type="radio" name="love_prioritize_others" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="love_prioritize_others" value="Often"> Often</label>
-            <label><input type="radio" name="love_prioritize_others" value="Always"> Always</label>
+            <legend>
+              How often do you prioritize others' emotional needs while ignoring
+              your own?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="love_prioritize_others"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="love_prioritize_others"
+                value="Sometimes"
+              />
+              Sometimes</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="love_prioritize_others"
+                value="Often"
+              />
+              Often</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="love_prioritize_others"
+                value="Always"
+              />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you frequently feel unseen, misunderstood, or unloved?</legend>
-            <label><input type="radio" name="love_unseen" value="Never" required> Never</label>
-            <label><input type="radio" name="love_unseen" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="love_unseen" value="Often"> Often</label>
-            <label><input type="radio" name="love_unseen" value="Always"> Always</label>
+            <legend>
+              Do you frequently feel unseen, misunderstood, or unloved?
+            </legend>
+            <label
+              ><input type="radio" name="love_unseen" value="Never" required />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="love_unseen" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="love_unseen" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="love_unseen" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
             <legend>Do you rebel or withdraw when conflict arises?</legend>
-            <label><input type="radio" name="love_conflict_response" value="No, I never do either" required> No, I never do either</label>
-            <label><input type="radio" name="love_conflict_response" value="Sometimes, I do one of these or both"> Sometimes, I do one of these or both</label>
-            <label><input type="radio" name="love_conflict_response" value="Often I do one of these or both"> Often I do one of these or both</label>
-            <label><input type="radio" name="love_conflict_response" value="Yes, I always do one of these or both"> Yes, I always do one of these or both</label>
+            <label
+              ><input
+                type="radio"
+                name="love_conflict_response"
+                value="No, I never do either"
+                required
+              />
+              No, I never do either</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="love_conflict_response"
+                value="Sometimes, I do one of these or both"
+              />
+              Sometimes, I do one of these or both</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="love_conflict_response"
+                value="Often I do one of these or both"
+              />
+              Often I do one of these or both</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="love_conflict_response"
+                value="Yes, I always do one of these or both"
+              />
+              Yes, I always do one of these or both</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well are you at making sure relationships are not transactional (what you give vs. get)?</legend>
-            <label><input type="radio" name="love_transactional" value="Poor" required> Poor</label>
-            <label><input type="radio" name="love_transactional" value="Fair"> Fair</label>
-            <label><input type="radio" name="love_transactional" value="Good"> Good</label>
-            <label><input type="radio" name="love_transactional" value="Excellent"> Excellent</label>
+            <legend>
+              How well are you at making sure relationships are not
+              transactional (what you give vs. get)?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="love_transactional"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="love_transactional" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="love_transactional" value="Good" />
+              Good</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="love_transactional"
+                value="Excellent"
+              />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Have you ever sabotaged healthy relationships due to fear of vulnerability?</legend>
-            <label><input type="radio" name="love_sabotage" value="Never" required> Never</label>
-            <label><input type="radio" name="love_sabotage" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="love_sabotage" value="Often"> Often</label>
-            <label><input type="radio" name="love_sabotage" value="Always"> Always</label>
+            <legend>
+              Have you ever sabotaged healthy relationships due to fear of
+              vulnerability?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="love_sabotage"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="love_sabotage" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="love_sabotage" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="love_sabotage" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -673,48 +1952,147 @@
         </div>
 
         <!-- career/job quadrant -->
-        <div class="chakra-section" id="careerJob"
-            data-title='Career / Job'
-            data-description="How you approach work, leadership, and your life's mission">
-
+        <div
+          class="chakra-section"
+          id="careerJob"
+          data-title="Career / Job"
+          data-description="How you approach work, leadership, and your life's mission"
+        >
           <fieldset>
-            <legend>Do you feel trapped in your job but unsure how to leave or pivot?</legend>
-            <label><input type="radio" name="career_trapped" value="Never" required> Never</label>
-            <label><input type="radio" name="career_trapped" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="career_trapped" value="Often"> Often</label>
-            <label><input type="radio" name="career_trapped" value="Always"> Always</label>
+            <legend>
+              Do you feel trapped in your job but unsure how to leave or pivot?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="career_trapped"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="career_trapped" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="career_trapped" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="career_trapped" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you take on work roles or responsibilities out of guilt or obligation rather than desire?</legend>
-            <label><input type="radio" name="career_obligation" value="Never" required> Never</label>
-            <label><input type="radio" name="career_obligation" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="career_obligation" value="Often"> Often</label>
-            <label><input type="radio" name="career_obligation" value="Always"> Always</label>
+            <legend>
+              How often do you take on work roles or responsibilities out of
+              guilt or obligation rather than desire?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="career_obligation"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="career_obligation" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="career_obligation" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="career_obligation" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How well do you value your time and skills financially?</legend>
-            <label><input type="radio" name="career_value" value="Poor" required> Poor</label>
-            <label><input type="radio" name="career_value" value="Fair"> Fair</label>
-            <label><input type="radio" name="career_value" value="Good"> Good</label>
-            <label><input type="radio" name="career_value" value="Excellent"> Excellent</label>
+            <legend>
+              How well do you value your time and skills financially?
+            </legend>
+            <label
+              ><input type="radio" name="career_value" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="career_value" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="career_value" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="career_value" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you resist structure, rules, or authority in favor of forging your own path?</legend>
-            <label><input type="radio" name="career_resist" value="Never" required> Never</label>
-            <label><input type="radio" name="career_resist" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="career_resist" value="Often"> Often</label>
-            <label><input type="radio" name="career_resist" value="Always"> Always</label>
+            <legend>
+              How often do you resist structure, rules, or authority in favor of
+              forging your own path?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="career_resist"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="career_resist" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="career_resist" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="career_resist" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you feel creatively inspired but delay action due to overthinking or perfectionism?</legend>
-            <label><input type="radio" name="career_perfectionism" value="Never" required> Never</label>
-            <label><input type="radio" name="career_perfectionism" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="career_perfectionism" value="Often"> Often</label>
-            <label><input type="radio" name="career_perfectionism" value="Always"> Always</label>
+            <legend>
+              How often do you feel creatively inspired but delay action due to
+              overthinking or perfectionism?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="career_perfectionism"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="career_perfectionism"
+                value="Sometimes"
+              />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="career_perfectionism" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="career_perfectionism" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
@@ -722,55 +2100,164 @@
         </div>
 
         <!-- time & money freedom quadrant -->
-        <div class="chakra-section" id="timeMoney"
-            data-title='Time & Money Freedom'
-            data-description="How you engage with abundance, scheduling, and energetic flow">
-
+        <div
+          class="chakra-section"
+          id="timeMoney"
+          data-title="Time & Money Freedom"
+          data-description="How you engage with abundance, scheduling, and energetic flow"
+        >
           <fieldset>
-            <legend>How often do you give your time, energy, or money without feeling a fair return or balance?</legend>
-            <label><input type="radio" name="timeMoney_balance" value="Never" required> Never</label>
-            <label><input type="radio" name="timeMoney_balance" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="timeMoney_balance" value="Often"> Often</label>
-            <label><input type="radio" name="timeMoney_balance" value="Always"> Always</label>
+            <legend>
+              How often do you give your time, energy, or money without feeling
+              a fair return or balance?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="timeMoney_balance"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_balance" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_balance" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_balance" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How often do you overwork, hustle, or fill your calendar to avoid deeper feelings or fears?</legend>
-            <label><input type="radio" name="timeMoney_hustle" value="Never" required> Never</label>
-            <label><input type="radio" name="timeMoney_hustle" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="timeMoney_hustle" value="Often"> Often</label>
-            <label><input type="radio" name="timeMoney_hustle" value="Always"> Always</label>
+            <legend>
+              How often do you overwork, hustle, or fill your calendar to avoid
+              deeper feelings or fears?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="timeMoney_hustle"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_hustle" value="Sometimes" />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_hustle" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_hustle" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How would you rate your comfort with managing money and creating structure around your time?</legend>
-            <label><input type="radio" name="timeMoney_comfort" value="Poor" required> Poor</label>
-            <label><input type="radio" name="timeMoney_comfort" value="Fair"> Fair</label>
-            <label><input type="radio" name="timeMoney_comfort" value="Good"> Good</label>
-            <label><input type="radio" name="timeMoney_comfort" value="Excellent"> Excellent</label>
+            <legend>
+              How would you rate your comfort with managing money and creating
+              structure around your time?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="timeMoney_comfort"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_comfort" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_comfort" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_comfort" value="Excellent" />
+              Excellent</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>Do you find yourself living in survival mode even when more is available?</legend>
-            <label><input type="radio" name="timeMoney_survival" value="Never" required> Never</label>
-            <label><input type="radio" name="timeMoney_survival" value="Sometimes"> Sometimes</label>
-            <label><input type="radio" name="timeMoney_survival" value="Often"> Often</label>
-            <label><input type="radio" name="timeMoney_survival" value="Always"> Always</label>
+            <legend>
+              Do you find yourself living in survival mode even when more is
+              available?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="timeMoney_survival"
+                value="Never"
+                required
+              />
+              Never</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="timeMoney_survival"
+                value="Sometimes"
+              />
+              Sometimes</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_survival" value="Often" />
+              Often</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_survival" value="Always" />
+              Always</label
+            >
           </fieldset>
 
           <fieldset>
-            <legend>How comfortable are you with investing in things that align with your values?</legend>
-            <label><input type="radio" name="timeMoney_investing" value="Poor" required> Poor</label>
-            <label><input type="radio" name="timeMoney_investing" value="Fair"> Fair</label>
-            <label><input type="radio" name="timeMoney_investing" value="Good"> Good</label>
-            <label><input type="radio" name="timeMoney_investing" value="Excellent"> Excellent</label>
+            <legend>
+              How comfortable are you with investing in things that align with
+              your values?
+            </legend>
+            <label
+              ><input
+                type="radio"
+                name="timeMoney_investing"
+                value="Poor"
+                required
+              />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_investing" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="timeMoney_investing" value="Good" />
+              Good</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="timeMoney_investing"
+                value="Excellent"
+              />
+              Excellent</label
+            >
           </fieldset>
 
           <button type="button" class="prev-btn">Previous</button>
           <button type="submit" class="submit-btn">Submit</button>
         </div>
-
-    </form>
-  </main>
-</body>
+      </form>
+    </main>
+  </body>
 </html>
