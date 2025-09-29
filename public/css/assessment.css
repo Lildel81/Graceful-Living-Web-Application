@@ -19,7 +19,11 @@
   margin-bottom: 40px;
 }
 
-/* Example chakra hero colors */
+/* chakra hero colors */
+.section-page .hero.user-info {
+  background: linear-gradient(135deg, #5cade7, #9bd1fe); /* light blue */
+}
+
 .section-page .hero.chakra-root {
     background: linear-gradient(135deg, #e75c5c, #fe9b9b); /* red */
 }
@@ -49,9 +53,9 @@
     background: linear-gradient(135deg, #e3c8f9, #f1d9fc); /* violet */
 }
 
-/* Single color for life quadrant */
+/* single color for life quadrant */
 .section-page .hero.life-quadrant {
-    background: linear-gradient(135deg, #6c5ce7, #a29bfe); /* example color */
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe); /* purple */
 }
 
 
@@ -66,7 +70,7 @@
     opacity: 0.9;
 }
 
-/* Form container */
+/* form container */
 form#assessment-form {
   max-width: 700px;
   margin: 2rem auto;
@@ -76,7 +80,32 @@ form#assessment-form {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-/* Labels & inputs */
+/* question headers: both legends and labels for main inputs */
+form fieldset legend,
+form label {
+  font-family: 'Source Serif Pro', 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #222;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  border-left: 4px solid #6c63ff; /* purple accent */
+  padding-left: 0.5rem;
+}
+
+/* for inline options (radio/checkbox labels), tone them down */
+form fieldset label {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #444;
+  border: none;
+  padding-left: 0;
+  margin: 0.4rem 0;
+}
+
+/* labels & inputs */
 form label {
   display: block;
   margin: 1rem 0 0.5rem;
@@ -84,7 +113,7 @@ form label {
   color: #333;
 }
 
-/* Fieldsets for grouped inputs */
+/* fieldsets for grouped inputs */
 fieldset {
   border: none;
   margin: 1.5rem 0;
@@ -97,11 +126,84 @@ legend {
   color: #333;
 }
 
-/* Radio & checkboxes inline */
+/* radio & checkboxes inline */
 fieldset label {
   display: block;
   margin: 0.5rem 0;
   font-weight: normal;
+}
+
+fieldset input {
+  margin-right: 0.5rem;
+}
+
+/* notes */
+.note {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.required {
+  color: #d93025;
+  font-weight: 700;
+  margin-left: 0.2rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  resize: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.3);
+  outline: none;
+  resize: none;
+}
+
+/* progress bar styles */
+.progress-bar {
+  width: 100%;
+  max-width: 600px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 50px auto;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f6fdff, #e5f5fa);
+  width: 10%;
+  border-radius: 4px;
+  transition: width 0.6s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-text {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 10px 0;
+  letter-spacing: 0.5px;
 }
 
 .chakra-section {

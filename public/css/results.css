@@ -1,0 +1,108 @@
+body {
+    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
+    color: #222;
+    line-height: 1.6;
+    background-color: #f5f6fa;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 80px 0;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #76d98f, #a8e3b1); /* soothing green */
+    color: white;
+
+}
+
+header h1 {
+    font-family: 'Source Serif Pro', 'Playfair Display', serif;
+    font-size: 2.8rem;
+    margin: 0;
+}
+
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+section {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    border-top: 5px solid #6c63ff; /* default accent */
+}
+
+#chakra-section {
+    border-top-color: #79c7a0; /* soothing green */
+}
+
+#archetype-section {
+    border-top-color: #ffb888; /* warm orange */
+    margin-bottom: 50px;
+}
+
+section h2 {
+    font-family: 'Source Serif Pro', 'Playfair Display', serif;
+    font-size: 2em;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+section h3 {
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+p {
+    margin-bottom: 1.2em;
+}
+
+/* lists */
+ul, ol {
+    padding-left: 25px;
+    margin-bottom: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+ul li , ol{
+    list-style-position: inside;
+}
+
+/* highlight for persona/shadow */
+h3 + p {
+    font-style: italic;
+    padding: 12px 15px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #ccc;
+    border-radius: 4px;
+}
+
+/* gighlight for bija mantra */
+#chakra-section h3:nth-of-type(1) + p {
+    font-weight: bold;
+    background-color: #e6f7ef;
+    border-left-color: #79c7a0;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    main {
+        padding: 0 15px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+}
