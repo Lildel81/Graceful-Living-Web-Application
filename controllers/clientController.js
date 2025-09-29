@@ -391,12 +391,24 @@ const getAdminPortalView = async (req, res, next) => {
       users = MOCK_USERS;
     }
     */ ß;
+    
+    //For now, placeholder values until real DB queries are added
+    const totalSubmissions = users.length; // show how many users exist
+    // placeholder until the correct logic is implemented
+    const avgChakraBalance = 0;
+    const avgQuadrantBalance = 0;
+    const mostImbalanced = null;
+
     res.render("adminportal", {
       userName: (req.user && (req.user.firstname || req.user.name)) || "Admin",
       upcomingSessions: "",
       notifications: "",
       recentActivities: "",
       users,
+      totalSubmissions,
+      avgChakraBalance,
+      avgQuadrantBalance,
+      mostImbalanced,
     });
   } catch (err) {
     console.error("Failed to load admin portal:", err.message);
@@ -406,6 +418,10 @@ const getAdminPortalView = async (req, res, next) => {
       notifications: "",
       recentActivities: "",
       users: MOCK_USERS, // hard fallback so page still shows data
+      totalSubmissions: MOCK_USERS.length,
+      avgChakraBalance: 0,
+      avgQuadrantBalance: 0,
+      mostImbalanced: null,
     });
   }
 };
