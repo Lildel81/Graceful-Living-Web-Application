@@ -53,21 +53,21 @@
     -->
 
     <% if (resourcesText && resourcesText.videoUrl) { %>
-    <div class="video-container">
-       <iframe 
-            width="560" 
-            height="315" 
-            src="<%= resourcesText.videoUrl
-                    .replace('watch?v=', 'embed/')
-                    .replace('youtu.be/', 'www.youtube.com/embed/')
-                    .split('?')[0] %>" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>
-
+    <div class="video_wrapper">
+        <div class="youtube_video">
+            <iframe 
+                width="560" 
+                height="315" 
+                src="<%= resourcesText.videoUrl %>" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
     </div>
-    <% } %> 
+    <% } %>
+
+ 
 
     <!-- Dynamic Resources Images -->
     <div class="downloads_container">

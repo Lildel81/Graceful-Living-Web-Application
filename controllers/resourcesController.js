@@ -57,7 +57,7 @@ function normalizeYouTubeUrl(url) {
 // update text 
 const updateResourcesText = async (req, res) => {
   try {
-    console.log("REQ TEXT BODY:", req.body);
+    // console.log("REQ TEXT BODY:", req.body);
 
     const { title, paragraphs, videoUrl } = req.body;
     let text = await ResourcesText.findOne();
@@ -146,8 +146,8 @@ const getEditResourcesImageView = async (req, res) => {
 const editResourcesImage = async (req, res) => {
   try {
     // debug logs 
-    console.log("REQ BODY:", req.body);
-    console.log("REQ FILE:", req.file);
+    // console.log("REQ BODY:", req.body);
+    // console.log("REQ FILE:", req.file);
 
     // const { overlayText, buttonText, buttonUrl } = req.body;
     const { overlayText, buttonText, buttonUrl } = req.body || {};

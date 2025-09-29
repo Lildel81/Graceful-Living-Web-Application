@@ -64,15 +64,18 @@
                   <ul>
                     <% if (footerResources && footerResources.length > 0) { %>
                     <% footerResources.forEach(resource => { %>
+                        <% if (resource.overlayText && resource.buttonUrl) { %>
                         <li>
-                        <a href="<%= resource.buttonUrl %>" target="_blank">
-                            <%= resource.buttonText || "Resource" %>
-                        </a>
+                            <span class="resource-name"><%= resource.overlayText || "Resource" %></span>:
+                            <a href="<%= resource.buttonUrl %>" target="_blank">
+                            <%= resource.buttonText || "Download" %>
+                            </a>
                         </li>
+                        <% } %>
                     <% }) %>
                     <% } else { %>
                     <li>No resources available</li>
-                     <% } %>
+                    <% } %>
                   </ul>
               </div>
 

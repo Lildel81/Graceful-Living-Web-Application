@@ -7,7 +7,7 @@ const resourcesTextSchema = new Schema({
   title: { type: String, default: "Resources" },
   // dynamic array so admin can input as many paragraphs as they want
   paragraphs: [{ type: String }],
-  videoUrl: { type: String, default: "https://youtu.be/LKa0ABbkGrQ?si=RxNlk9td6FNo4GQc" },
+  videoUrl: { type: String, default: "https://www.youtube.com/embed/LKa0ABbkGrQ" },
   updatedAt: { type: Date, default: Date.now }
 });
 

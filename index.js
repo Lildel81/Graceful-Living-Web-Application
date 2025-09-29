@@ -18,6 +18,24 @@ const chakraRoutes = require('./routes/chakraRoutes');
 
 const app = express();
 
+// security middleware for imbedded yt videos
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "default-src": ["'self'"],
+        "script-src": ["'self'", "https://www.youtube.com", "https://www.gstatic.com"],
+        "frame-src": ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"],
+        "img-src": ["'self'", "data:", "https://i.ytimg.com"],
+        "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        "font-src": ["'self'", "https://fonts.gstatic.com"]
+      }
+    }
+  })
+);
+app.disable('x-powered-by');
+
 require('./startup/db')();
 require('./startup/validations')();
 
@@ -134,7 +152,7 @@ app.use('/reset', resetPageRoutes);
 const rateLimit = require('express-rate-limit');
 const resetLimiter = rateLimit({ windowMs: 15*60*1000, max: 5 }); // 5 req/15min per IP Address
 app.use('/auth/reset/request', resetLimiter);
-app.use(helmet());
+// app.use(helmet());
 app.disable('x-powered-by');
 
 
