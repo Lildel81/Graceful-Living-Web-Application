@@ -9,12 +9,8 @@ require('dotenv').config();
 const helmet = require('helmet');
 
 
-// for file uploads -- dani
-const uploadRoutes = require('./routes/uploadRoutes');
-
 const err = require('./middleware/errors');
 const config = require('./startup/config');
-const multer = require('multer');
 const carouselRoutes = require('./routes/carousel-routes');
 const resourcesRoutes = require('./routes/resources-routes');
 const homeRoutes = require('./routes/homeRoutes');
@@ -44,24 +40,6 @@ mongoose.connection.once('open', async () => {
   }
 });
 
-app.use(carouselRoutes);
-app.use(resourcesRoutes);
-
-// Set up multer for image upload
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/images/uploads');
-    },
-    filename: function(req, file, cb) {
-        const ext = path.extname(file.originalname);
-        const uniqueName = Date.now() + ext;
-        cb(null, uniqueName);
-    }
-});
-
-const upload = multer({storage});
-app.locals.upload = upload;
-
 // Set view engine before using express-ejs-layouts
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // Ensure Express looks in the correct views folder
@@ -77,6 +55,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
 
 const session = require('express-session')
+
+// for footer to populate resources 
+const ResourcesImage = require('./models/resourcesImage');
+app.use(async (req, res, next) => {
+  try {
+    res.locals.footerResources = await ResourcesImage.find().sort({ createdAt: -1 }).limit(3);
+  } catch (err) {
+    console.error("Error loading footer resources:", err);
+    res.locals.footerResources = [];
+  }
+  next();
+});
+
+app.use(resourcesRoutes);
+app.use(carouselRoutes);
 
 //constructor for each session cookie
 app.use(
@@ -99,10 +92,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
-// routes for uploads directory -- dani
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/', uploadRoutes);
 
 // Home Page Route with Reviews
 app.use('/', homeRoutes); 

@@ -11,6 +11,7 @@ const Client = require("../models/client");
 const CarouselSlide = require("../models/carouselSlide");
 const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
+const ResourcesText = require('../models/resourcesText');
 const mongoose = require("mongoose");
 
 const MOCK_USERS = [
@@ -471,10 +472,15 @@ const getResourcesView = async (req, res, next) => {
 
   try {
     const resources = await ResourcesImage.find().sort({ createdAt: -1 });
-    res.render("resources", { resources });
+    const resourcesText = await ResourcesText.findOne();
+
+    res.render('resources', { 
+      resources,
+      resourcesText
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error loading resources");
+    console.error("Error loading resources page:", err);
+    res.status(500).send("Error loading resources page");
   }
 };
 

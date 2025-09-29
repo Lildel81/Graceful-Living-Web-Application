@@ -62,9 +62,17 @@
               <div class="footer-column">
                   <h3>Resources</h3>
                   <ul>
-                      <li><a href="#">Resource 1</a></li>
-                      <li><a href="#">Resource 2</a></li>
-                      <li><a href="#">Resource 3</a></li>
+                    <% if (footerResources && footerResources.length > 0) { %>
+                    <% footerResources.forEach(resource => { %>
+                        <li>
+                        <a href="<%= resource.buttonUrl %>" target="_blank">
+                            <%= resource.buttonText || "Resource" %>
+                        </a>
+                        </li>
+                    <% }) %>
+                    <% } else { %>
+                    <li>No resources available</li>
+                     <% } %>
                   </ul>
               </div>
 

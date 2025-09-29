@@ -15,6 +15,7 @@
       <img src="<%= resource.imageUrl %>" class="slide-img" alt="Current Resource Image">
     </div>
 
+    <!-- text fields always editable -->
     <div class="form-section">
       <label for="overlayText">Overlay Text:</label>
       <input type="text" name="overlayText" id="overlayText" value="<%= resource.overlayText || '' %>">
@@ -26,20 +27,18 @@
       <input type="text" name="buttonUrl" id="buttonUrl" value="<%= resource.buttonUrl || '' %>">
     </div>
 
+    <!-- make image change optional -->
     <div class="form-section">
-      <label>Choose New Image Source:</label>
-      <label><input type="radio" name="imageOption" value="upload"> Upload New Image</label>
+      <label>Change Image (optional):</label><br>
+
+      <!-- radio buttons are optional now -->
+      <label><input type="radio" name="imageOption" value="upload"> Upload New</label>
+      <input type="file" name="imageUpload" id="imageUpload">
+
+      <br>
+
       <label><input type="radio" name="imageOption" value="url"> Replace with URL</label>
-
-      <div>
-        <label for="imageUpload">Upload New Image:</label>
-        <input type="file" name="imageUpload" id="imageUpload">
-      </div>
-
-      <div>
-        <label for="imageUrl">New Image URL:</label>
-        <input type="text" name="imageUrl" id="imageUrl" placeholder="Or paste new image URL here">
-      </div>
+      <input type="text" name="imageUrl" id="imageUrl" placeholder="Paste new image URL">
     </div>
 
     <button type="submit">Save Changes</button>
@@ -48,3 +47,4 @@
   <a href="/adminportal/resourcesmanagement"><button>⬅ Back</button></a>
 </body>
 </html>
+

@@ -4,7 +4,8 @@ const path = require('path');
 
 const getCarouselManagement = async(req, res) => {
     const slides = await CarouselSlide.find().sort({createdAt: -1});
-    res.render('carouselmanagement', {slides});
+    // dani: changed layout to false so header won't show in iframe since i changed order of app.us(carouselRoutes) in index.js
+    res.render('carouselmanagement', {slides, layout: false});
 };
 
 const getEditSlideView = async(req, res) => {
