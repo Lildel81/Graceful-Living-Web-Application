@@ -444,11 +444,11 @@ const getAdminPortalView = async (req, res) => {
     */ 
     
     //For now, placeholder values until real DB queries are added
-    const totalSubmissions = users.length; // show how many users exist
+    //const totalSubmissions = users.length; // show how many users exist
     // placeholder until the correct logic is implemented
-    const avgChakraBalance = 0;
-    const avgQuadrantBalance = 0;
-    const mostImbalanced = null;
+    //const avgChakraBalance = 0;
+    //const avgQuadrantBalance = 0;
+    //const mostImbalanced = null;
 
  
 
