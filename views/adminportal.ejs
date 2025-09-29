@@ -94,187 +94,183 @@
     .btn-add:hover{ background:#097; }
   </style>
 </head>
+<body>
+  
+  <div class="hero">
+    <b>Welcome <%= userName %>!</b>
+  </div>
 
-<div>
-    
-    <div class="hero">
-        <b>Welcome <%= userName %>!</b>
-    </div>
-    <div class="secondary-nav">
-        <!-- <a href="/adminportal">Home</a> -->
-        <a href="/content-management">Content Management</a>
-        <a href="/adminportal/session">Session Management</a>
-        <a href="/clientmanagement/add">Add Client</a>
-    </div>
+  <div class="secondary-nav">
+    <!-- <a href="/adminportal">Home</a> -->
+    <a href="/content-management">Content Management</a>
+    <a href="/adminportal/session">Session Management</a>
+    <a href="/clientmanagement/add">Add Client</a>
+  </div>
 
-    <!-- Statistics Dashboard -->
-    <main class="dashboard">
+  <!-- Statistics Dashboard -->
+  <main class="dashboard">
 
-        <!-- Stats Cards -->
-        <section class="stats-cards">
-            <div class="card">
-                Total Submissions: <%= totalSubmissions %>
-            </div>
-            <div class="card">
-                Avg. Chakra Balance: <%= avgChakraBalance %>
-            </div>
-            <div class="card">
-                Avg. Quadrant Balance: <%= avgQuadrantBalance %>
-            </div>
-            <div class="card">
-                Most Imbalanced: <%= mostImbalanced %>
-            </div>
-        </section>
+    <!-- Stats Cards -->
+    <section class="stats-cards">
+      <div class="card">
+        Total Submissions:
+        <%= typeof totalSubmissions !== 'undefined' ? totalSubmissions : 0 %>
+      </div>
+      <div class="card">
+        Avg. Chakra Balance:
+        <%= typeof avgChakraBalance !== 'undefined' ? avgChakraBalance : 0 %>
+      </div>
+      <div class="card">
+        Avg. Quadrant Balance:
+        <%= typeof avgQuadrantBalance !== 'undefined' ? avgQuadrantBalance : 0 %>
+      </div>
+      <div class="card">
+        Most Imbalanced:
+        <%= typeof mostImbalanced !== 'undefined' ? mostImbalanced : 'N/A' %>
+      </div>
+    </section>
 
-        <!-- Charts -->
-        <section class="charts">
-            <div class="chart">Average Chakra Scores</div>
-            <div class="chart">Score Distribution</div>
-        </section>
-    </main>
+    <!-- Charts -->
+    <section class="charts">
+      <div class="chart">Average Chakra Scores</div>
+      <div class="chart">Score Distribution</div>
+    </section>
+  </main>
 
-    <!-- rest of homepage content -->
+  <!-- rest of homepage content -->
 
-
-<div class="user-section"
+  <div class="user-section">
     <div class="overview">
-        <h2>User List</h2>
+      <h2>User List</h2>
 
-    <!-- Add Client button -->
-    <div style="text-align:right; margin: 0 0 8px;">
-      <a class="btn-add" href="/clientmanagement/add">+ Add Client</a>
-    </div>
+      <!-- Add Client button -->
+      <div style="text-align:right; margin: 0 0 8px;">
+        <a class="btn-add" href="/clientmanagement/add">+ Add Client</a>
+      </div>
 
-    <input id="adminUserFilter" type="text" placeholder="Filter by name or email">
+      <input id="adminUserFilter" type="text" placeholder="Filter by name or email">
 
-    <div class="user-table-container">
-      <table id="usersTable">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Closed Chakra</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (typeof users !== 'undefined' && users.length) { %>
-            <% users.forEach(function(u){ %>
-              <tr>
-                <td><%= u.firstname %></td>
-                <td><%= u.lastname %></td>
-                <td><%= u.phonenumber %></td>
-                <td><%= u.email %></td>
-                <td><%= u.closedChakra %></td>
-              </tr>
-            <% }) %>
-          <% } else { %>
-            <tr><td colspan="5">No users found.</td></tr>
-          <% } %>
-        </tbody>
-      </table>
+      <div class="user-table-container">
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Closed Chakra</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (typeof users !== 'undefined' && users.length) { %>
+              <% users.forEach(function(u){ %>
+                <tr>
+                  <td><%= u.firstname %></td>
+                  <td><%= u.lastname %></td>
+                  <td><%= u.phonenumber %></td>
+                  <td><%= u.email %></td>
+                  <td><%= u.closedChakra %></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr><td colspan="5">No users found.</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <script>
-  // Safe, isolated filter that won't conflict with other scripts
-  document.addEventListener('DOMContentLoaded', function () {
-    try {
-      const filter = document.getElementById('adminUserFilter');
-      const table  = document.getElementById('usersTable');
-      if (!filter || !table || !table.tBodies || !table.tBodies[0]) return;
+    // Safe, isolated filter that won't conflict with other scripts
+    document.addEventListener('DOMContentLoaded', function () {
+      try {
+        const filter = document.getElementById('adminUserFilter');
+        const table  = document.getElementById('usersTable');
+        if (!filter || !table || !table.tBodies || !table.tBodies[0]) return;
 
-      const tbody = table.tBodies[0];
-      const rows  = Array.from(tbody.rows);
+        const tbody = table.tBodies[0];
+        const rows  = Array.from(tbody.rows);
 
-      // Precompute searchable text per row (first + last + email)
-      const searchIndex = rows.map(row => {
-        const first = (row.cells[0]?.textContent || '').toLowerCase();
-        const last  = (row.cells[1]?.textContent || '').toLowerCase();
-        const email = (row.cells[3]?.textContent || '').toLowerCase();
-        return { row, text: `${first} ${last} ${email}` };
-      });
+        // Precompute searchable text per row (first + last + email)
+        const searchIndex = rows.map(row => {
+          const first = (row.cells[0]?.textContent || '').toLowerCase();
+          const last  = (row.cells[1]?.textContent || '').toLowerCase();
+          const email = (row.cells[3]?.textContent || '').toLowerCase();
+          return { row, text: `${first} ${last} ${email}` };
+        });
 
-      function applyFilter() {
-        const q = filter.value.trim().toLowerCase();
-        let shown = 0;
-        for (const item of searchIndex) {
-          const match = !q || item.text.includes(q);
-          item.row.style.display = match ? '' : 'none';
-          if (match) shown++;
+        function applyFilter() {
+          const q = filter.value.trim().toLowerCase();
+          for (const item of searchIndex) {
+            const match = !q || item.text.includes(q);
+            item.row.style.display = match ? '' : 'none';
+          }
         }
+
+        // Filter on both input & keyup for IME/edge cases
+        filter.addEventListener('input', applyFilter);
+        filter.addEventListener('keyup', applyFilter);
+
+        // First pass
+        applyFilter();
+
+        // Helpful console ping so you know it wired up
+        console.debug('[adminportal] live filter ready');
+      } catch (e) {
+        console.error('[adminportal] filter init failed:', e);
       }
+    });
+  </script>
 
-      // Filter on both input & keyup for IME/edge cases
-      filter.addEventListener('input', applyFilter);
-      filter.addEventListener('keyup', applyFilter);
+  <!--edit the resources page - Oanh moved it into content-management.ejs-->
+  <!-- <a href="/adminportal/resourcesmanagement"><button>Manage Resources</button></a> -->
 
-      // First pass
-      applyFilter();
+  <!-- from last sprint, delete 
+  <button id="openResourcesBtn">Edit Resources</button>
 
-      // Helpful console ping so you know it wired up
-      console.debug('[adminportal] live filter ready');
-    } catch (e) {
-      console.error('[adminportal] filter init failed:', e);
-    }
-  });
-</script>
+  <div class="subpage" id="subpage">
+      <h2>Edit Resources</h2>
+      <p>Edit the contents of the Resources page</p>
 
+      <span id="closeBtn" class="close-btn">&times;</span>
 
+      <a href="/gallery"><button>View Uploaded Images</button></a>
 
+      <form id="uploadForm" enctype="multipart/form-data">
+          <input type="file" name="photo" accept="image/*" required>
+          <button type="submit">Upload Image</button>
+      </form>
+      
+      <div id="uploadStatus"></div>
+  </div> -->
 
-    <!--edit the resources page - Oanh moved it into content-management.ejs-->
-    <!-- <a href="/adminportal/resourcesmanagement"><button>Manage Resources</button></a> -->
+  <!--sprint 06 - Oanh moved it into content-management.ejs-->
+  <!-- <div class="overview">
+      <h2>Add a Testimonial</h2>
+      <form action="/admin/add-review" method="POST" class="testimonial-form">
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" name="name" required><br><br>
 
+          <label for="quote">Quote:</label><br>
+          <textarea id="quote" name="quote" rows="3" required></textarea><br><br>
 
-    <!-- from last sprint, delete 
-    <button id="openResourcesBtn">Edit Resources</button>
+          <label for="location">Location:</label><br>
+          <input type="text" id="location" name="location" required><br><br>
 
-    
-    <div class="subpage" id="subpage">
-        <h2>Edit Resources</h2>
-        <p>Edit the contents of the Resources page</p>
+          <label for="event">Event:</label><br>
+          <input type="text" id="event" name="event" required><br><br>
 
-        <span id="closeBtn" class="close-btn">&times;</span>
+          <button type="submit">Submit Testimonial</button>
+      </form>
+  </div> -->
 
-        <a href="/gallery"><button>View Uploaded Images</button></a>
-
-
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" name="photo" accept="image/*" required>
-        <button type="submit">Upload Image</button>
-    </form>
-    
-    <div id="uploadStatus"></div>
-    </div> -->
-
-    <!--sprint 06 - Oanh moved it into content-management.ejs-->
-    <!-- <div class="overview">
-        <h2>Add a Testimonial</h2>
-        <form action="/admin/add-review" method="POST" class="testimonial-form">
-            <label for="name">Name:</label><br>
-            <input type="text" id="name" name="name" required><br><br>
-
-            <label for="quote">Quote:</label><br>
-            <textarea id="quote" name="quote" rows="3" required></textarea><br><br>
-
-            <label for="location">Location:</label><br>
-            <input type="text" id="location" name="location" required><br><br>
-
-            <label for="event">Event:</label><br>
-            <input type="text" id="event" name="event" required><br><br>
-
-            <button type="submit">Submit Testimonial</button>
-        </form>
-    </div> -->
-
-    <!-- <script>
-        // Check if redirected with ?submitted=true
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('submitted') === 'true') {
-          alert('✅ Testimonial submitted successfully!');
-        }
-      </script> -->
+  <!-- <script>
+      // Check if redirected with ?submitted=true
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('submitted') === 'true') {
+        alert('✅ Testimonial submitted successfully!');
+      }
+    </script> -->
 </body>
 </html>
