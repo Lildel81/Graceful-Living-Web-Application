@@ -441,7 +441,7 @@ const getAdminPortalView = async (req, res) => {
     if (forceMock || !users || users.length === 0) {
       users = MOCK_USERS;
     }
-    */ ß;
+    */ 
     
     //For now, placeholder values until real DB queries are added
     const totalSubmissions = users.length; // show how many users exist
