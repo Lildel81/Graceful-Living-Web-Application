@@ -450,32 +450,7 @@ const getAdminPortalView = async (req, res) => {
     const avgQuadrantBalance = 0;
     const mostImbalanced = null;
 
-    res.render("adminportal", {
-      userName: (req.user && (req.user.firstname || req.user.name)) || "Admin",
-      upcomingSessions: "",
-      notifications: "",
-      recentActivities: "",
-      users,
-      totalSubmissions,
-      avgChakraBalance,
-      avgQuadrantBalance,
-      mostImbalanced,
-    });
-  } catch (err) {
-    console.error("Failed to load admin portal:", err.message);
-    res.render("adminportal", {
-      userName: "Admin",
-      upcomingSessions: "",
-      notifications: "",
-      recentActivities: "",
-      users: MOCK_USERS, // hard fallback so page still shows data
-      totalSubmissions: MOCK_USERS.length,
-      avgChakraBalance: 0,
-      avgQuadrantBalance: 0,
-      mostImbalanced: null,
-    });
-  }
-};
+ 
 
 const getGalleryView = async (req, res, next) => {
   const uploadDir = path.join(__dirname, "..", "uploads");
