@@ -183,6 +183,7 @@ const editResourcesImage = async (req, res) => {
 module.exports = {
   getResourcesManagement,
   getOrCreateResourcesText,
+  normalizeYouTubeUrl,
   updateResourcesText,
   createResourcesImage,
   deleteResourcesImage,
