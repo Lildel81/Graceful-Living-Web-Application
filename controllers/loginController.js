@@ -39,8 +39,7 @@ const loginLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true, // only 4xx/5xx count as failures
-  //keyGenerator: (req) => `${req.ip}:${(req.body.username || '').toLowerCase()}`,
-  keyGenerator: (req, res) => ipKeyGenerator(req),
+  keyGenerator: (req) => `${req.ip}:${(req.body.username || '').toLowerCase()}`,
   handler: (req, res) => {
     return res.status(429).render('login', {
       ok: false,
