@@ -8,59 +8,35 @@ const { notifyAdmins } = require("../services/adminNotifications");
 // scoring scheme
 const gradingScheme = {
   default: {
-    Poor: 0,
-    Fair: 1,
-    Good: 2,
-    Excellent: 3,
-    Never: 0,
-    Sometimes: 1,
-    Often: 2,
-    Always: 3,
+    "Poor": 0, "Fair": 1, "Good": 2, "Excellent": 3,
+    "Never": 0, "Sometimes": 1, "Often": 2, "Always": 3
   },
   solarPlexus: {
-    q1: { Never: 3, Sometimes: 2, Often: 1, Always: 0 },
+    q1: { "Never": 3, "Sometimes": 2, "Often": 1, "Always": 0 },
     default: {
-      Poor: 0,
-      Fair: 1,
-      Good: 2,
-      Excellent: 3,
-      Never: 0,
-      Sometimes: 1,
-      Often: 2,
-      Always: 3,
-    },
+      "Poor": 0, "Fair": 1, "Good": 2, "Excellent": 3,
+      "Never": 0, "Sometimes": 1, "Often": 2, "Always": 3
+    }
   },
   crownChakra: {
-    q2: { Poor: 0, Fair: 1, Good: 2, Excellent: 2 },
+    q2: { "Poor": 0, "Fair": 1, "Good": 2, "Excellent": 2 },
     default: {
-      Poor: 0,
-      Fair: 1,
-      Good: 2,
-      Excellent: 3,
-      Never: 0,
-      Sometimes: 1,
-      Often: 2,
-      Always: 3,
-    },
+      "Poor": 0, "Fair": 1, "Good": 2, "Excellent": 3,
+      "Never": 0, "Sometimes": 1, "Often": 2, "Always": 3
+    }
   },
   loveRelationships: {
     q3: {
       "No, I never do either": 0,
       "Sometimes, I do one of these or both": 1,
       "Often I do one of these or both": 2,
-      "Yes, I always do one of these or both": 3,
+      "Yes, I always do one of these or both": 3
     },
     default: {
-      Poor: 0,
-      Fair: 1,
-      Good: 2,
-      Excellent: 3,
-      Never: 0,
-      Sometimes: 1,
-      Often: 2,
-      Always: 3,
-    },
-  },
+      "Poor": 0, "Fair": 1, "Good": 2, "Excellent": 3,
+      "Never": 0, "Sometimes": 1, "Often": 2, "Always": 3
+    }
+  }
 };
 
 // life quadrant archetype mapping
@@ -467,5 +443,11 @@ router.get("/results", async (req, res) => {
     res.status(500).send("Error fetching assessment");
   }
 });
+
+// export router, attach helpers for testing
+router.getScore = getScore;
+router.scoreAnswers = scoreAnswers;
+router.determineArchetype = determineArchetype;
+router.findFocusChakra = findFocusChakra;
 
 module.exports = router;
