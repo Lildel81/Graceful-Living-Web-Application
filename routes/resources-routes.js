@@ -5,11 +5,12 @@ const multer = require('multer');
 const resourcesController = require('../controllers/resourcesController');
 
 // debug middleware to log all requests hitting these routes
-router.use((req, res, next) => {
+// DO NOT USE BC IT EXPOSES CREDENTIALS
+/*router.use((req, res, next) => {
   console.log(`[RESOURCES ROUTE] ${req.method} ${req.originalUrl}`);
   console.log("REQ BODY (pre-multer):", req.body);
   next();
-});
+});*/
 
 // multer config
 const storage = multer.diskStorage({
