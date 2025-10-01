@@ -38,8 +38,21 @@
     <% if (typeof ok !== 'undefined' && ok) { %>
     <p class="success"> Saved! You can now proceed.</p>
     <% } %>
+    <div id="msg" role="status" aria-live="polite">
+    <% if (typeof error !== 'undefined' && error) { %>
+    <p class="error"><%= error %></p>
+    <% } %>
+
+    <% if (typeof ok !== 'undefined' && ok) { %>
+    <p class="success">Saved! You can now proceed.</p>
+    <% } %>
+     </div>
     </div>
+    <a id="forgot-password" href="#" style="font-size:0.9rem;">Forgot password?</a>
+    <div id="reset-status" style="margin-top:8px;"></div>
+
     
-    
+        <script src="/js/mail.js" defer></script>
+
 </body>
 </html>

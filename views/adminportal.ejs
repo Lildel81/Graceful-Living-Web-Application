@@ -1,223 +1,277 @@
+<!-- EJS Template File -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GracefulLiving Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- css resources page -->
-    <link rel="stylesheet" href="/css/adminportal.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GracefulLiving Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- css resources page -->
+  <link rel="stylesheet" href="/css/adminportal.css">
 
-    <!-- js for resources page -->
-    <script src="/js/adminportal.js" defer></script> 
+  <!-- js for resources page -->
+  <script src="/js/adminportal.js" defer></script> 
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Open Sans', sans-serif; /*using this font general text*/
-            min-height: 100vh;
-            background: url('/public/images/admin_background.jpg') center/cover no-repeat fixed;
-        }
-        .hero,
-        .overview h2,
-        .overview-box h3 {
-            font-family: 'Playfair Display', serif; /*using this font for the headers*/
-        }
-        main {
-            padding-top: 5rem;
-            padding-bottom: 5rem;
-        }
-        .hero {
-            color: white;
-            text-align: left;
-            padding: 50px 50px 20px;
-            font-size: 2rem; /*Welcome*/
-        }
-        .secondary-nav {
-            background-color: #dff3f4cc;
-            text-align: center;
-            padding: 15px 0;
-            font-size: 1.2em;
-            margin-bottom: 40px; /* Add space below nav */
-        }
-        .secondary-nav a {
-            margin: 0 50px;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-        .secondary-nav a:hover {
-            color: #1d8888;
-        }
-        .overview {
-            background: rgba(230, 243, 248, 0.8);
-            margin: 0 auto 120px;
-            padding: 40px;
-            width: 80%;
-            text-align: center;
-            border-radius: 0px;
-        }
-        .overview-container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
-        .overview-box {
-            background: white;
-            padding: 1px;
-            width: 30%;
-            border-radius: 0px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.211);
-        }
-        .overview-box h3 {
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-        .content-box {
-            padding: 15px;
-            height: 150px;
-            border-radius: 5px;
-            overflow-y: auto;
-        }
-        .overview h2 {
-            font-weight: 500;
-        }
-    </style>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif; /*using this font general text*/
+      min-height: 100vh;
+      background: url('/images/admin_background.jpg') center/cover no-repeat fixed;
+    }
+    .hero,
+    .overview h2,
+    .overview-box h3 {
+      font-family: 'Playfair Display', serif; /*using this font for the headers*/
+    }
+    main {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+    .hero {
+      color: white;
+      text-align: left;
+      padding: 50px 50px 20px;
+      font-size: 2rem; /*Welcome*/
+    }
+    .secondary-nav {
+      background-color: #dff3f4cc;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 1.2em;
+      margin-bottom: 40px; /* Add space below nav */
+    }
+    .secondary-nav a {
+      margin: 0 50px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .secondary-nav a:hover {
+      color: #1d8888;
+    }
+    .overview {
+      background: rgba(230, 243, 248, 0.8);
+      margin: 0 auto 120px;
+      padding: 40px;
+      width: 80%;
+      text-align: center;
+      border-radius: 0px;
+    }
+    .overview-container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+    .overview-box {
+      background: white;
+      padding: 1px;
+      width: 30%;
+      border-radius: 0px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.211);
+    }
+    .overview-box h3 {
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .content-box {
+      padding: 15px;
+      height: 150px;
+      border-radius: 5px;
+      overflow-y: auto;
+    }
+    .overview h2 {
+      font-weight: 500;
+    }
+    .btn-add{
+      display:inline-block; padding:8px 12px; border-radius:8px;
+      background:#0b8; color:#fff; text-decoration:none; font-weight:600;
+    }
+    .btn-add:hover{ background:#097; }
+  </style>
 </head>
 <body>
-    
-    <div class="hero">
-        <b>Welcome <%= userName %>!</b>
-    </div>
-    <div class="secondary-nav">
-        <a href="/adminportal">Home</a>
-        <a href="/content-management">Content Management</a>
-        <a href="/adminportal/session">Session Management</a>
-    </div>
-    <div class="overview">
-        <h2>Quick Overview</h2>
-        <div class="overview-container">
-            <div class="overview-box">
-                <h3>Upcoming Sessions</h3>
-                <div class="content-box"><%= upcomingSessions %></div>
-            </div>
-            <div class="overview-box">
-                <h3>Notifications</h3>
-                <div class="content-box"><%= notifications %></div>
-            </div>
-            <div class="overview-box">
-                <h3>Recent Activities</h3>
-                <div class="content-box"><%= recentActivities %></div>
-            </div>
-        </div>
-    </div> 
-
-    <div class="overview">
-  <h2>User List</h2>
-
-  <input id="userFilter" type="text" placeholder="Filter by name or email" style="padding:8px; width:60%; max-width:420px; margin:10px auto 20px; display:block;">
-
-  <div style="overflow-x:auto;">
-    <table id="usersTable" style="width:100%; border-collapse:collapse; background:#fff;">
-      <thead>
-        <tr style="background:#eaf5f8;">
-          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">First Name</th>
-          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Last Name</th>
-          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Phone</th>
-          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Email</th>
-          <th style="padding:10px; border-bottom:1px solid #ddd; text-align:left;">Closed Chakra</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (typeof users !== 'undefined' && users.length) { %>
-          <% users.forEach(function(u){ %>
-            <tr>
-              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.firstname %></td>
-              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.lastname %></td>
-              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.phonenumber %></td>
-              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.email %></td>
-              <td style="padding:10px; border-bottom:1px solid #f0f0f0;"><%= u.closedChakra %></td>
-            </tr>
-          <% }) %>
-        <% } else { %>
-          <tr><td colspan="5" style="padding:12px;">No users found.</td></tr>
-        <% } %>
-      </tbody>
-    </table>
+  
+  <div class="hero">
+    <b>Welcome <%= userName %>!</b>
   </div>
-</div>
 
-<script>
-  // simple client-side filter
-  const filter = document.getElementById('userFilter');
-  const table = document.getElementById('usersTable');
-  if (filter && table) {
-    filter.addEventListener('input', () => {
-      const q = filter.value.toLowerCase();
-      for (const row of table.tBodies[0].rows) {
-        const name = (row.cells[0].textContent + ' ' + row.cells[1].textContent).toLowerCase();
-        const email = row.cells[3].textContent.toLowerCase();
-        row.style.display = (name.includes(q) || email.includes(q)) ? '' : 'none';
+  <div class="secondary-nav">
+    <!-- <a href="/adminportal">Home</a> -->
+    <a href="/content-management">Content Management</a>
+    <a href="/adminportal/session">Session Management</a>
+    <!--<a href="/clientmanagement/add">Add Client</a>-->
+    <a href="/clientmanagement">Client Management</a>
+  </div>
+
+  <!-- Statistics Dashboard -->
+  <main class="dashboard">
+
+    <!-- Stats Cards -->
+    <section class="stats-cards">
+      <div class="card">
+        Total Submissions:
+        <%= typeof totalSubmissions !== 'undefined' ? totalSubmissions : 0 %>
+      </div>
+      <div class="card">
+        Avg. Chakra Balance:
+        <%= typeof avgChakraBalance !== 'undefined' ? avgChakraBalance : 0 %>
+      </div>
+      <div class="card">
+        Avg. Quadrant Balance:
+        <%= typeof avgQuadrantBalance !== 'undefined' ? avgQuadrantBalance : 0 %>
+      </div>
+      <div class="card">
+        Most Imbalanced:
+        <%= typeof mostImbalanced !== 'undefined' ? mostImbalanced : 'N/A' %>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="charts">
+      <div class="chart">Average Chakra Scores</div>
+      <div class="chart">Score Distribution</div>
+    </section>
+  </main>
+
+  <!-- rest of homepage content -->
+
+  <div class="user-section">
+    <div class="overview">
+      <h2>User List</h2>
+
+      <!-- Add Client button -->
+      <div style="text-align:right; margin: 0 0 8px;">
+        <a class="btn-add" href="/clientmanagement/add">+ Add Client</a>
+      </div>
+
+      <input id="adminUserFilter" type="text" placeholder="Filter by name or email">
+
+      <div class="user-table-container">
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Closed Chakra</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (typeof users !== 'undefined' && users.length) { %>
+              <% users.forEach(function(u){ %>
+                <tr>
+                  <td><%= u.firstname %></td>
+                  <td><%= u.lastname %></td>
+                  <td><%= u.phonenumber %></td>
+                  <td><%= u.email %></td>
+                  <td><%= u.closedChakra %></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr><td colspan="5">No users found.</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Safe, isolated filter that won't conflict with other scripts
+    document.addEventListener('DOMContentLoaded', function () {
+      try {
+        const filter = document.getElementById('adminUserFilter');
+        const table  = document.getElementById('usersTable');
+        if (!filter || !table || !table.tBodies || !table.tBodies[0]) return;
+
+        const tbody = table.tBodies[0];
+        const rows  = Array.from(tbody.rows);
+
+        // Precompute searchable text per row (first + last + email)
+        const searchIndex = rows.map(row => {
+          const first = (row.cells[0]?.textContent || '').toLowerCase();
+          const last  = (row.cells[1]?.textContent || '').toLowerCase();
+          const email = (row.cells[3]?.textContent || '').toLowerCase();
+          return { row, text: `${first} ${last} ${email}` };
+        });
+
+        function applyFilter() {
+          const q = filter.value.trim().toLowerCase();
+          for (const item of searchIndex) {
+            const match = !q || item.text.includes(q);
+            item.row.style.display = match ? '' : 'none';
+          }
+        }
+
+        // Filter on both input & keyup for IME/edge cases
+        filter.addEventListener('input', applyFilter);
+        filter.addEventListener('keyup', applyFilter);
+
+        // First pass
+        applyFilter();
+
+        // Helpful console ping so you know it wired up
+        console.debug('[adminportal] live filter ready');
+      } catch (e) {
+        console.error('[adminportal] filter init failed:', e);
       }
     });
-  }
-</script>
+  </script>
 
+  <!--edit the resources page - Oanh moved it into content-management.ejs-->
+  <!-- <a href="/adminportal/resourcesmanagement"><button>Manage Resources</button></a> -->
 
-    <!--edit the resources page -->
-    <a href="/adminportal/resourcesmanagement"><button>Manage Resources</button></a>
+  <!-- from last sprint, delete 
+  <button id="openResourcesBtn">Edit Resources</button>
 
+  <div class="subpage" id="subpage">
+      <h2>Edit Resources</h2>
+      <p>Edit the contents of the Resources page</p>
 
-    <!-- from last sprint, delete 
-    <button id="openResourcesBtn">Edit Resources</button>
+      <span id="closeBtn" class="close-btn">&times;</span>
 
-    
-    <div class="subpage" id="subpage">
-        <h2>Edit Resources</h2>
-        <p>Edit the contents of the Resources page</p>
+      <a href="/gallery"><button>View Uploaded Images</button></a>
 
-        <span id="closeBtn" class="close-btn">&times;</span>
+      <form id="uploadForm" enctype="multipart/form-data">
+          <input type="file" name="photo" accept="image/*" required>
+          <button type="submit">Upload Image</button>
+      </form>
+      
+      <div id="uploadStatus"></div>
+  </div> -->
 
-        <a href="/gallery"><button>View Uploaded Images</button></a>
+  <!--sprint 06 - Oanh moved it into content-management.ejs-->
+  <!-- <div class="overview">
+      <h2>Add a Testimonial</h2>
+      <form action="/admin/add-review" method="POST" class="testimonial-form">
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" name="name" required><br><br>
 
+          <label for="quote">Quote:</label><br>
+          <textarea id="quote" name="quote" rows="3" required></textarea><br><br>
 
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" name="photo" accept="image/*" required>
-        <button type="submit">Upload Image</button>
-    </form>
-    
-    <div id="uploadStatus"></div>
-    </div> -->
+          <label for="location">Location:</label><br>
+          <input type="text" id="location" name="location" required><br><br>
 
-    <div class="overview">
-        <h2>Add a Testimonial</h2>
-        <form action="/admin/add-review" method="POST" class="testimonial-form">
-            <label for="name">Name:</label><br>
-            <input type="text" id="name" name="name" required><br><br>
+          <label for="event">Event:</label><br>
+          <input type="text" id="event" name="event" required><br><br>
 
-            <label for="quote">Quote:</label><br>
-            <textarea id="quote" name="quote" rows="3" required></textarea><br><br>
+          <button type="submit">Submit Testimonial</button>
+      </form>
+  </div> -->
 
-            <label for="location">Location:</label><br>
-            <input type="text" id="location" name="location" required><br><br>
-
-            <label for="event">Event:</label><br>
-            <input type="text" id="event" name="event" required><br><br>
-
-            <button type="submit">Submit Testimonial</button>
-        </form>
-    </div>
-
-    <script>
-        // Check if redirected with ?submitted=true
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('submitted') === 'true') {
-          alert('✅ Testimonial submitted successfully!');
-        }
-      </script>
+  <!-- <script>
+      // Check if redirected with ?submitted=true
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('submitted') === 'true') {
+        alert('✅ Testimonial submitted successfully!');
+      }
+    </script> -->
 </body>
 </html>

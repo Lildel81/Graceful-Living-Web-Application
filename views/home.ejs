@@ -1,3 +1,5 @@
+<!--const path = require('path');
+app.use(express.static(path.join(__dirname, 'public'))); -->
 <!--/*------------------Carousel section-------------------------------*/-->
 <section aria-label="Newest Photos">
   <div class="carousel" data-carousel>
@@ -67,7 +69,7 @@
      <input type="radio" name="radio-btn" id="radio2">
      <input type="radio" name="radio-btn" id="radio3"> -->
 
-    <% slides.forEach((slide, i) => { %>
+   <% slides.forEach((slide, i) => { %>
       <input type="radio" name="radio-btn" id="radio<%= i+1 %>" <%= i === 0 ? 'checked' : '' %>>
     <% }) %>
 
@@ -75,9 +77,9 @@
 
      <!--Automatic navigation start-->
     <div class="navigation-auto">
-      <div class="auto-btn-1"></div>
-      <div class="auto-btn-2"></div>
-      <div class="auto-btn-3"></div>
+      <% slides.forEach((slide, i) => { %>
+        <div class="auto-btn-<%= i+1 %>"></div>
+      <% }) %>
     </div>
     <!--Automatic navigation end-->
 
@@ -97,14 +99,17 @@
 </section>
 <!--/*------------------------Carousel Section End------------------------------------*/-->
 <div class="home-container">
-  <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
-  <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
-  <h2>Hi!</h2>
-  <p>Let me introduce myself to you.</p>
 
+  <div class="quote-container">
+    <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
+    <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
+  </div>
+
+  <div>
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Hi!</h2>
+    <p style="font-size: 18px; margin-bottom: 20px; color: #003366;">Let me introduce myself to you.</p>
+  </div>
   <div class="video-container">
-    
-
     <iframe 
       width="560" 
       height="315" 
@@ -124,30 +129,126 @@
       <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
           
           <!-- Service 1 -->
-          <div style="width: 250px; height: 250px; background: #ccc; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-              <h3 style="font-size: 18px; font-weight: bold; color: #003366;">Service 1</h3>
-              <p style="font-size: 14px; margin: 10px 0; color: #003366;">Lorem ipsum dolor sit amet.</p>
-              <button style="padding: 8px 12px; background: #333; color: #fff; border-radius: 5px; border: none; cursor: pointer;">
-                  Let explore it
+          <div style="
+            width: 18rem; 
+            height: 28rem; 
+            background: url('/images/service%201.png') center / cover no-repeat; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
+            align-items: center; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            padding: 1rem;
+          ">
+            <!-- Overlay box -->
+            <div style="
+              background: rgba(0,0,0,0.5); 
+              padding: 1rem; 
+              border-radius: 8px; 
+              width: 100%; 
+              display: flex; 
+              flex-direction: column; 
+              align-items: center;
+              text-align: center;
+            ">
+              <h3 style="font-size: 18px; font-weight: bold; color: #fff; margin: 0;">Service 1</h3>
+              <p style="font-size: 14px; margin: 10px 0; color: #fff;">Lorem ipsum dolor sit amet.</p>
+              <button style="
+                padding: 8px 12px; 
+                background: #333; 
+                color: #fff; 
+                border-radius: 5px; 
+                border: none; 
+                cursor: pointer;
+                margin-top: 0.5rem;
+                margin-right:0;
+              ">
+                Let explore it
               </button>
+            </div>
           </div>
 
           <!-- Service 2 -->
-          <div style="width: 250px; height: 250px; background: #ccc; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-              <h3 style="font-size: 18px; font-weight: bold; color: #003366;">Service 2</h3>
-              <p style="font-size: 14px; margin: 10px 0; color: #003366;">Lorem ipsum dolor sit amet.</p>
-              <button style="padding: 8px 12px; background: #333; color: #fff; border-radius: 5px; border: none; cursor: pointer;">
-                  Let explore it
+          <div style="
+            width: 18rem; 
+            height: 28rem; 
+            background: url('/images/service%202.png') center / cover no-repeat; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
+            align-items: center; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            padding: 1rem;
+          ">
+            <!-- Overlay box -->
+            <div style="
+              background: rgba(0,0,0,0.5); 
+              padding: 1rem; 
+              border-radius: 8px; 
+              width: 100%; 
+              display: flex; 
+              flex-direction: column; 
+              align-items: center;
+              text-align: center;
+            ">
+              <h3 style="font-size: 18px; font-weight: bold; color: #fff; margin: 0;">Service 2</h3>
+              <p style="font-size: 14px; margin: 10px 0; color: #fff;">Lorem ipsum dolor sit amet.</p>
+              <button style="
+                padding: 8px 12px; 
+                background: #333; 
+                color: #fff; 
+                border-radius: 5px; 
+                border: none; 
+                cursor: pointer;
+                margin-top: 0.5rem;
+                margin-right:0;
+              ">
+                Let explore it
               </button>
+            </div>
           </div>
 
           <!-- Service 3 -->
-          <div style="width: 250px; height: 250px; background: #ccc; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-              <h3 style="font-size: 18px; font-weight: bold; color: #003366;">Service 3</h3>
-              <p style="font-size: 14px; margin: 10px 0; color: #003366;">Lorem ipsum dolor sit amet.</p>
-              <button style="padding: 8px 12px; background: #333; color: #fff; border-radius: 5px; border: none; cursor: pointer;">
-                  Let explore it
+          <div style="
+            width: 18rem; 
+            height: 28rem; 
+            background: url('/images/service%203.png') center / cover no-repeat; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
+            align-items: center; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            padding: 1rem;
+          ">
+            <!-- Overlay box -->
+            <div style="
+              background: rgba(0,0,0,0.5); 
+              padding: 1rem; 
+              border-radius: 8px; 
+              width: 100%; 
+              display: flex; 
+              flex-direction: column; 
+              align-items: center;
+              text-align: center;
+            ">
+              <h3 style="font-size: 18px; font-weight: bold; color: #fff; margin: 0;">Service 3</h3>
+              <p style="font-size: 14px; margin: 10px 0; color: #fff;">Lorem ipsum dolor sit amet.</p>
+              <button style="
+                padding: 8px 12px; 
+                background: #333; 
+                color: #fff; 
+                border-radius: 5px; 
+                border: none; 
+                cursor: pointer;
+                margin-top: 0.5rem;
+                margin-right:0;
+              ">
+                Let explore it
               </button>
+            </div>
           </div>
 
       </div>
@@ -155,7 +256,7 @@
   <!-- ✅ Services Section Ends Here -->
 
   <div class="review-section">
-    <h3>Voices of the Healed</h3>
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Voices of the Healed</h2>
   
     <% selectedReviews.forEach((review, i) => { %>
       <div class="review" style="background: url('/images/review-background<%= (i % 3) + 1 %>.png') no-repeat center center / cover;">

@@ -11,6 +11,7 @@ const Client = require("../models/client");
 const CarouselSlide = require("../models/carouselSlide");
 const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
+const ResourcesText = require('../models/resourcesText');
 const mongoose = require("mongoose");
 
 const MOCK_USERS = [
@@ -311,25 +312,75 @@ const getAssessmentView = async (req, res, next) => {
   res.render("quiz/assessment");
 };
 
-const getAdminPortalView = async (req, res, next) => {
-  // turn on mock data with ?mock=1 or env var MOCK_USERS=true
-  const forceMock = req.query.mock === "1" || process.env.MOCK_USERS === "true";
-
+const postCreateClient = async (req, res) => {
   try {
-    let users = [];
+    const payload = {
+      firstname:   (req.body.firstname || '').trim(),
+      lastname:    (req.body.lastname  || '').trim(),
+      phonenumber: (req.body.phonenumber || '').trim(),
+      email:       (req.body.email || '').trim(),
+      closedChakra:(req.body.closedChakra || '').trim(),
+      currentDate: new Date().toISOString()
+    };
 
-    if (!forceMock) {
-      // try to load from DB first
-      users = await Client.find(
-        {},
-        "firstname lastname phonenumber email closedChakra"
-      ).lean();
+    // Validate with your existing Joi validator if exported
+    if (typeof Client.validate === 'function') {
+      const { error } = Client.validate(payload);
+      if (error) {
+        return res.status(400).render('client-add', {
+          formError: error.details?.[0]?.message || 'Validation error',
+          formValues: payload
+        });
+      }
     }
 
-    // fallback to mocks if forced, DB errored, or DB is empty
-    if (forceMock || !users || users.length === 0) {
-      users = MOCK_USERS;
+    // Optional: prevent duplicate emails
+    const existing = await Client.findOne({ email: payload.email }).lean();
+    if (existing) {
+      return res.status(400).render('client-add', {
+        formError: 'A client with this email already exists.',
+        formValues: payload
+      });
     }
+
+    await Client.create(payload);
+    return res.redirect('/adminportal?created=1'); // back to the list with success flag
+  } catch (err) {
+    console.error('Failed to create client:', err);
+    return res.status(500).render('client-add', {
+      formError: 'Something went wrong creating the client.',
+      formValues: req.body
+    });
+  }
+};
+
+
+const getAdminPortalView = async (req, res) => {
+  try {
+    const users = await Client
+      .find({}, 'firstname lastname phonenumber email closedChakra')
+      .sort({ firstname: 1, lastname: 1 })
+      .lean();
+
+    res.render('adminportal', {
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+      upcomingSessions: '',
+      notifications: '',
+      recentActivities: '',
+      users
+    });
+  } catch (err) {
+    console.error('Failed to load admin portal:', err);
+    res.render('adminportal', {
+      userName: 'Admin',
+      upcomingSessions: '',
+      notifications: '',
+      recentActivities: '',
+      users: []           // no mock — just empty if DB fails
+    });
+  }
+};
+
 
     // old quizresponses query logic retained for reference
     /*
@@ -390,25 +441,16 @@ const getAdminPortalView = async (req, res, next) => {
     if (forceMock || !users || users.length === 0) {
       users = MOCK_USERS;
     }
-    */ ß;
-    res.render("adminportal", {
-      userName: (req.user && (req.user.firstname || req.user.name)) || "Admin",
-      upcomingSessions: "",
-      notifications: "",
-      recentActivities: "",
-      users,
-    });
-  } catch (err) {
-    console.error("Failed to load admin portal:", err.message);
-    res.render("adminportal", {
-      userName: "Admin",
-      upcomingSessions: "",
-      notifications: "",
-      recentActivities: "",
-      users: MOCK_USERS, // hard fallback so page still shows data
-    });
-  }
-};
+    */ 
+    
+    //For now, placeholder values until real DB queries are added
+    //const totalSubmissions = users.length; // show how many users exist
+    // placeholder until the correct logic is implemented
+    //const avgChakraBalance = 0;
+    //const avgQuadrantBalance = 0;
+    //const mostImbalanced = null;
+
+ 
 
 const getGalleryView = async (req, res, next) => {
   const uploadDir = path.join(__dirname, "..", "uploads");
@@ -455,10 +497,15 @@ const getResourcesView = async (req, res, next) => {
 
   try {
     const resources = await ResourcesImage.find().sort({ createdAt: -1 });
-    res.render("resources", { resources });
+    const resourcesText = await ResourcesText.findOne();
+
+    res.render('resources', { 
+      resources,
+      resourcesText
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error loading resources");
+    console.error("Error loading resources page:", err);
+    res.status(500).send("Error loading resources page");
   }
 };
 
@@ -475,7 +522,15 @@ const getShopView = async (req, res, next) => {
 };
 
 const getApplicationView = async (req, res, next) => {
-  res.render("application", { successMessage: null });
+  res.render("prequiz/application", { successMessage: null });
+};
+
+const getPreAppView = (req, res) =>{
+  res.render('prequiz/pre-app'); 
+};
+
+const getApplicationSuccessView = (req, res) =>{
+  res.render('prequiz/app-success');
 };
 
 const getReviewsView = async (req, res, next) => {
@@ -500,6 +555,12 @@ const getResourcesManagementView = (req, res) => {
   res.render("resourcesmanagement");
 };
 
+const getClientManagementView = (req, res) => {
+  res.render('clientmanagement');
+};
+
+
+
 const getEditResourcesImageView = async (req, res) => {
   const resource = await ResourcesImage.findById(req.params.id);
   res.render("editresourcesimage", { resource }); // ✅ layout.ejs wraps it
@@ -515,16 +576,20 @@ module.exports = {
   handleUpload,
   deleteImage,
   getAdminPortalView,
+  postCreateClient,
   getContactView,
   getResourcesView,
   getNotFoundView,
   getServicesView,
   getShopView,
   getApplicationView,
+  getPreAppView,
+  getApplicationSuccessView,
   getReviewsView,
   getContentManagementView,
   getResourcesManagementView,
   getEditResourcesImageView,
   getLoginView,
+  getClientManagementView,
   router,
 };

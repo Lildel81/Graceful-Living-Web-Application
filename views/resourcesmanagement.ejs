@@ -7,6 +7,53 @@
   <link rel="stylesheet" href="/css/carousel-mangement.css">
 </head>
 <body>
+
+  <!-- text management section -->
+  <h2>Edit Resources Page Text</h2>
+  <form action="/adminportal/resources/text/update" method="POST">
+    <div class="form-section">
+      <label for="title">Page Title:</label>
+      <input type="text" id="title" name="title" value="<%= resourcesText ? resourcesText.title : '' %>">
+
+      <h3>Paragraphs:</h3>
+      <div id="paragraphs-container">
+        <% if (resourcesText && resourcesText.paragraphs && resourcesText.paragraphs.length > 0) { %>
+          <% resourcesText.paragraphs.forEach(function(p) { %>
+            <textarea name="paragraphs[]" rows="3"><%= p %></textarea>
+          <% }) %>
+        <% } else { %>
+          <textarea name="paragraphs[]" rows="3"></textarea>
+        <% } %>
+      </div>
+
+      <button type="button" onclick="addParagraph()">Add Paragraph</button>
+
+      <label for="videoUrl">YouTube Video URL:</label>
+      <input 
+        type="text" 
+        id="videoUrl" 
+        name="videoUrl" 
+        value="<%= resourcesText ? resourcesText.videoUrl : '' %>">
+
+    </div>
+
+    <button type="submit">Save Text</button>
+  </form>
+
+  <script>
+    function addParagraph() {
+      const container = document.getElementById('paragraphs-container');
+      const textarea = document.createElement('textarea');
+      textarea.name = "paragraphs[]";
+      textarea.rows = 3;
+      container.appendChild(textarea);
+    }
+  </script>
+
+
+
+
+  <!-- image management section -->
   <h2>Manage Resources Images</h2>
 
     <!-- error message -->

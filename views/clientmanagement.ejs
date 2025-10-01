@@ -1,0 +1,68 @@
+<!-- CLIENT MANAGEMENT BAR -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Client Management</title>
+    <link rel="stylesheet" href="/css/clientmanagement.css"/>
+ </head>
+
+ <body>
+    <main>
+    <div class="hero"><b>Client Management</b> </div>
+
+    <!--Client Mangagement Bar -->
+    <nav class="client-mgmt_links">
+      <a href="">Pre-Application Results</a></button>
+      <a href="">Energy Leak Results</a></button>
+      <a href="/clientmanagement/add">Add Client</a>
+    </nav>
+
+    <div class="back-link">
+        <a href="/adminportal"><button>← Back to Admin Portal</button></a>
+    </div>
+
+
+    <!--Quick access search bar?-->
+    <section class="overview">
+        <h2>User List</h2>
+
+        <!-- visual-only search -->
+        <input id="userFilter" type="text" placeholder="Filter by name or email">
+
+        <div style="overflow-x:auto;">
+        <table id="usersTable">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Closed Chakra</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% if (typeof users !== 'undefined' && users.length) { %>
+                <% users.forEach(function(u){ %>
+                <tr>
+                    <td><%= u.firstname %></td>
+                    <td><%= u.lastname %></td>
+                    <td><%= u.phonenumber %></td>
+                    <td><%= u.email %></td>
+                    <td><%= u.closedChakra %></td>
+                </tr>
+                <% }) %>
+            <% } else { %>
+                <tr><td colspan="5">No users found.</td></tr>
+            <% } %>
+            </tbody>
+        </table>
+        </div>
+  </section>
+  </main>
+
+ </body>
+
+
+ </html>

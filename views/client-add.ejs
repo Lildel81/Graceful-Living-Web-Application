@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Client</title>
+  <link rel="stylesheet" href="/css/adminportal.css">
+</head>
+<body>
+  <div class="hero"><b>Add Client</b></div>
+  <div class="overview" style="max-width:900px;margin:0 auto;">
+    <a href="/adminportal" class="btn-back" style="display:inline-block;margin-bottom:12px;padding:8px 12px;background:#0b8;color:#fff;border-radius:8px;text-decoration:none">← Back to Admin Portal</a>
+
+    <% if (formError) { %>
+      <div style="margin:10px 0 20px;padding:10px;background:#ffecec;border:1px solid #f5c2c7;color:#842029;border-radius:8px;">
+        <%= formError %>
+      </div>
+    <% } %>
+
+    <form action="/admin/clients" method="POST" class="form-stacked" style="text-align:left;">
+      <label>First Name *</label>
+      <input name="firstname" required value="<%= formValues?.firstname || '' %>" />
+
+      <label>Last Name *</label>
+      <input name="lastname" required value="<%= formValues?.lastname || '' %>" />
+
+      <label>Phone Number *</label>
+      <input name="phonenumber" required value="<%= formValues?.phonenumber || '' %>" />
+
+      <label>Email *</label>
+      <input name="email" type="email" required value="<%= formValues?.email || '' %>" />
+
+      <label>Closed Chakra *</label>
+      <select name="closedChakra" required>
+        <option value="" disabled <%= formValues?.closedChakra ? '' : 'selected' %>>Select one</option>
+        <option value="root"        <%= formValues?.closedChakra==='root'?'selected':'' %>>Root</option>
+        <option value="sacral"      <%= formValues?.closedChakra==='sacral'?'selected':'' %>>Sacral</option>
+        <option value="solarPlexus" <%= formValues?.closedChakra==='solarPlexus'?'selected':'' %>>Solar Plexus</option>
+        <option value="heart"       <%= formValues?.closedChakra==='heart'?'selected':'' %>>Heart</option>
+        <option value="throat"      <%= formValues?.closedChakra==='throat'?'selected':'' %>>Throat</option>
+        <option value="thirdEye"    <%= formValues?.closedChakra==='thirdEye'?'selected':'' %>>Third Eye</option>
+        <option value="crown"       <%= formValues?.closedChakra==='crown'?'selected':'' %>>Crown</option>
+      </select>
+
+      <button type="submit" style="margin-top:12px;">Add Client</button>
+      <p style="opacity:.7;margin-top:6px;">* Required by current schema</p>
+    </form>
+  </div>
+</body>
+</html>
