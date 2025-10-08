@@ -9,4 +9,8 @@ router.post(
 );
 router.get("/assessment/thanks", (req, res) => res.render("quiz/thanks"));
 
+exports.renderApplication = (req, res) => {
+  res.render('prequiz/application', { successMessage: null, errorMessage: null });
+};
+
 module.exports = router;

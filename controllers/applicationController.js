@@ -1,5 +1,5 @@
 const Application = require('../models/appSchema');
-const {validate} = require('../models/appSchema'); 
+const {validate} = Application;
 
 
 // handles the application form submission
@@ -24,6 +24,7 @@ const submitApplication = async (req, res) => {
             successMessage: null,
             errorMessage: error.details[0].message,
             form: payload,
+            csrfToken: req.csrfToken(),        // terry added this for security purposes
         });
     }    
 
@@ -36,10 +37,13 @@ const submitApplication = async (req, res) => {
         return res.redirect(303, '/app-success');
    
     } catch (err){
+        console.error('Application save failed:', err);
+
         return res.status(500).render('prequiz/application',{
             successMessage: null,
-            errrorMessage: 'Something went wrong saving your application. Please try again',
+            errorMessage: 'Something went wrong saving your application. Please try again', //terry fixed the error issue
             form: payload,
+            csrfToken: req.csrfToken(),        // terry added this for security purposes
         });
     }
 };

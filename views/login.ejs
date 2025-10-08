@@ -10,6 +10,9 @@
 <body>
   <h1> Admin Portal Login</h1>
     <form id="login-form" action="/login" method = "POST">
+
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
       <label>Username 
         <input 
           type="text" 
@@ -17,7 +20,10 @@
           class="username-box" 
           name="username" 
           autocomplete="username" 
+          autocapitalize="none"
+          spellcheck="false"
           required 
+          maxlength="31"
           />
         </label>
 
@@ -28,7 +34,8 @@
           class="password-box" 
           name="password" 
           autocomplete="current-password" 
-          required 
+          required
+          maxlength="72"
           />
         </label>
 

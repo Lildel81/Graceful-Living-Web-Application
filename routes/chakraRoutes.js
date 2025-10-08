@@ -434,7 +434,7 @@ router.get("/results", async (req, res) => {
     const archetypeData = resultsContent.archetypes[assessment.archetype];
 
     // render the page with full objects
-    res.render("quiz/results", {
+    res.render('quiz/results', {
       chakraData,
       archetypeData,
     });
@@ -443,6 +443,8 @@ router.get("/results", async (req, res) => {
     res.status(500).send("Error fetching assessment");
   }
 });
+
+
 
 // export router, attach helpers for testing
 router.getScore = getScore;

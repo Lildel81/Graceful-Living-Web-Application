@@ -6,7 +6,10 @@
   <link rel="stylesheet" href="/css/application.css">
 </head>
 <body>
-  <form action="/application" method="post">
+<form id="assessment-form" action="/application" method="POST" novalidate>
+
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
     <h2>Getting To Know You</h2>
     <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
       <p style="color:#b00020; font-weight:600; margin:8px 0 16px;"><%= errorMessage %></p>

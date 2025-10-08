@@ -27,7 +27,6 @@ router.get('/application', getApplicationView);
 router.get('/app-success', getApplicationSuccessView);
 router.get('/reviews', getReviewsView)
 router.get('/content-management', requireAdmin, getContentManagementView);
-router.get('/login', getLoginView);
 router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagementView);
 router.get('/clientmanagement', requireAdmin, getClientManagementView); 
 router.get('/clientmanagement/add', requireAdmin, (req, res) => {
@@ -40,6 +39,18 @@ router.post('/admin/clients', requireAdmin, postCreateClient);
 router.post('/application', submitApplication);
 
 //router.get('/login', getAdminPortalView); // This is for me to go to adminportal faster
+
+router.get('/', (req, res) => {
+  res.render('login', { ok: req.query.ok, csrfToken: req.csrfToken() });
+});
+
+router.post('/', async (req, res) => {
+  // auth...
+  return res.status(401).render('login', {
+    csrfToken: req.csrfToken(), // new token for re-render
+    error: 'Invalid username or password'
+  });
+});
 
 router.post('/admin/add-review', requireAdmin, async (req, res) => {
     try {
