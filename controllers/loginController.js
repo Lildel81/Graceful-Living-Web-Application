@@ -6,6 +6,12 @@ const mongoose = require('mongoose');
 
 const router = express.Router();
 
+const createDOMPurify = require('dompurify')
+const { JSDOM } = require('jsdom')
+
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
+
 const DUMMY_BCRYPT_HASH = '$2b$12$C0M7X0I1k2aUPq2m4i2WfOo5sM0m2kG1VhSWas6yOqB0W3zJ5r0H6';
 
 /* ---------- model ---------- */
@@ -37,13 +43,16 @@ const loginLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true,
-  keyGenerator: (req) => `${req.ip}:${(req.body.username || '').toLowerCase()}`,
+  keyGenerator: (req) => {
+    const cleanUsername = DOMPurify.sanitize(req.body.username || '');
+    return '${req.ip}:${cleanUsername.toLowerCase()}'
+  },
   handler: (req, res) => {
     return res.status(429).render('login', {
       ok: false,
       error: 'Too many failed login attempts. Try again in 15 minutes.',
       username: req.body.username || '',
-      csrfToken: req.csrfToken(),          // <-- add token
+      //csrfToken: req.csrfToken(),          // <-- add token
     });
   },
 });
@@ -62,7 +71,12 @@ router.get('/', (req, res) => {
 
 /* ---------- POST /login ---------- */
 router.post('/', loginLimiter, async (req, res) => {
-  const { error, value } = formSchema.validate(req.body, { abortEarly: false });
+const cleanUsername = DOMPurify.sanitize(req.body.username || '');
+const cleanPassword = DOMPurify.sanitize(req.body.password || '');
+
+
+  const { error, value } = formSchema.validate(
+    { username: cleanUsername, password: cleanPassword }, { abortEarly: false });
   if (error) {
     return res.status(400).render('login', {
       ok: false,

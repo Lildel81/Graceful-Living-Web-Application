@@ -97,7 +97,7 @@ mongoose.connection.once("open", async () => {
     await col.dropIndex("expiresAt_1").catch((e) => {
       if (e?.codeName !== "IndexNotFound") throw e;
     });
-    await require("./models/PasswordResetToken").createIndexes();
+    await require("./models/passwordResetToken").createIndexes();
     console.log("[indexes] PasswordResetToken OK");
   } catch (err) {
     console.error("[indexes] PasswordResetToken error:", err.message);
@@ -154,7 +154,7 @@ app.get("/contact", (req, res) => {
   res.render("contact");
 });
 app.get("/about", (req, res) => {
-  res.render("aboutUS");
+  res.render("aboutUs");
 });
 //terry added for debugging purposes
 

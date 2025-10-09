@@ -1,6 +1,12 @@
 const Application = require('../models/appSchema');
 const {validate} = Application;
 
+const createDOMPurify = require('dompurify')
+const { JSDOM } = require('jsdom')
+
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
+
 
 // handles the application form submission
 const submitApplication = async (req, res) => {
@@ -8,12 +14,32 @@ const submitApplication = async (req, res) => {
     const toArray = (v) => (Array.isArray(v) ? v : v ? [v] : []);
 
     // submitted form becomes object, and make checkboxes arrays
-   const payload = {
-    ...req.body,
-    familiarWith: toArray(req.body.familiarWith),
-    challenges: toArray(req.body.challenges),
-   };
+//    const payload = {
+//     ...req.body,
 
+//     familiarWith: toArray(DOMPurify.sanitize(req.body.familiarWith)),
+//     challenges: toArray(DOMPurify.sanitize(req.body.challenges)),
+//    };
+//terry added all this so its sanitized.
+    const payload = {
+        email: DOMPurify.sanitize(req.body.email),
+  fullName: DOMPurify.sanitize(req.body.fullName),
+  contactNumber: DOMPurify.sanitize(req.body.contactNumber),
+  ageBracket: DOMPurify.sanitize(req.body.ageBracket),
+  isHealthcareWorker: DOMPurify.sanitize(req.body.isHealthcareWorker),
+  healthcareRole: DOMPurify.sanitize(req.body.healthcareRole),
+  healthcareYears: req.body.healthcareYears
+    ? Number(DOMPurify.sanitize(req.body.healthcareYears))
+    : undefined,
+  jobTitle: DOMPurify.sanitize(req.body.jobTitle),
+  workedWithPractitioner: DOMPurify.sanitize(req.body.workedWithPractitioner),
+  familiarWith: sanitizeArray(req.body.familiarWith),
+  experience: DOMPurify.sanitize(req.body.experience),
+  goals: DOMPurify.sanitize(req.body.goals),
+  challenges: sanitizeArray(req.body.challenges),
+    }
+
+   
    // validate the data with schema joi
    const {error, value } = validate(payload); 
 
@@ -24,7 +50,7 @@ const submitApplication = async (req, res) => {
             successMessage: null,
             errorMessage: error.details[0].message,
             form: payload,
-            csrfToken: req.csrfToken(),        // terry added this for security purposes
+           // csrfToken: req.csrfToken(),        // terry added this for security purposes
         });
     }    
 
@@ -43,7 +69,7 @@ const submitApplication = async (req, res) => {
             successMessage: null,
             errorMessage: 'Something went wrong saving your application. Please try again', //terry fixed the error issue
             form: payload,
-            csrfToken: req.csrfToken(),        // terry added this for security purposes
+            //csrfToken: req.csrfToken(),        // terry added this for security purposes
         });
     }
 };

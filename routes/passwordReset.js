@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const { sendResetEmail } = require('../mail/mailer');
 const crypto = require('crypto');
-const PasswordResetToken = require('../models/PasswordResetToken');
+const PasswordResetToken = require('../models/passwordResetToken');
 
 
 const HARD_CODED_RECIPIENT = process.env.RESET_EMAIL_RECIPIENT || 'terry.weatherman8112@gmail.com';
