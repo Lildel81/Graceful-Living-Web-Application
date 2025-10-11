@@ -15,6 +15,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.1.0",
     "express-session": "^1.18.2",
+    "googleapis": "^162.0.0",
     "helmet": "^8.1.0",
     "hpp": "^0.2.3",
     "joi": "^17.13.3",

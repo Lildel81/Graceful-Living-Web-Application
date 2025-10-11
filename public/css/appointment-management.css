@@ -1,0 +1,1029 @@
+/**
+ * ================================================
+ * ADMIN DASHBOARD STYLES
+ * ================================================
+ * 
+ * This stylesheet provides the visual design for the admin appointment
+ * management dashboard for GracefuLiving coaching platform.
+ * 
+ * Design Principles:
+ * - Professional, clean admin interface
+ * - Tabbed navigation for organization
+ * - Two-column layout (main content + sidebar)
+ * - Color-coded status indicators
+ * - Interactive elements with visual feedback
+ * - Responsive design for all devices
+ * 
+ * Components:
+ * - Dashboard header with save button
+ * - Tab navigation (4 tabs)
+ * - Available days checkboxes
+ * - Time slots grid with add/remove
+ * - Blocked dates list
+ * - All appointments table with filters
+ * - Upcoming appointments sidebar
+ * - Quick statistics cards
+ * 
+ * Color Scheme:
+ * - Primary: Teal (#008080) - Buttons, highlights
+ * - Success: Green (#e0f2f1) - Positive actions
+ * - Error: Red (#dc3545) - Delete, warnings
+ * - Info: Blue (#17a2b8) - Informational elements
+ * - Warning: Yellow (#ffc107) - Caution states
+ */
+
+/* ==========================================
+   CSS CUSTOM PROPERTIES (VARIABLES)
+   ========================================== */
+/* 
+   Define reusable color and styling variables.
+   Makes it easy to maintain consistent design and change themes.
+*/
+:root {
+    --primary-color: #008080;          /* Teal - Main brand color */
+    --secondary-color: #E0F2F1;        /* Light teal - Backgrounds */
+    --text-dark: #333;                 /* Dark gray - Primary text */
+    --text-light: #666;                /* Medium gray - Secondary text */
+    --white: #ffffff;                  /* White - Cards, backgrounds */
+    --light-gray: #f4f4f4;             /* Very light gray - Page background */
+    --border-color: #ddd;              /* Light gray - Borders */
+    --success-color: #28a745;          /* Green - Success states */
+    --error-color: #dc3545;            /* Red - Error/delete states */
+    --warning-color: #ffc107;          /* Yellow - Warning states */
+    --info-color: #17a2b8;             /* Blue - Info states */
+}
+
+/* ==========================================
+   GLOBAL RESET
+   ========================================== */
+/* 
+   Reset browser default styles for consistency.
+   Box-sizing ensures padding/border are included in element width.
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   BODY STYLES
+   ========================================== */
+/* 
+   Base styling for the entire admin dashboard page.
+   Sets font family, background, and text color.
+*/
+body {
+    font-family: 'Inter', 'Futura', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--light-gray); /* Light gray page background */
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* ==========================================
+   MAIN DASHBOARD CONTAINER
+   ========================================== */
+/* 
+   Central container for the entire admin dashboard.
+   Centered on page with maximum width for optimal viewing.
+*/
+.admin-dashboard {
+    max-width: 1200px;                 /* Maximum width for readability */
+    margin: 0 auto;                    /* Center horizontally */
+    padding: 20px;
+    min-height: 100vh;                 /* Full viewport height */
+}
+
+/* ==========================================
+   DASHBOARD HEADER
+   ========================================== */
+/* 
+   Top header bar with title and save button.
+   Flexbox layout for responsive positioning.
+*/
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;   /* Space between left and right */
+    align-items: flex-start;
+    background: var(--white);         /* White card background */
+    padding: 30px;
+    border-radius: 12px;              /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-bottom: 20px;
+}
+
+/* Left side: Icon and title */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;                        /* Space between icon and text */
+}
+
+/* Gear icon for admin context */
+.gear-icon {
+    font-size: 2em;
+    color: var(--primary-color);      /* Teal color */
+}
+
+/* Dashboard title */
+.header-title h1 {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+/* Subtitle/description */
+.header-title p {
+    color: var(--text-light);         /* Lighter gray */
+    font-size: 1.1em;
+}
+
+/* ==========================================
+   SAVE BUTTON
+   ========================================== */
+/* 
+   Primary action button for saving availability changes.
+   Saves weekly schedule and time slot modifications to database.
+*/
+.save-btn {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;                          /* Space between icon and text */
+    transition: all 0.2s ease;
+}
+
+/* Save button hover state */
+.save-btn:hover {
+    background: #5a52d4;               /* Darker teal */
+    transform: translateY(-1px);       /* Slight lift effect */
+    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3); /* Elevated shadow */
+}
+
+/* Floppy disk save icon */
+.save-icon {
+    font-size: 1.1em;
+}
+
+/* ==========================================
+   TAB NAVIGATION
+   ========================================== */
+/* 
+   Tab buttons for switching between dashboard sections.
+   4 tabs: Available Days, Time Slots, Blocked Dates, All Appointments
+   
+   Features:
+   - Equal-width tab buttons
+   - Active state with blue background
+   - Bottom indicator line for active tab
+   - Hover effects
+*/
+.tab-navigation {
+    display: flex;
+    background: var(--white);         /* White background */
+    border-radius: 12px;
+    padding: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    gap: 8px;
+}
+
+/* Individual tab button */
+.tab-btn {
+    flex: 1;                          /* Equal width for all tabs */
+    background: transparent;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--text-light);         /* Gray default */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* Active tab styling */
+.tab-btn.active {
+    background: #e8f2ff;              /* Light blue background */
+    color: var(--primary-color);      /* Teal text */
+}
+
+/* Active tab bottom indicator line */
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);      /* Center horizontally */
+    width: 30px;
+    height: 3px;
+    background: var(--primary-color); /* Teal line */
+    border-radius: 2px;
+}
+
+/* Tab hover state (only for inactive tabs) */
+.tab-btn:hover:not(.active) {
+    background: var(--light-gray);    /* Light gray background */
+    color: var(--text-dark);          /* Dark text */
+}
+
+/* ==========================================
+   MAIN CONTENT LAYOUT
+   ========================================== */
+/* 
+   Two-column grid layout.
+   Left column (2fr): Tab content panels
+   Right column (1fr): Sidebar (appointments + stats)
+*/
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;   /* 2:1 ratio */
+    gap: 20px;
+}
+
+.content-left, .content-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ==========================================
+   TAB CONTENT PANELS
+   ========================================== */
+/* 
+   Content containers for each tab.
+   Only one is visible at a time.
+   Fade-in animation on tab switch.
+*/
+.tab-content {
+    display: none;                    /* Hidden by default */
+    animation: fadeIn 0.3s ease;      /* Smooth entrance */
+}
+
+/* Active tab content (currently visible) */
+.tab-content.active {
+    display: block;
+}
+
+/* Fade-in animation for tab transitions */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================
+   PANEL CARDS
+   ========================================== */
+/* 
+   White card containers for tab content.
+   Provides clean, elevated appearance.
+*/
+.panel {
+    background: var(--white);         /* White background */
+    padding: 30px;
+    border-radius: 12px;              /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Panel heading */
+.panel h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+/* Panel description text */
+.panel p {
+    color: var(--text-light);         /* Lighter gray */
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+/* ==========================================
+   AVAILABLE DAYS TAB
+   ========================================== */
+/* 
+   Weekly availability selection interface.
+   Admin checks days of the week to accept appointments.
+   
+   Features:
+   - Grid layout for checkbox options
+   - Each day is a checkbox with label
+   - Visual feedback on hover and checked states
+   - Days saved to database on "Save Changes"
+*/
+
+/* Days selection grid container */
+.days-selection {
+    display: grid;
+    gap: 12px;                        /* Space between day options */
+}
+
+/* Individual day option (checkbox + label) */
+.day-option {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--white);
+}
+
+.day-option:hover {
+    border-color: var(--primary-color);
+    background: #f8f9ff;
+}
+
+.day-option input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.day-option input[type="checkbox"]:checked + .day-name {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.day-name {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+/* ==========================================
+   TIME SLOTS TAB
+   ========================================== */
+/* 
+   Time slot management interface.
+   Admin can add and remove 30-minute appointment time slots.
+   
+   Features:
+   - HTML5 time input for adding slots
+   - Auto-generates 30-minute duration
+   - Grid display of existing slots
+   - Remove button on each slot
+   - Changes saved to database on "Save Changes"
+*/
+
+/* Add time slot form container */
+.add-time-slot {
+    margin-bottom: 25px;
+}
+
+/* Form label */
+.add-time-slot label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+/* Time input and button container */
+.time-input-group {
+    display: flex;
+    gap: 10px;                        /* Space between input and button */
+    align-items: center;
+}
+
+.time-input {
+    padding: 12px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    flex: 1;
+    transition: border-color 0.2s ease;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.add-btn {
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-btn:hover {
+    background: #5a52d4;
+    transform: translateY(-1px);
+}
+
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.time-slot-item {
+    background: var(--light-gray);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 15px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-slot-item:hover {
+    border-color: var(--primary-color);
+    background: #f8f9ff;
+}
+
+.time-slot-item .remove-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--error-color);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================
+   BLOCKED DATES TAB
+   ========================================== */
+/* 
+   Date blocking interface for holidays, vacations, and time off.
+   Blocked dates won't appear as available on the booking calendar.
+   
+   Features:
+   - HTML5 date picker for selecting dates
+   - List of currently blocked dates
+   - Remove button on each blocked date
+   - Immediately saves to database (no "Save Changes" needed)
+   - Pacific timezone handling to prevent day shifts
+*/
+
+/* Block date form container */
+.block-date-form {
+    margin-bottom: 25px;
+}
+
+/* Form label */
+.block-date-form label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.date-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.date-input {
+    padding: 12px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    flex: 1;
+    transition: border-color 0.2s ease;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.block-btn {
+    background: var(--error-color);
+    color: var(--white);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.block-btn:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.blocked-dates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.blocked-date-item {
+    background: #ffe0e0;
+    border: 1px solid var(--error-color);
+    border-radius: 8px;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blocked-date-item.error {
+    background: #ffcccc;
+    border: 2px solid #ff4444;
+}
+
+.blocked-date-item .remove-btn {
+    background: var(--error-color);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.blocked-date-item .remove-btn:hover {
+    background: #d32f2f;
+}
+
+/* ==========================================
+   SIDEBAR CARDS
+   ========================================== */
+/* 
+   White card containers for sidebar widgets.
+   Includes upcoming appointments and quick stats.
+   
+   Features:
+   - Consistent white card appearance
+   - Shadow for elevation
+   - Rounded corners
+   - Responsive padding
+*/
+.appointments-card, .stats-card {
+    background: var(--white);         /* White card background */
+    padding: 25px;
+    border-radius: 12px;              /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.clock-icon {
+    font-size: 1.2em;
+    color: var(--primary-color);
+}
+
+.card-header h3 {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* Appointments List */
+.appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.appointment-item {
+    background: #f8f9ff;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+}
+
+.appointment-item .remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--error-color);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.appointment-name {
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.appointment-email {
+    color: var(--text-light);
+    font-size: 0.9em;
+    margin-bottom: 8px;
+}
+
+.appointment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.appointment-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    color: var(--text-dark);
+}
+
+.appointment-detail .icon {
+    color: var(--primary-color);
+}
+
+/* ==========================================
+   QUICK STATS CARD
+   ========================================== */
+/* 
+   Real-time statistics dashboard in sidebar.
+   Shows counts of days, time slots, blocked dates, and appointments.
+   
+   Features:
+   - 2x2 grid layout for 4 metrics
+   - Color-coded values (blue, red, green)
+   - Auto-updates when data changes
+   - Visual hierarchy with labels and large numbers
+*/
+.stats-card h3 {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: var(--light-gray);
+    border-radius: 8px;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.stat-value {
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+.stat-value.blue {
+    color: var(--info-color);
+}
+
+.stat-value.red {
+    color: var(--error-color);
+}
+
+.stat-value.green {
+    color: var(--success-color);
+}
+
+/* Loading States */
+.loading {
+    text-align: center;
+    color: var(--text-light);
+    padding: 20px;
+    font-style: italic;
+}
+
+/* ==========================================
+   ALL APPOINTMENTS TAB - FILTER CONTROLS
+   ========================================== */
+/* 
+   Radio button filters for appointment list.
+   Options: All, Upcoming, Past, Cancelled
+   
+   Features:
+   - Horizontal radio button layout
+   - Clear labels for each filter
+   - Gray background container
+   - Instant filtering on selection
+*/
+.filter-controls {
+    display: flex;
+    gap: 20px;                        /* Space between filter options */
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--light-gray);    /* Light gray background */
+    border-radius: 8px;
+}
+
+/* Filter label with radio button */
+.filter-controls label {
+    display: flex;
+    align-items: center;
+    gap: 8px;                         /* Space between radio and text */
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Radio button styling */
+.filter-controls input[type="radio"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+/* ==========================================
+   ALL APPOINTMENTS TAB - TABLE
+   ========================================== */
+/* 
+   Full appointments table with all appointment details.
+   
+   Features:
+   - Sortable columns
+   - Hover effects on rows
+   - Color-coded status badges
+   - Action buttons (status dropdown, delete)
+   - Responsive horizontal scroll
+   
+   Columns:
+   - Client Name, Email, Phone
+   - Date, Time
+   - Status (badge)
+   - Actions (dropdown + delete button)
+*/
+
+/* Table container with horizontal scroll */
+.appointments-table-container {
+    overflow-x: auto;                 /* Horizontal scroll on small screens */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Main table element */
+.appointments-table {
+    width: 100%;
+    border-collapse: collapse;        /* Remove cell spacing */
+    background: var(--white);
+}
+
+/* Table header */
+.appointments-table thead {
+    background: var(--primary-color);  /* Teal header */
+    color: var(--white);               /* White text */
+}
+
+/* Table header cells */
+.appointments-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Table data cells */
+.appointments-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Row hover effect */
+.appointments-table tbody tr:hover {
+    background: var(--light-gray);    /* Light gray on hover */
+}
+
+/* Remove border from last row */
+.appointments-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Loading state cell */
+.loading-cell {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 30px !important;
+}
+
+/* ==========================================
+   STATUS BADGES
+   ========================================== */
+/* 
+   Color-coded badges showing appointment status.
+   Used in appointments table and sidebar list.
+   
+   Status Types:
+   - Pending: Yellow background, brown text
+   - Confirmed: Green background, dark green text
+   - Cancelled: Red background, dark red text
+   - Completed: Blue background, dark blue text
+*/
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;              /* Pill shape */
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: capitalize;       /* "pending" → "Pending" */
+}
+
+/* Pending status (awaiting confirmation) */
+.status-badge.pending {
+    background: #fff3cd;              /* Light yellow */
+    color: #856404;                   /* Dark yellow/brown */
+}
+
+/* Confirmed status (approved) */
+.status-badge.confirmed {
+    background: #d4edda;              /* Light green */
+    color: #155724;                   /* Dark green */
+}
+
+/* Cancelled status */
+.status-badge.cancelled {
+    background: #f8d7da;              /* Light red */
+    color: #721c24;                   /* Dark red */
+}
+
+/* Completed status (past appointment) */
+.status-badge.completed {
+    background: #d1ecf1;              /* Light blue */
+    color: #0c5460;                   /* Dark blue */
+}
+
+/* ==========================================
+   ACTION BUTTONS (TABLE ACTIONS)
+   ========================================== */
+/* 
+   Action buttons in the appointments table.
+   Includes status dropdown and delete button.
+   
+   Features:
+   - Flexbox layout for button group
+   - Color-coded by action type
+   - Hover effects for interactivity
+*/
+
+/* Action buttons container */
+.action-buttons {
+    display: flex;
+    gap: 8px;                         /* Space between buttons */
+    flex-wrap: wrap;                  /* Wrap on small screens */
+}
+
+/* Base action button styles */
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* Status update button (unused - using dropdown instead) */
+.action-btn.status {
+    background: var(--info-color);    /* Blue background */
+    color: var(--white);              /* White text */
+}
+
+.action-btn.status:hover {
+    background: #138496;              /* Darker blue on hover */
+}
+
+/* Delete button */
+.action-btn.delete {
+    background: var(--error-color);   /* Red background */
+    color: var(--white);              /* White text */
+}
+
+.action-btn.delete:hover {
+    background: #c82333;              /* Darker red on hover */
+}
+
+/* ==========================================
+   STATUS DROPDOWN
+   ========================================== */
+/* 
+   Dropdown for changing appointment status.
+   Options: Pending, Confirmed, Cancelled, Completed
+   
+   Features:
+   - White background select element
+   - Border styling matching design
+   - Cursor pointer for interactivity
+*/
+.status-dropdown {
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.85em;
+    background: var(--white);
+    cursor: pointer;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN - TABLET & MOBILE
+   ========================================== */
+/* 
+   Responsive adjustments for tablet and mobile devices (≤768px).
+   
+   Changes:
+   - Single column layout (stack sidebar below main content)
+   - Vertical tab navigation
+   - Stacked buttons and inputs
+   - Smaller table text
+   - Reduced padding
+   
+   Improves:
+   - Touch interaction on mobile
+   - Readability on small screens
+   - Space efficiency
+*/
+@media (max-width: 768px) {
+    /* Single column layout (no sidebar) */
+    .dashboard-content {
+        grid-template-columns: 1fr;   /* Stack vertically */
+    }
+    
+    /* Stack header vertically, center text */
+    .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    /* Vertical tab navigation */
+    .tab-navigation {
+        flex-direction: column;       /* Stack tabs vertically */
+    }
+    
+    /* Single column stats grid */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Stack inputs and buttons vertically */
+    .time-input-group, .date-input-group {
+        flex-direction: column;
+    }
+    
+    /* Stack filter controls vertically */
+    .filter-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* Smaller table text for mobile */
+    .appointments-table {
+        font-size: 0.85em;
+    }
+    
+    /* Reduced table padding */
+    .appointments-table th,
+    .appointments-table td {
+        padding: 8px;
+    }
+    
+    /* Stack action buttons vertically */
+    .action-buttons {
+        flex-direction: column;
+    }
+}
