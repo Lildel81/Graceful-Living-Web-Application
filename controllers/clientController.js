@@ -12,6 +12,7 @@ const CarouselSlide = require("../models/carouselSlide");
 const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
+const Application = require('../models/appSchema');
 const mongoose = require("mongoose");
 
 const MOCK_USERS = [
@@ -533,6 +534,77 @@ const getApplicationSuccessView = (req, res) =>{
   res.render('prequiz/app-success');
 };
 
+
+
+const getPreQuizResults = async (req, res) =>{
+  try {
+    const {
+      q,
+      ageBracket,
+      isHealthcareWorker,
+      workedWithPractitioner,
+      familiarWith,
+      challenges,
+      from,
+      to
+    } = req.query;
+
+    
+    const filter = {};
+    if (q) {
+      const rx = new RegExp(q, 'i');
+      filter.$or = [
+        { fullName: rx },
+        { email: rx },
+        { contactNumber: rx },
+        { jobTitle: rx }
+      ];
+    }
+    if (ageBracket) filter.ageBracket = ageBracket;
+    if (isHealthcareWorker) filter.isHealthcareWorker = isHealthcareWorker;
+    if (workedWithPractitioner) filter.workedWithPractitioner = workedWithPractitioner;
+
+    const toArr = v => (Array.isArray(v) ? v : v ? [v] : []);
+    const fam = toArr(familiarWith);
+    if (fam.length) filter.familiarWith = { $all: fam };
+
+    const ch = toArr(challenges);
+    if (ch.length) filter.challenges = { $all: ch };
+
+    if (from || to) {
+      filter.submittedAt = {};
+      if (from) filter.submittedAt.$gte = new Date(from);
+      if (to) {
+        const d = new Date(to);
+        d.setHours(23, 59, 59, 999);
+        filter.submittedAt.$lte = d;
+      }
+    }
+
+    const [totalSubmissions, rows] = await Promise.all([
+      Application.countDocuments(filter),
+      Application.find(filter).sort({ submittedAt: -1 }).lean()
+    ]);
+
+    res.render('prequiz-results', {
+      title: 'Pre-Application Results',
+      stats: { total: totalSubmissions },
+      rows,
+     
+      q: q || '',
+      ageBracket: ageBracket || '',
+      isHealthcareWorker: isHealthcareWorker || '',
+      workedWithPractitioner: workedWithPractitioner || '',
+      familiarWith: toArr(familiarWith),
+      challenges: toArr(challenges),
+      from: from || '',
+      to: to || ''
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getReviewsView = async (req, res, next) => {
   try {
     const testimonialData = await testimonials.find({});
@@ -591,5 +663,6 @@ module.exports = {
   getEditResourcesImageView,
   getLoginView,
   getClientManagementView,
+  getPreQuizResults,
   router,
 };

@@ -23,7 +23,7 @@ const chakraRoutes = require("./routes/chakraRoutes");
 const loginController = require("./controllers/loginController");
 const passwordResetRoutes = require("./routes/passwordReset");
 const resetPageRoutes = require("./routes/resetPage");
-
+const clientApplications = require('./routes/clientApplications');
 const app = express();
 
 app.disable("x-powered-by");
@@ -199,5 +199,6 @@ app.use(resourcesRoutes);
 app.use(carouselRoutes);
 //app.use(require("./routes/assessment"));
 app.use(clientRoutes.routes);
+app.use('/', clientApplications);
 
 app.listen(config.port, () => winston.info("App is listening on http://localhost:" + config.port));
