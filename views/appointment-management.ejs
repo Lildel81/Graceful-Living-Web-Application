@@ -1,0 +1,508 @@
+<!--
+    ================================================
+    ADMIN DASHBOARD - APPOINTMENT MANAGEMENT
+    ================================================
+    
+    This page provides a comprehensive admin dashboard for managing the appointment
+    booking system for GracefuLiving coaching platform.
+    
+    Features:
+    - Weekly availability management (select working days)
+    - Time slot configuration (add/remove available times)
+    - Date blocking for holidays/vacations
+    - View and manage all appointments
+    - Update appointment status
+    - Delete appointments
+    - Real-time stats (available days, time slots, blocked dates, appointments)
+    - Upcoming appointments sidebar
+    - CSRF protection for all actions
+    
+    Tabs:
+    1. Available Days - Select which days of the week to accept appointments
+    2. Time Slots - Manage 30-minute time slots
+    3. Blocked Dates - Block specific dates (holidays, vacations)
+    4. All Appointments - View/manage all appointments with filters
+    
+    Authentication:
+    - Protected route: requires admin login
+    - Session-based authentication via /adminportal/appointments
+    
+    Dependencies:
+    - /css/appointment-management.css - Dashboard styling
+    - /js/appointment-management.js - Client-side logic and interactions
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding for proper text display -->
+    <meta charset="UTF-8">
+    
+    <!-- Responsive design for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Page title shown in browser tab -->
+    <title>Admin Dashboard - Graceful Living</title>
+    
+    <!-- Dashboard styles -->
+    <link rel="stylesheet" href="/css/appointment-management.css">
+</head>
+<body>
+    <!-- Main dashboard container -->
+    <div class="admin-dashboard">
+        
+        <!-- ==========================================
+             CSRF PROTECTION
+             ========================================== -->
+        <!-- 
+            Hidden CSRF token for security.
+            Sent with all form submissions and AJAX requests to prevent
+            cross-site request forgery attacks.
+            
+            Token is generated server-side and validated on every request.
+        -->
+        <input type="hidden" id="csrfToken" value="<%= csrfToken %>">
+        
+        <!-- ==========================================
+             DASHBOARD HEADER
+             ========================================== -->
+        <!-- 
+            Top header with title and save button.
+            Save button applies all changes made in the dashboard.
+        -->
+        <div class="dashboard-header">
+            <!-- Left side: Title and description -->
+            <div class="header-left">
+                <div class="gear-icon">⚙️</div>
+                <div class="header-title">
+                    <h1>Appointment Management Dashboard</h1>
+                    <p>Manage your availability and appointments</p>
+                </div>
+            </div>
+            
+            <!-- Right side: Save button -->
+            <div class="header-right">
+                <!-- Saves availability and time slot changes to database -->
+                <button class="save-btn" id="saveChangesBtn">
+                    <span class="save-icon">💾</span>
+                    Save Changes
+                </button>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB NAVIGATION
+             ========================================== -->
+        <!-- 
+            Navigation tabs for switching between different management sections.
+            Only one tab is active/visible at a time.
+            
+            Tabs:
+            1. Available Days - Weekly schedule configuration
+            2. Time Slots - Time slot management
+            3. Blocked Dates - Specific date blocking
+            4. All Appointments - Complete appointment list
+        -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="available-days">Available Days</button>
+            <button class="tab-btn" data-tab="time-slots">Time Slots</button>
+            <button class="tab-btn" data-tab="blocked-dates">Blocked Dates</button>
+            <button class="tab-btn" data-tab="all-appointments">All Appointments</button>
+        </div>
+
+        <!-- ==========================================
+             MAIN CONTENT AREA
+             ========================================== -->
+        <!-- 
+            Two-column layout:
+            - Left: Tab content panels
+            - Right: Sidebar (upcoming appointments + stats)
+        -->
+        <div class="dashboard-content">
+            
+            <!-- Left Column: Tab Content Panels -->
+            <div class="content-left">
+                
+                <!-- ==========================================
+                     TAB 1: AVAILABLE DAYS
+                     ========================================== -->
+                <!-- 
+                    Weekly availability configuration.
+                    Admin selects which days of the week to accept appointments.
+                    
+                    Features:
+                    - Checkbox for each day of the week
+                    - data-day attribute: 0=Sunday, 1=Monday, ..., 6=Saturday
+                    - Changes saved to database when "Save Changes" is clicked
+                    - Affects which dates show as available on booking calendar
+                    
+                    Flow:
+                    1. Admin checks/unchecks days
+                    2. Clicks "Save Changes" button
+                    3. JavaScript sends updates to server
+                    4. Database updated with new availability
+                    5. Booking calendar reflects changes
+                -->
+                <div class="tab-content active" id="available-days">
+                    <div class="panel">
+                        <h2>Select Days You're Available</h2>
+                        <p>Choose which days of the week you accept appointments</p>
+                        
+                        <!-- Day selection checkboxes -->
+                        <div class="days-selection">
+                            <!-- Sunday (data-day="0") -->
+                            <label class="day-option">
+                                <input type="checkbox" id="sunday" data-day="0">
+                                <span class="day-name">Sunday</span>
+                            </label>
+                            
+                            <!-- Monday (data-day="1") -->
+                            <label class="day-option">
+                                <input type="checkbox" id="monday" data-day="1">
+                                <span class="day-name">Monday</span>
+                            </label>
+                            
+                            <!-- Tuesday (data-day="2") -->
+                            <label class="day-option">
+                                <input type="checkbox" id="tuesday" data-day="2">
+                                <span class="day-name">Tuesday</span>
+                            </label>
+                            
+                            <!-- Wednesday (data-day="3") -->
+                            <label class="day-option">
+                                <input type="checkbox" id="wednesday" data-day="3">
+                                <span class="day-name">Wednesday</span>
+                            </label>
+                            
+                            <!-- Thursday (data-day="4") -->
+                            <label class="day-option">
+                                <input type="checkbox" id="thursday" data-day="4">
+                                <span class="day-name">Thursday</span>
+                            </label>
+                            
+                            <!-- Friday (data-day="5") -->
+                            <label class="day-option">
+                                <input type="checkbox" id="friday" data-day="5">
+                                <span class="day-name">Friday</span>
+                            </label>
+                            
+                            <!-- Saturday (data-day="6") -->
+                            <label class="day-option">
+                                <input type="checkbox" id="saturday" data-day="6">
+                                <span class="day-name">Saturday</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     TAB 2: TIME SLOTS
+                     ========================================== -->
+                <!-- 
+                    Time slot management for appointment scheduling.
+                    Admin can add and remove 30-minute time slots.
+                    
+                    Features:
+                    - Time picker input for adding new slots
+                    - Automatically creates 30-minute duration
+                    - Grid display of existing time slots
+                    - Remove button on each time slot
+                    - Changes saved when "Save Changes" is clicked
+                    
+                    Example:
+                    - Input: 9:00 AM → Creates: "9:00 AM - 9:30 AM"
+                    - Input: 2:00 PM → Creates: "2:00 PM - 2:30 PM"
+                    
+                    Flow:
+                    1. Admin enters start time (e.g., 9:00)
+                    2. Clicks "+ Add" button
+                    3. JavaScript creates 30-minute slot (9:00 AM - 9:30 AM)
+                    4. Slot appears in grid with remove button
+                    5. Click "Save Changes" to persist to database
+                -->
+                <div class="tab-content" id="time-slots">
+                    <div class="panel">
+                        <h2>Manage Time Slots</h2>
+                        <p>Add or remove available appointment times</p>
+                        
+                        <!-- Add new time slot form -->
+                        <div class="add-time-slot">
+                            <label for="newTimeSlot">Add New Time Slot</label>
+                            <div class="time-input-group">
+                                <!-- HTML5 time input (24-hour format) -->
+                                <input type="time" id="newTimeSlot" class="time-input">
+                                <!-- Add button triggers JavaScript to create 30-min slot -->
+                                <button class="add-btn" id="addTimeSlotBtn">+ Add</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Time slots display grid (populated by JavaScript) -->
+                        <div class="time-slots-grid" id="timeSlotsGrid">
+                            <!-- Existing time slots will be dynamically displayed here -->
+                            <!-- Each slot shows: "HH:MM AM/PM - HH:MM AM/PM" with remove button -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     TAB 3: BLOCKED DATES
+                     ========================================== -->
+                <!-- 
+                    Block specific dates for holidays, vacations, or personal time.
+                    Blocked dates will not appear as available on the booking calendar.
+                    
+                    Features:
+                    - Date picker for selecting dates to block
+                    - List of currently blocked dates
+                    - Remove button on each blocked date
+                    - Handles Pacific timezone to prevent day shifts
+                    - Immediately saves to database (no "Save Changes" needed)
+                    
+                    Use Cases:
+                    - Holidays (Christmas, Thanksgiving, etc.)
+                    - Vacation days
+                    - Personal time off
+                    - Conference attendance
+                    
+                    Flow:
+                    1. Admin selects date from calendar picker
+                    2. Clicks "Block Date" button
+                    3. Date immediately saved to database
+                    4. Date added to blocked dates list
+                    5. Booking calendar updated (date no longer bookable)
+                    6. Click "Remove" to unblock a date
+                -->
+                <div class="tab-content" id="blocked-dates">
+                    <div class="panel">
+                        <h2>Block Specific Dates</h2>
+                        <p>Add dates when you're unavailable (vacations, holidays, etc.)</p>
+                        
+                        <!-- Block date form -->
+                        <div class="block-date-form">
+                            <label for="blockDate">Select Date to Block</label>
+                            <div class="date-input-group">
+                                <!-- HTML5 date input (YYYY-MM-DD format) -->
+                                <input type="date" id="blockDate" class="date-input">
+                                <!-- Block button triggers immediate save to database -->
+                                <button class="block-btn" id="blockDateBtn">Block Date</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Blocked dates list (populated by JavaScript) -->
+                        <div class="blocked-dates-list" id="blockedDatesList">
+                            <!-- Blocked dates will be dynamically displayed here -->
+                            <!-- Each entry shows: "Day, Mon DD, YYYY" with remove button -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     TAB 4: ALL APPOINTMENTS
+                     ========================================== -->
+                <!-- 
+                    Complete appointment management interface.
+                    View, filter, update status, and delete appointments.
+                    
+                    Features:
+                    - Filter appointments (All, Upcoming, Past, Cancelled)
+                    - Table view with all appointment details
+                    - Status dropdown to change appointment status
+                    - Delete button for permanent removal
+                    - Color-coded status badges
+                    - Syncs with Google Calendar
+                    
+                    Status Options:
+                    - Pending: Awaiting confirmation
+                    - Confirmed: Approved appointment
+                    - Completed: Past appointment that occurred
+                    - Cancelled: Cancelled by admin or client
+                    
+                    Flow:
+                    1. View all appointments in table
+                    2. Use radio buttons to filter by status/date
+                    3. Change status via dropdown → Updates database + Google Calendar
+                    4. Click "Delete" → Permanently removes → Deletes from Google Calendar
+                -->
+                <div class="tab-content" id="all-appointments">
+                    <div class="panel">
+                        <h2>All Appointments</h2>
+                        <p>View and manage all appointments (past, upcoming, and cancelled)</p>
+                        
+                        <!-- Filter controls -->
+                        <div class="filter-controls">
+                            <!-- All appointments -->
+                            <label>
+                                <input type="radio" name="appointmentFilter" value="all" checked> All
+                            </label>
+                            <!-- Future appointments only -->
+                            <label>
+                                <input type="radio" name="appointmentFilter" value="upcoming"> Upcoming
+                            </label>
+                            <!-- Past appointments only -->
+                            <label>
+                                <input type="radio" name="appointmentFilter" value="past"> Past
+                            </label>
+                            <!-- Cancelled appointments only -->
+                            <label>
+                                <input type="radio" name="appointmentFilter" value="cancelled"> Cancelled
+                            </label>
+                        </div>
+                        
+                        <!-- Appointments table container -->
+                        <div class="appointments-table-container">
+                            <table class="appointments-table">
+                                <!-- Table header -->
+                                <thead>
+                                    <tr>
+                                        <th>Client Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <!-- Table body (populated by JavaScript) -->
+                                <tbody id="allAppointmentsTableBody">
+                                    <tr>
+                                        <td colspan="7" class="loading-cell">Loading appointments...</td>
+                                    </tr>
+                                    <!-- Rows will be dynamically generated with:
+                                         - Client information (name, email, phone)
+                                         - Appointment date and time
+                                         - Status badge (color-coded)
+                                         - Action buttons (status dropdown, delete button)
+                                    -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of content-left -->
+
+            <!-- ==========================================
+                 RIGHT SIDEBAR
+                 ========================================== -->
+            <!-- 
+                Persistent sidebar visible on all tabs.
+                Shows quick overview and upcoming appointments.
+            -->
+            <div class="content-right">
+                
+                <!-- ==========================================
+                     UPCOMING APPOINTMENTS CARD
+                     ========================================== -->
+                <!-- 
+                    Displays next 5 upcoming appointments.
+                    Updates in real-time when appointments are added/modified.
+                    
+                    Features:
+                    - Shows only future, non-cancelled appointments
+                    - Displays: client name, email, date, time
+                    - Limited to 5 most recent
+                    - Cancel button (×) on each appointment
+                    - Auto-refreshes after changes
+                    
+                    Data Source:
+                    - Loaded from: GET /appointments/adminportal/appointments
+                    - Filtered and sorted by JavaScript
+                -->
+                <div class="appointments-card">
+                    <div class="card-header">
+                        <span class="clock-icon">🕐</span>
+                        <h3>Upcoming Appointments</h3>
+                    </div>
+                    <!-- Appointments list (populated by JavaScript) -->
+                    <div class="appointments-list" id="appointmentsList">
+                        <div class="loading">Loading appointments...</div>
+                        <!-- Will display appointment items with:
+                             - Client name
+                             - Client email
+                             - Appointment date (e.g., "Mon, Oct 13, 2025")
+                             - Appointment time (e.g., "2:00 PM")
+                             - Cancel button (×)
+                        -->
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     QUICK STATS CARD
+                     ========================================== -->
+                <!-- 
+                    Real-time statistics dashboard.
+                    Shows count of various system elements.
+                    
+                    Metrics:
+                    - Available Days: Number of weekdays with availability
+                    - Time Slots: Total number of time slots configured
+                    - Blocked Dates: Count of blocked dates
+                    - Appointments: Total upcoming appointments
+                    
+                    Updates:
+                    - Automatically recalculates when data changes
+                    - Color-coded for visual clarity (blue, red, green)
+                -->
+                <div class="stats-card">
+                    <h3>Quick Stats</h3>
+                    <div class="stats-grid">
+                        <!-- Available Days count (blue) -->
+                        <div class="stat-item">
+                            <span class="stat-label">Available Days</span>
+                            <span class="stat-value blue" id="availableDaysCount">0</span>
+                        </div>
+                        
+                        <!-- Time Slots count (blue) -->
+                        <div class="stat-item">
+                            <span class="stat-label">Time Slots</span>
+                            <span class="stat-value blue" id="timeSlotsCount">0</span>
+                        </div>
+                        
+                        <!-- Blocked Dates count (red) -->
+                        <div class="stat-item">
+                            <span class="stat-label">Blocked Dates</span>
+                            <span class="stat-value red" id="blockedDatesCount">0</span>
+                        </div>
+                        
+                        <!-- Appointments count (green) -->
+                        <div class="stat-item">
+                            <span class="stat-label">Appointments</span>
+                            <span class="stat-value green" id="appointmentsCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of content-right -->
+        </div>
+        <!-- End of dashboard-content -->
+    </div>
+    <!-- End of admin-dashboard -->
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+    <!-- 
+        Client-side dashboard logic and interactions.
+        
+        Functions:
+        - Tab switching
+        - Load/save availability settings
+        - Add/remove time slots
+        - Block/unblock dates
+        - Load/filter/update appointments
+        - Update statistics
+        - Handle all AJAX requests
+        
+        API Endpoints Used:
+        - GET /appointments/adminportal/availability
+        - POST /appointments/adminportal/availability
+        - GET /appointments/adminportal/blocked-dates
+        - POST /appointments/adminportal/blocked-dates
+        - DELETE /appointments/adminportal/blocked-dates/:id
+        - GET /appointments/adminportal/appointments
+        - PUT /appointments/adminportal/appointments/:id/status
+        - DELETE /appointments/adminportal/appointments/:id
+    -->
+    <script src="/js/appointment-management.js"></script>
+</body>
+</html>

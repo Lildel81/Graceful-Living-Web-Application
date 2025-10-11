@@ -1,0 +1,913 @@
+/**
+ * ================================================
+ * BOOKING PAGE STYLES
+ * ================================================
+ * 
+ * This stylesheet provides the visual design for the Calendly-style
+ * appointment booking interface for GracefuLiving coaching platform.
+ * 
+ * Design Principles:
+ * - Clean, modern, professional appearance
+ * - Step-by-step visual progression
+ * - Interactive calendar and time selection
+ * - Responsive design (mobile-first)
+ * - Accessible color contrasts
+ * - Smooth transitions and animations
+ * 
+ * Components:
+ * - Header with branding
+ * - Progress indicator (3 steps)
+ * - Interactive calendar
+ * - Time slot grid
+ * - Contact form
+ * - Confirmation screen
+ * 
+ * Color Scheme:
+ * - Primary: Teal (#008080) - Buttons, highlights, selected items
+ * - Secondary: Light Gray (#F3F4F6) - Backgrounds, disabled states
+ * - Success: Green (#10B981) - Confirmation states
+ * - Text: Dark Gray (#374151) - Main content
+ */
+
+/* ==========================================
+   CSS CUSTOM PROPERTIES (VARIABLES)
+   ========================================== */
+/* 
+   Define reusable color and styling variables.
+   Makes it easy to maintain consistent design and change themes.
+*/
+:root {
+    --primary-color: #008080;           /* Teal - Main brand color */
+    --primary-hover: #E0F2F1;          /* Light teal - Hover states */
+    --secondary-color: #F3F4F6;        /* Light gray - Backgrounds */
+    --text-color: #374151;             /* Dark gray - Main text */
+    --text-light: #6B7280;             /* Medium gray - Secondary text */
+    --border-color: #D1D5DB;           /* Light gray - Borders */
+    --success-color: #10B981;          /* Green - Success states */
+    --white: #FFFFFF;                  /* White - Cards, backgrounds */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);      /* Standard shadow */
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* Large shadow */
+}
+
+/* ==========================================
+   GLOBAL RESET
+   ========================================== */
+/* 
+   Reset browser default styles for consistency.
+   Box-sizing ensures padding/border are included in element width.
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   BODY STYLES
+   ========================================== */
+/* 
+   Base styling for the entire page.
+   Sets font family, background, and text color.
+*/
+body {
+    font-family: 'Inter', 'Futura', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* ==========================================
+   MAIN CONTAINER
+   ========================================== */
+/* 
+   Central container for the entire booking interface.
+   Centered on page with maximum width for readability.
+*/
+.booking-container {
+    max-width: 600px;                  /* Optimal reading width */
+    margin: 0 auto;                    /* Center horizontally */
+    background: var(--white);          /* White background */
+    min-height: 100vh;                 /* Full viewport height */
+    box-shadow: var(--shadow-lg);      /* Elevated card effect */
+}
+
+/* ==========================================
+   HEADER SECTION
+   ========================================== */
+/* 
+   Branded header at the top of the booking page.
+   Teal background with white text for strong visual identity.
+*/
+.booking-header {
+    background: var(--primary-color);  /* Teal brand color */
+    color: var(--white);               /* White text */
+    padding: 40px 30px;                /* Spacious padding */
+    text-align: center;                /* Center-aligned text */
+    border-radius: 0 0 20px 20px;      /* Rounded bottom corners */
+}
+
+.booking-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.booking-header p {
+    font-size: 16px;
+    opacity: 0.9;                      /* Slightly transparent for hierarchy */
+}
+
+/* ==========================================
+   PROGRESS INDICATOR
+   ========================================== */
+/* 
+   Visual step tracker showing booking progress.
+   Three steps: Date → Time → Details
+   
+   States:
+   - Default: Gray circle, gray text
+   - Active: Teal circle, teal text
+   - Completed: Teal circle, teal connector line
+*/
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+}
+
+/* Connector line between steps */
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;                         /* Align with circle center */
+    left: 60%;
+    right: -40%;
+    height: 2px;
+    background: var(--border-color);   /* Gray for incomplete */
+    z-index: 1;                        /* Behind circles */
+}
+
+/* Teal connector line for completed steps */
+.step.completed:not(:last-child)::after {
+    background: var(--primary-color);
+}
+
+/* Step number circle */
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;                /* Circular shape */
+    background: var(--border-color);   /* Gray default */
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    position: relative;
+    z-index: 2;                        /* Above connector lines */
+    transition: all 0.3s ease;
+}
+
+/* Active step (current step) */
+.step-circle.active {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+}
+
+/* Completed step (already finished) */
+.step-circle.completed {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+}
+
+/* Step label text */
+.step-label {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light);          /* Gray default */
+}
+
+/* Active/completed step labels */
+.step.active .step-label,
+.step.completed .step-label {
+    color: var(--primary-color);       /* Teal for emphasis */
+}
+
+/* ==========================================
+   STEP CONTENT AREA
+   ========================================== */
+/* 
+   Main content area where each step is displayed.
+   Only one step is visible at a time.
+*/
+.booking-content {
+    padding: 40px 30px;
+}
+
+/* Step container (hidden by default) */
+.booking-step {
+    display: none;                     /* Hidden by default */
+    animation: fadeIn 0.3s ease-in;    /* Smooth entrance animation */
+}
+
+/* Active step (currently visible) */
+.booking-step.active {
+    display: block;                    /* Show this step */
+}
+
+/* Fade-in animation for step transitions */
+@keyframes fadeIn {
+    from {
+        opacity: 0;                    /* Start invisible */
+        transform: translateY(20px);   /* Start slightly below */
+    }
+    to {
+        opacity: 1;                    /* End fully visible */
+        transform: translateY(0);      /* End at normal position */
+    }
+}
+
+/* Step content container */
+.step-content {
+    text-align: center;                /* Center-align all content */
+}
+
+/* ==========================================
+   STEP ICONS
+   ========================================== */
+/* 
+   Large emoji icons for visual context.
+   Different icon for each step (calendar, clock, notepad).
+*/
+.calendar-icon,
+.time-icon,
+.details-icon {
+    font-size: 48px;                   /* Large, prominent size */
+    margin-bottom: 20px;
+    display: block;
+}
+
+/* ==========================================
+   STEP HEADERS
+   ========================================== */
+/* 
+   Heading for each step ("Select a Date", etc.).
+*/
+.step-content h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+/* ==========================================
+   BACK NAVIGATION LINKS
+   ========================================== */
+/* 
+   "← Change Date" / "← Change Time" links.
+   Allow users to go back and modify previous selections.
+*/
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary-color);       /* Teal color */
+    text-decoration: none;             /* No underline */
+    font-size: 14px;
+    margin-bottom: 20px;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--primary-hover);       /* Lighter on hover */
+}
+
+/* ==========================================
+   INTERACTIVE CALENDAR (STEP 1)
+   ========================================== */
+/* 
+   Calendar widget for date selection.
+   Shows month view with available dates highlighted.
+   
+   Features:
+   - Month navigation (previous/next buttons)
+   - 7-column grid (Sun-Sat)
+   - Visual states: disabled, available, selected
+   - Hover effects for interactivity
+   - Only future dates with availability are selectable
+*/
+.calendar-container {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: var(--shadow);
+}
+
+/* Calendar header with month name and navigation */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Previous/next month navigation buttons */
+.nav-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;                /* Circular button */
+    transition: background-color 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: var(--secondary-color); /* Gray background on hover */
+}
+
+/* Current month/year display */
+.calendar-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Calendar grid container */
+.calendar-grid {
+    width: 100%;
+}
+
+/* Day of week headers (Sun, Mon, Tue, etc.) */
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for days of week */
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.day-header {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    padding: 8px 4px;
+}
+
+/* Date cells grid (42 cells = 6 weeks) */
+.calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for days of week */
+    gap: 4px;
+}
+
+/* Individual date cell */
+.date-cell {
+    aspect-ratio: 1;                   /* Square shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* Disabled date (past, blocked, or no availability) */
+.date-cell.disabled {
+    color: var(--text-light);          /* Gray text */
+    background: #F9FAFB;               /* Light gray background */
+    cursor: not-allowed;               /* Not clickable cursor */
+}
+
+/* Available date (can be selected) */
+.date-cell.available {
+    color: var(--primary-color);       /* Teal text */
+    background: var(--white);          /* White background */
+    border: 2px solid var(--primary-color); /* Teal border */
+    font-weight: 600;                  /* Bold for emphasis */
+}
+
+/* Available date hover state */
+.date-cell.available:hover {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+    border-color: var(--primary-color);
+    transform: scale(1.05);            /* Slightly larger on hover */
+}
+
+/* Selected date */
+.date-cell.selected {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+    border-color: var(--primary-color);
+}
+
+/* ==========================================
+   TIME SLOT SELECTION (STEP 2)
+   ========================================== */
+/* 
+   Time slot picker showing available appointment times.
+   Displays 30-minute time slots for the selected date.
+   
+   Features:
+   - Selected date reminder at top
+   - 3-column grid of time slots
+   - Scrollable if many slots
+   - Visual states: default, hover, selected, disabled
+   - Only shows available (non-booked) slots
+*/
+
+/* Selected date reminder */
+.selected-date-info {
+    background: var(--secondary-color); /* Light gray background */
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* Time slots container */
+.time-slots-container {
+    margin: 20px 0;
+}
+
+/* Time slots grid (3 columns) */
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 12px;
+    max-height: 400px;                 /* Limit height for scrolling */
+    overflow-y: auto;                  /* Vertical scroll if needed */
+    padding: 10px;
+}
+
+/* Individual time slot button */
+.time-slot {
+    padding: 16px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--white);
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Time slot hover state */
+.time-slot:hover {
+    border-color: var(--primary-color); /* Teal border on hover */
+    background: #F3F4F6;               /* Light gray background */
+}
+
+/* Selected time slot */
+.time-slot.selected {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+    border-color: var(--primary-color);
+}
+
+/* Disabled time slot (already booked or past) */
+.time-slot.disabled {
+    background: #F3F4F6;               /* Light gray */
+    color: #9CA3AF;                    /* Darker gray text */
+    border-color: #E5E7EB;             /* Gray border */
+    cursor: not-allowed;               /* Not clickable cursor */
+    opacity: 0.6;                      /* Faded appearance */
+    text-decoration: line-through;     /* Strike-through text */
+}
+
+/* Disabled time slot hover (no effect) */
+.time-slot.disabled:hover {
+    border-color: #E5E7EB;
+    background: #F3F4F6;
+}
+
+/* No slots available message */
+.no-slots {
+    text-align: center;
+    color: var(--text-light);
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+/* ==========================================
+   APPOINTMENT SUMMARY (STEP 3)
+   ========================================== */
+/* 
+   Summary box showing selected date and time.
+   Displayed at top of details form for confirmation.
+*/
+.appointment-summary {
+    background: var(--secondary-color); /* Light gray background */
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.summary-text {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* ==========================================
+   CONTACT FORM (STEP 3)
+   ========================================== */
+/* 
+   Form for collecting client contact information.
+   
+   Fields:
+   - Full Name (required)
+   - Email Address (required)
+   - Phone Number (required)
+   - Additional Notes (optional)
+   
+   Features:
+   - HTML5 validation
+   - Focus states with teal highlight
+   - Responsive input sizing
+*/
+
+/* Form field container */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Form field labels */
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* Input fields and textarea */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;              /* Use same font as page */
+    transition: border-color 0.2s ease;
+    background: var(--white);
+}
+
+/* Input focus state (when user clicks in field) */
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;                     /* Remove default outline */
+    border-color: var(--primary-color); /* Teal border */
+    box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1); /* Subtle teal glow */
+}
+
+/* Textarea specific styling */
+.form-group textarea {
+    resize: vertical;                  /* Allow vertical resize only */
+    min-height: 100px;                 /* Minimum height */
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+/* 
+   Button styles for navigation and form submission.
+   Two types: Primary (teal) and Secondary (white with border)
+   
+   States:
+   - Default: Clickable, colored
+   - Hover: Elevated, color change
+   - Disabled: Gray, not clickable
+*/
+
+/* Button container */
+.step-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Base button styles */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    min-width: 120px;
+}
+
+/* Primary button (Next, Confirm, etc.) */
+.btn-primary {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+}
+
+/* Primary button hover state */
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);  /* Lighter teal */
+    transform: translateY(-1px);       /* Slight lift effect */
+}
+
+/* Disabled primary button */
+.btn-primary:disabled {
+    background: var(--border-color);   /* Gray background */
+    color: var(--text-light);          /* Gray text */
+    cursor: not-allowed;               /* Not clickable cursor */
+    transform: none;                   /* No hover effect */
+}
+
+/* Secondary button (Back button) */
+.btn-secondary {
+    background: var(--white);          /* White background */
+    color: var(--text-color);          /* Dark text */
+    border: 1px solid var(--border-color); /* Gray border */
+}
+
+/* Secondary button hover state */
+.btn-secondary:hover {
+    background: var(--secondary-color); /* Light gray background */
+    border-color: var(--text-light);   /* Darker border */
+}
+
+/* ==========================================
+   LOADING STATE
+   ========================================== */
+/* 
+   Loading indicator shown while fetching data from server.
+   Animated spinning circle for visual feedback.
+*/
+.loading-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+
+/* Animated loading spinner */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);    /* Gray border */
+    border-top: 2px solid var(--primary-color); /* Teal top for rotation effect */
+    border-radius: 50%;                /* Circular shape */
+    animation: spin 1s linear infinite; /* Continuous rotation */
+}
+
+/* Spinner rotation animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==========================================
+   ERROR STATE
+   ========================================== */
+/* 
+   Error message displayed when loading fails.
+   Red background for visual alert.
+*/
+.error-message {
+    background: #FEE2E2;               /* Light red background */
+    color: #DC2626;                    /* Dark red text */
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #FECACA;         /* Red border */
+    margin: 20px 0;
+}
+
+/* ==========================================
+   CONFIRMATION SCREEN (STEP 4)
+   ========================================== */
+/* 
+   Success screen shown after successful booking.
+   Displays appointment details and next actions.
+   
+   Features:
+   - Green checkmark icon
+   - Confirmation card with appointment details
+   - Session duration badge (30 min)
+   - Action buttons (home, book another)
+*/
+
+/* Success checkmark icon */
+.success-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--success-color);  /* Green background */
+    border-radius: 50%;                /* Circular shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;               /* Center horizontally */
+    color: var(--white);               /* White checkmark */
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* Confirmation details card */
+.confirmation-card {
+    background: var(--secondary-color); /* Light gray background */
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+/* Card header (session title and duration) */
+.confirmation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.confirmation-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* 30-minute duration badge */
+.duration-badge {
+    background: var(--primary-color);  /* Teal background */
+    color: var(--white);               /* White text */
+    padding: 4px 12px;
+    border-radius: 20px;               /* Pill shape */
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Confirmation details list */
+.confirmation-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.detail-row {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* Action buttons container */
+.confirmation-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN - TABLET
+   ========================================== */
+/* 
+   Responsive adjustments for tablet and smaller screens.
+   Optimizes layout and sizing for medium devices (≤768px).
+*/
+@media (max-width: 768px) {
+    /* Full-width container on tablets */
+    .booking-container {
+        margin: 0;
+        border-radius: 0;              /* No rounded corners */
+        box-shadow: none;              /* No shadow */
+    }
+    
+    /* Reduced header padding */
+    .booking-header {
+        padding: 30px 20px;
+        border-radius: 0;
+    }
+    
+    /* Reduced content padding */
+    .booking-content {
+        padding: 30px 20px;
+    }
+    
+    /* Reduced progress steps padding */
+    .progress-steps {
+        padding: 20px;
+    }
+    
+    /* Stack buttons vertically */
+    .step-actions {
+        flex-direction: column;
+    }
+    
+    /* Full-width buttons */
+    .btn {
+        width: 100%;
+    }
+    
+    /* Reduce time slots to 2 columns */
+    .time-slots-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Tighter calendar spacing */
+    .calendar-dates {
+        gap: 2px;
+    }
+    
+    /* Smaller date text */
+    .date-cell {
+        font-size: 12px;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN - MOBILE
+   ========================================== */
+/* 
+   Further optimizations for mobile phones (≤480px).
+   Single column layout for better touch interaction.
+*/
+@media (max-width: 480px) {
+    /* Smaller header text */
+    .booking-header h1 {
+        font-size: 24px;
+    }
+    
+    /* Smaller step headers */
+    .step-content h2 {
+        font-size: 20px;
+    }
+    
+    /* Single column time slots for easier tapping */
+    .time-slots-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Minimal calendar spacing */
+    .calendar-dates {
+        gap: 1px;
+    }
+    
+    /* Smaller date text */
+    .date-cell {
+        font-size: 11px;
+    }
+}
+
+/* ==========================================
+   CUSTOM SCROLLBAR
+   ========================================== */
+/* 
+   Styled scrollbar for time slots grid.
+   Webkit browsers only (Chrome, Safari, Edge).
+   
+   Features:
+   - Thin scrollbar (6px)
+   - Rounded edges
+   - Subtle colors matching design
+*/
+.time-slots-grid::-webkit-scrollbar {
+    width: 6px;                        /* Thin scrollbar */
+}
+
+.time-slots-grid::-webkit-scrollbar-track {
+    background: var(--secondary-color); /* Light gray track */
+    border-radius: 3px;
+}
+
+.time-slots-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color);   /* Gray thumb */
+    border-radius: 3px;
+}
+
+.time-slots-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--text-light);     /* Darker gray on hover */
+}

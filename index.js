@@ -24,6 +24,9 @@ const loginController = require("./controllers/loginController");
 const passwordResetRoutes = require("./routes/passwordReset");
 const resetPageRoutes = require("./routes/resetPage");
 const clientApplications = require('./routes/clientApplications');
+const appointmentRoutes = require("./routes/appointment-routes");
+const googleCalendarService = require("./services/googleCalendar");
+
 const app = express();
 
 app.disable("x-powered-by");
@@ -47,8 +50,8 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "100kb" }));
-app.use(express.urlencoded({ extended: true, limit: "100kb" }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -97,11 +100,14 @@ mongoose.connection.once("open", async () => {
     await col.dropIndex("expiresAt_1").catch((e) => {
       if (e?.codeName !== "IndexNotFound") throw e;
     });
-    await require("./models/PasswordResetToken").createIndexes();
+    await require("./models/passwordResetToken").createIndexes();
     console.log("[indexes] PasswordResetToken OK");
   } catch (err) {
     console.error("[indexes] PasswordResetToken error:", err.message);
   }
+
+  // Initialize Google Calendar API
+  googleCalendarService.initialize();
 });
 
 const ResourcesImage = require("./models/resourcesImage");
@@ -154,8 +160,24 @@ app.get("/contact", (req, res) => {
   res.render("contact");
 });
 app.get("/about", (req, res) => {
-  res.render("aboutUS");
+  res.render("aboutUs");
 });
+
+// Appointment booking routes
+app.get("/booking", (req, res) => {
+  res.render("booking", { csrfToken: req.csrfToken() });
+});
+
+// Admin appointment management
+app.get("/adminportal/appointments", (req, res) => {
+  if (req.session && req.session.isAdmin) {
+    res.render("appointment-management", { csrfToken: req.csrfToken() });
+  } else {
+    res.redirect("/login");
+  }
+});
+
+app.use("/appointments", appointmentRoutes);
 //terry added for debugging purposes
 
 const { submitApplication } = require('./controllers/applicationController');
