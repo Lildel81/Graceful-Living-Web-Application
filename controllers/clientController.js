@@ -14,6 +14,7 @@ const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
 const Application = require('../models/appSchema');
 const mongoose = require("mongoose");
+const ChakraAssessment = require("../models/chakraAssessment");
 
 const MOCK_USERS = [
   {
@@ -363,21 +364,43 @@ const getAdminPortalView = async (req, res) => {
       .sort({ firstname: 1, lastname: 1 })
       .lean();
 
+    // --- Fetch all the submitted assessments --- //
+    const assessments = await ChakraAssessment.find().lean();
+    
+    // --- Calculate total submissions --- //
+    const totalSubmissions = assessments.length;
+
+    // --- Calculate average chakra balance across all submissions --- //
+    let avgChakraBalance = 0;
+    if (totalSubmissions > 0) {
+      const totalAverages = assessments.reduce((sum, assessment) => {
+        if (assessment.results) {
+          const chakraAverages = Object.values(assessment.results)
+            .map(r => parseFloat(r.average))
+            .filter(n => !isNaN(n));
+          const avg = chakraAverages.reduce((a, b) => a + b, 0) / chakraAverages.length;
+          return sum + avg;
+        }
+        return sum;
+      }, 0);
+      avgChakraBalance = (totalAverages / totalSubmissions).toFixed(2);
+    }
+
+    // --- render the page with the stats ---//
     res.render('adminportal', {
       userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
-      upcomingSessions: '',
-      notifications: '',
-      recentActivities: '',
-      users
+      users,
+      totalSubmissions,
+      avgChakraBalance,
     });
+  
   } catch (err) {
     console.error('Failed to load admin portal:', err);
     res.render('adminportal', {
       userName: 'Admin',
-      upcomingSessions: '',
-      notifications: '',
-      recentActivities: '',
-      users: []           // no mock — just empty if DB fails
+      users: [],           // no mock — just empty if DB fails
+      totalSubmissions: 0,
+      avgChakraBalance: 0,
     });
   }
 };
