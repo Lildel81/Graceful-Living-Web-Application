@@ -13,6 +13,7 @@ const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
 const Application = require('../models/appSchema');
+const ChakraAssessment = require('../models/chakraAssessment');
 const mongoose = require("mongoose");
 
 const MOCK_USERS = [
@@ -535,8 +536,8 @@ const getApplicationSuccessView = (req, res) =>{
 };
 
 
-
-const getPreQuizResults = async (req, res) =>{
+// PreQuiz results 
+async function getPreQuizResults(req, res, next ){
   try {
     const {
       q,
@@ -603,7 +604,90 @@ const getPreQuizResults = async (req, res) =>{
   } catch (err) {
     next(err);
   }
-};
+}
+
+
+
+// Chakra Quiz Results 
+async function getChakraQuizResults(req, res, next){
+  try {
+    const {
+      q,
+      ageBracket,
+      healthcareWorker,
+      workedWithPractitioner,
+      familiarWith,
+      challenges,
+      from,
+      to,
+      focusChakra, 
+      archetype
+    } = req.query;
+
+    
+    const filter = {};
+    if (q) {
+      const rx = new RegExp(q, 'i');
+      filter.$or = [
+        { fullName: rx },
+        { email: rx },
+        { contactNumber: rx },
+        { jobTitle: rx }
+      ];
+    }
+    if (ageBracket) filter.ageBracket = ageBracket;
+    if (healthcareWorker) filter.healthcareWorker = healthcareWorker;
+
+    const toArr = v => (Array.isArray(v) ? v : v ? [v] : []);
+    const fam = toArr(familiarWith);
+    if (fam.length) filter.familiarWith = { $all: fam };
+
+    const ch = toArr(challenges);
+    if (ch.length) filter.challenges = { $all: ch };
+
+    const fc = toArr(focusChakra);
+    if (fc.length) filter.focusChakra = { $in: fc };
+
+    const arch = toArr(archetype);
+    if (arch.length) filter.archetype = { $in: arch };
+
+    if (from || to) {
+      filter.createdAt = {};
+      if (from) filter.createdAt.$gte = new Date(from);
+      if (to) {
+        const d = new Date(to);
+        d.setHours(23, 59, 59, 999);
+        filter.createdAt.$lte = d;
+      }
+    }
+
+    const [totalSubmissions, rows] = await Promise.all([
+      ChakraAssessment.countDocuments(filter),
+      ChakraAssessment.find(filter).sort({ createdAt: -1 }).lean()
+    ]);
+
+    res.render('chakraquiz-results', {
+      title: 'Energy Leak Results',
+      stats: { total: totalSubmissions },
+      rows,
+     
+      q: q || '',
+      ageBracket: ageBracket || '',
+      healthcareWorker: healthcareWorker || '',
+      workedWithPractitioner: workedWithPractitioner || '',
+      familiarWith: toArr(familiarWith),
+      challenges: toArr(challenges),
+      from: from || '',
+      to: to || '',
+      focusChakra: req.query.focusChakra || '',
+      archetype: req.query.archetype || ''
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
 
 const getReviewsView = async (req, res, next) => {
   try {
@@ -664,5 +748,6 @@ module.exports = {
   getLoginView,
   getClientManagementView,
   getPreQuizResults,
+  getChakraQuizResults,
   router,
 };

@@ -24,6 +24,7 @@ const loginController = require("./controllers/loginController");
 const passwordResetRoutes = require("./routes/passwordReset");
 const resetPageRoutes = require("./routes/resetPage");
 const clientApplications = require('./routes/clientApplications');
+const chakraApplications = require('./routes/chakraApplications');
 const appointmentRoutes = require("./routes/appointment-routes");
 const googleCalendarService = require("./services/googleCalendar");
 
@@ -222,5 +223,6 @@ app.use(carouselRoutes);
 //app.use(require("./routes/assessment"));
 app.use(clientRoutes.routes);
 app.use('/', clientApplications);
+app.use('/', chakraApplications);
 
 app.listen(config.port, () => winston.info("App is listening on http://localhost:" + config.port));

@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pre-Applicatin Results</title>
-  <link rel="stylesheet" href="/css/prequiz-results.css">
+  <title>Energy Leak Results</title>
+  <link rel="stylesheet" href="/css/chakraquiz-results.css">
 </head>
 <body>
     <main class="wrap">
-        <h1>Pre-Application Results</h1>
+        <h1>Energy Leak Results</h1>
 
         <!--Total Sumbissions-->
         <section class="stats">
@@ -18,7 +18,7 @@
         </section>
 
         <!--Filters-->
-        <form id="filters" class="filters" method="get" action="/clientmanagement/applications">
+        <form id="filters" class="filters" method="get" action="/clientmanagement/assessments">
             <div class="field">
                 <label for="q">Search</label>
                 <input id="q" name="q" value="<%= q %>" placeholder="Name, email, phone, job title…">
@@ -39,11 +39,11 @@
 
             <!--Healtcare Worker Filter-->
             <div class="field">
-                <label for="isHealthcareWorker">Healthcare Worker</label>
-                <select id="isHealthcareWorker" name="isHealthcareWorker">
+                <label for="healthcareWorker">Healthcare Worker</label>
+                <select id="healthcareWorker" name="healthcareWorker">
                     <option value="">Any</option>
-                    <option value="Yes" <%= isHealthcareWorker==='Yes'?'selected':'' %>>Yes</option>
-                    <option value="No"  <%= isHealthcareWorker==='No'?'selected':'' %>>No</option>
+                    <option value="Yes" <%= healthcareWorker==='Yes'?'selected':'' %>>Yes</option>
+                    <option value="No"  <%= healthcareWorker==='No'?'selected':'' %>>No</option>
                 </select>
             </div>
 
@@ -76,6 +76,7 @@
                 </div>
             </div>
 
+
             <!--Challenges Filter-->
             <div class="field">
                 <label>Challenges</label>
@@ -84,6 +85,34 @@
                 <% ['Physical','Emotional','Mental','Spiritual','Other'].forEach(opt => { %>
                     <label class="cb">
                     <input type="checkbox" name="challenges" value="<%= opt %>" <%= ch.includes(opt)?'checked':'' %> />
+                    <span><%= opt %></span>
+                    </label>
+                <% }) %>
+                </div>
+            </div>
+
+            <!--Focus Chakra Filter-->
+            <div class="field">
+                <label>Focus Chakra</label>
+                <div class="checkbx">
+                <% const fc = focusChakra || []; %>
+                <% ['rootChakra','sacralChakra','solarPlexusChakra','heartChakra','throatChakra','thirdEyeChakra','crownChakra'].forEach(opt => { %>
+                    <label class="cb">
+                    <input type="checkbox" name="focusChakra" value="<%= opt %>" <%= fc.includes(opt)?'checked':'' %> />
+                    <span><%= opt %></span>
+                    </label>
+                <% }) %>
+                </div>
+            </div>
+
+            <!--Archetype Filter-->
+            <div class="field">
+                <label>Archetype</label>
+                <div class="checkbx">
+                <% const arch = archetype || []; %>
+                <% ['creator','healer','sage','warrior','lover','seeker','rebel','magician','caregiver','everyman','hero','saboteur'].forEach(opt => { %>
+                    <label class="cb">
+                    <input type="checkbox" name="archetype" value="<%= opt %>" <%= arch.includes(opt)?'checked':'' %> />
                     <span><%= opt %></span>
                     </label>
                 <% }) %>
@@ -104,7 +133,7 @@
 
             <div class="actions">
                 <button class="btn" type="submit">Apply</button>
-                <a class="btn ghost" href="/clientmanagement/applications">Reset</a>
+                <a class="btn ghost" href="/clientmanagement/assessments">Reset</a>
             </div>
   
 
@@ -130,6 +159,8 @@
                         <th>Challenges</th>
                         <th>Goals</th>
                         <th>Experience</th>
+                        <th>Focus Chakra</th>
+                        <th>Archetype</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,12 +169,12 @@
                         <% } %>
                         <% rows.forEach(r => { %>
                         <tr>
-                            <td><%= new Date(r.submittedAt).toLocaleDateString() %></td>
+                            <td><%= new Date(r.createdAt).toLocaleDateString() %></td>
                             <td><%= r.fullName %></td>
                             <td><%= r.email %></td>
                             <td><%= r.contactNumber %></td>
                             <td><%= r.ageBracket %></td>
-                            <td><%= r.isHealthcareWorker %></td>
+                            <td><%= r.healthcareWorker %></td>
                             <td><%= r.healthcareRole || '—' %></td>
                             <td><%= (r.healthcareYears ?? '') === '' ? '—' : r.healthcareYears %></td>
                             <td><%= r.jobTitle %></td>
@@ -152,6 +183,19 @@
                             <td><%= (r.challenges||[]).join(', ') %></td>
                             <td class="wrap"><%= r.goals %></td>
                             <td class="wrap"><%= r.experience || '—' %></td>
+
+                            <!-- Focus Chakra & Archetype Results -->
+                             <td> 
+                                <span class="chakra">
+                                    <%=(r.focusChakra || '-').replace(/Chakra$/,'') %>
+                                </span>
+                             </td>
+
+                             <td>
+                                <span class="arch">
+                                    <%=r.archetype || '-' %>
+                                </span>
+                             </td>
                         </tr>
                         <% }) %>
                     </tbody>
@@ -160,5 +204,5 @@
         </section>
     </main>
 
-    <script src="/js/prequiz-results.js" defer></script>
+    <script src="/js/chakraquiz-results.js" defer></script>
 </body>

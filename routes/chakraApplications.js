@@ -2,6 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { getPreQuizResults } = require('../controllers/clientController');
 
-router.get('/clientmanagement/assessments', getPreQuizResults);
+router.get('/clientmanagement/applications', getPreQuizResults);
 
-module.exports = router
+module.exports = router;
