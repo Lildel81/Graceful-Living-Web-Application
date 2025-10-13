@@ -21,6 +21,8 @@ const {
   getApplicationSuccessView,
   getClientManagementView,
   postCreateClient,
+  getChakraQuizResults, 
+  getPreQuizResults
 } = require('../controllers/clientController');
 
 const {
@@ -60,6 +62,9 @@ router.get('/user-login', getLoginView);     // reuse existing login view
 router.get('/user-signup', getLoginView);    // reuse existing login view
 router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagementView);
 router.get('/clientmanagement', requireAdmin, getClientManagementView);
+router.get('/clientmanagement/prequiz-results', requireAdmin, getPreQuizResults);
+router.get('/clientmanagement/chakraquiz-results', requireAdmin, getChakraQuizResults);router.get('/clientmanagement/prequiz-results', requireAdmin, getPreQuizResults);
+router.get('/clientmanagement/chakraquiz-results', requireAdmin, getChakraQuizResults);
 
 /* -------------------- Client Management -------------------- */
 router.get('/clientmanagement/add', requireAdmin, (req, res) => {
