@@ -14,7 +14,27 @@ const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); 
+
+// --- Allow admin iframes & local form posts (http/https localhost + YouTube) ---
+function allowAdminEmbeds(res) {
+  const extra = [
+    "frame-ancestors 'self'",
+    "frame-src 'self' http://localhost:8080 https://localhost:8080 https://www.youtube.com https://www.youtube-nocookie.com",
+    "form-action 'self' http://localhost:8080 https://localhost:8080"
+  ].join('; ');
+
+  const existing = res.get('Content-Security-Policy') || '';
+  const cleaned = existing
+    .replace(/frame-ancestors[^;]*;?/ig, '')
+    .replace(/frame-src[^;]*;?/ig, '')
+    .replace(/form-action[^;]*;?/ig, '')
+    .trim();
+
+  res.set('Content-Security-Policy', cleaned ? `${cleaned}; ${extra}` : extra);
+  res.set('X-Frame-Options', 'SAMEORIGIN');
+}
+
 
 const MOCK_USERS = [
   {
@@ -738,8 +758,11 @@ const getUserDashboardView = async (req, res, next) => {
 };
 
 const getContentManagementView = (req, res) => {
+  // loosen CSP only for this admin page (it hosts the testimonials iframe)
+  allowAdminEmbeds(res);
   res.render("content-management");
 };
+
 
 const getResourcesManagementView = (req, res) => {
   res.render("resourcesmanagement");

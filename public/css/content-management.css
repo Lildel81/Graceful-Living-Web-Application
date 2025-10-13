@@ -1,3 +1,7 @@
+/* --- Global reset --- */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* --- Page background --- */
 body {
   margin: 0;
   font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
@@ -9,19 +13,8 @@ body {
   position: relative;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Additional overlay to ensure complete coverage */
+/* Put both overlays BELOW all content so they never cover pages like /admin/testimonials */
+body::before,
 body::after {
   content: '';
   position: fixed;
@@ -29,20 +22,22 @@ body::after {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.1);
-  z-index: 0;
   pointer-events: none;
+  z-index: -2;  /* was -1 and 0; 0 could sit above content on some pages */
 }
 
-main { 
-  padding-top: 5rem; 
-  padding-bottom: 5rem; 
-  position: relative;
-  z-index: 1;
+body::before { background: rgba(0, 0, 0, 0.40); }
+body::after  { background: rgba(0, 0, 0, 0.10); }
+
+main {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  position: relative; /* stacking context for internal elements */
+  z-index: 0;         /* content stays above the negative overlays */
   background: transparent;
 }
 
-/* Fixed Back Button */
+/* --- Fixed Back Button --- */
 .fixed-back-button {
   position: fixed;
   top: 50%;
@@ -53,7 +48,7 @@ main {
 
 .fixed-back-button button {
   background-color: #008080;
-  color: white;
+  color: #fff;
   border: none;
   padding: 12px 16px;
   border-radius: 8px;
@@ -76,31 +71,29 @@ main {
   color: inherit;
 }
 
-/* Responsive design for mobile */
+/* --- Mobile tweaks --- */
 @media (max-width: 768px) {
   .fixed-back-button {
     right: 10px;
     top: 20px;
     transform: none;
   }
-  
   .fixed-back-button button {
     padding: 10px 12px;
     font-size: 12px;
   }
 }
 
-
-
+/* --- Hero & Tabs --- */
 .hero-text {
   text-align: left;
   font-family: 'Source Serif Pro', 'Playfair Display', serif;
-  color: white;
+  color: #fff;
   font-size: 1.5rem;
   padding: 3rem 5rem 1rem;
   background: transparent;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
 
 .tabs-nav {
@@ -111,8 +104,9 @@ main {
   background-color: #dff3f4cc;
   padding: 1rem;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 }
+
 .tab {
   appearance: none;
   background: transparent;
@@ -124,9 +118,11 @@ main {
   color: #253a52;
   transition: all 0.2s ease;
 }
+
 .tab:hover { color: #1d8888; }
 .tab.active { background: #253a52; color: #fff; }
 
+/* --- Panels --- */
 .panel {
   display: none;
   background: rgba(240, 248, 255, 0.95);
@@ -136,26 +132,49 @@ main {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   position: relative;
-  z-index: 2;
+  z-index: 1; /* ensures panel stays above the bg overlays */
 }
+
 .panel.active { display: block; }
-.panel h2 { font-family: 'Source Serif Pro', 'Playfair Display', serif; margin-top: 0; }
+.panel h2 {
+  font-family: 'Source Serif Pro', 'Playfair Display', serif;
+  margin-top: 0;
+}
 .panel form { display: grid; gap: 1rem; }
 
 label { font-weight: 600; }
-input[type="text"], input[type="url"], textarea {
+
+input[type="text"],
+input[type="url"],
+textarea {
   width: 100%;
   padding: 0.6rem 0.8rem;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   font-size: 1rem;
 }
+
 textarea { min-height: 140px; }
 
-.actions { display: flex; gap: 0.75rem; align-items: center; }
-.btn { background-color: #1d8888; color: white; border: none; padding: 0.6rem 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn {
+  background-color: #1d8888;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .btn.secondary { background: #253a52; }
 
+/* --- Iframe wrapper (managers) --- */
 .iframe-container {
   height: 1000px;
   max-width: 1200px;
@@ -165,6 +184,13 @@ textarea { min-height: 140px; }
   overflow: hidden;
   background: #fff;
 }
-.iframe-container iframe { width: 100%; height: 100%; border: 0; display: block; }
 
+.iframe-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Back link if needed */
 .back-link { display: block; margin: 2rem auto; text-align: center; }

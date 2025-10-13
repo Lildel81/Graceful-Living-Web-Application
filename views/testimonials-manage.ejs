@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Testimonials</title>
+  <style>
+    :root{
+      --ink:#1f2937; --muted:#6b7280; --teal:#1d8888; --teal-d:#15706f;
+      --border:#e5e7eb; --panel:#ffffff; --bg:#f7fafc; --danger:#ef4444; --danger-d:#dc2626;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:var(--ink); background:var(--bg) !important;
+    }
+    .wrap{max-width:1100px; margin:24px auto; padding:0 16px}
+    .head{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px}
+    .btn{appearance:none;border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+    .btn.teal{background:var(--teal);color:#fff}.btn.teal:hover{background:var(--teal-d)}
+    .btn.secondary{background:#eef2f7;color:#0b1220;border:1px solid var(--border)}
+    .btn.danger{background:var(--danger); color:#fff; border:0}
+    .btn.danger:hover{background:var(--danger-d)}
+    .panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px; box-shadow:0 4px 24px rgba(0,0,0,.06)}
+    table{width:100%; border-collapse:collapse}
+    th,td{padding:12px 10px; border-top:1px solid var(--border); vertical-align:top}
+    thead th{border-top:0; text-align:left; font-weight:700; color:#0f172a}
+    .row-actions{display:flex; gap:8px; flex-wrap:wrap}
+    .alert{
+      background:#e7f8f0; color:#0a6; border:1px solid #b7f0db; padding:10px 12px; border-radius:8px; margin:10px 0 16px;
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+    }
+    .alert .close-link{background:transparent;border:0;font-size:16px;cursor:pointer;color:#0a6;text-decoration:none}
+    .muted{color:var(--muted)}
+    form{display:inline}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <h1 style="margin:0">Testimonials</h1>
+      <div>
+        <a class="btn teal" href="/admin/testimonials/new">+ Add Testimonial</a>
+        <a class="btn secondary" href="/reviews" target="_blank" rel="noopener">View Public Page</a>
+        <a class="btn secondary" href="/content-management">Back to Content</a>
+      </div>
+    </div>
+
+    <% if (typeof success !== 'undefined' && success) { %>
+      <div class="alert" id="cmFlash">
+        <span><%= success %></span>
+        <!-- No inline JS: this link just reloads the page without querystring to hide the banner -->
+        <a class="close-link" href="/admin/testimonials" aria-label="Dismiss">×</a>
+      </div>
+    <% } %>
+
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:210px;">Name</th>
+            <th>Quote</th>
+            <th style="width:150px;">Location</th>
+            <th style="width:150px;">Event</th>
+            <th style="width:200px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (items && items.length) { %>
+            <% items.forEach(t => { %>
+              <tr>
+                <td><strong><%= t.name %></strong></td>
+                <td class="muted"><%= t.quote %></td>
+                <td><%= t.location || '' %></td>
+                <td><%= t.event || '' %></td>
+                <td class="row-actions">
+                  <a class="btn secondary" href="/admin/testimonials/<%= t._id %>/edit">Edit</a>
+                  <!-- No inline onsubmit to satisfy CSP -->
+                  <form action="/admin/testimonials/<%= t._id %>/delete" method="POST">
+                    <button class="btn danger" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="5" class="muted">No testimonials yet.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
+

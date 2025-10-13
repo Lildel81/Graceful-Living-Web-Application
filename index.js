@@ -42,14 +42,33 @@ app.use(
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
+        // IMPORTANT: turn OFF automatic http→https upgrade in dev
+        "upgrade-insecure-requests": null,
+
+        // keep your existing sources
         "default-src": ["'self'"],
+
+        // allow YouTube embeds (no inline scripts allowed)
         "script-src": ["'self'", "https://www.youtube.com", "https://www.gstatic.com"],
+        "script-src-attr": ["'none'"],
+
+        // allow framing self + YouTube
         "frame-src": ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"],
+
+        // forms can POST back to this origin
+        "form-action": ["'self'"],
+
+        // images/fonts/styles you already had
         "img-src": ["'self'", "data:", "https://i.ytimg.com"],
         "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         "font-src": ["'self'", "https://fonts.gstatic.com"],
+
+        // iframes should only be embedded by our own pages
+        "frame-ancestors": ["'self'"],
       },
     },
+    // optional: some browsers need this relaxed in dev
+    crossOriginEmbedderPolicy: false,
   })
 );
 
@@ -92,6 +111,25 @@ app.use(session({
 app.use(hpp());
 app.use(mongoSanitize());
 app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+
+// ✅ Allow same-origin iframing ONLY for the testimonials manager pages
+app.use(["/admin/testimonials", "/admin/testimonials/*"], (req, res, next) => {
+  // Permit this site to embed these routes in an <iframe>
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+
+  // Ensure CSP also allows same-origin framing for these routes
+  const existing = res.getHeader("Content-Security-Policy");
+  const fa = "frame-ancestors 'self'";
+  if (existing) {
+    // remove any existing frame-ancestors directive, then append ours
+    const withoutFA = existing.replace(/frame-ancestors[^;]*;?/i, "").trim();
+    const merged = withoutFA ? `${withoutFA}; ${fa}` : fa;
+    res.setHeader("Content-Security-Policy", merged);
+  } else {
+    res.setHeader("Content-Security-Policy", fa);
+  }
+  next();
+});
 
 require("./startup/db")();
 require("./startup/validations")();
