@@ -21,6 +21,7 @@
     .btn.secondary{background:#eef2f7;color:#0b1220;border:1px solid var(--border)}
     .btn.danger{background:var(--danger); color:#fff; border:0}
     .btn.danger:hover{background:var(--danger-d)}
+    .btn[disabled]{opacity:.6; cursor:not-allowed}
     .panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px; box-shadow:0 4px 24px rgba(0,0,0,.06)}
     table{width:100%; border-collapse:collapse}
     th,td{padding:12px 10px; border-top:1px solid var(--border); vertical-align:top}
@@ -49,7 +50,7 @@
     <% if (typeof success !== 'undefined' && success) { %>
       <div class="alert" id="cmFlash">
         <span><%= success %></span>
-        <!-- No inline JS: this link just reloads the page without querystring to hide the banner -->
+        <!-- No inline JS: simple link clears the querystring -->
         <a class="close-link" href="/admin/testimonials" aria-label="Dismiss">×</a>
       </div>
     <% } %>
@@ -75,9 +76,15 @@
                 <td><%= t.event || '' %></td>
                 <td class="row-actions">
                   <a class="btn secondary" href="/admin/testimonials/<%= t._id %>/edit">Edit</a>
-                  <!-- No inline onsubmit to satisfy CSP -->
+
+                  <!-- POST delete with CSRF -->
                   <form action="/admin/testimonials/<%= t._id %>/delete" method="POST">
-                    <button class="btn danger" type="submit">Delete</button>
+                    <% if (typeof csrfToken !== 'undefined' && csrfToken) { %>
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button class="btn danger" type="submit">Delete</button>
+                    <% } else { %>
+                      <button class="btn danger" type="submit" disabled title="Missing CSRF token">Delete</button>
+                    <% } %>
                   </form>
                 </td>
               </tr>

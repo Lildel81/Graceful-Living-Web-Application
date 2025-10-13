@@ -7,14 +7,17 @@ const listTestimonials = async (req, res) => {
     const items = await Testimonial.find().sort({ _id: -1 }).lean();
 
     // success banner from query flags
-    let ok = false;
-    let action = '';
-    if (req.query.created) { ok = true; action = 'created'; }
-    if (req.query.updated) { ok = true; action = 'updated'; }
-    if (req.query.deleted) { ok = true; action = 'deleted'; }
+    let success = '';
+    if (req.query.created) success = 'Testimonial created successfully.';
+    if (req.query.updated) success = 'Testimonial updated successfully.';
+    if (req.query.deleted) success = 'Testimonial deleted successfully.';
 
-    // render without the public site layout (no header/mountain bg)
-    res.render('testimonials-manage', { layout: false, items, ok, action });
+    res.render('testimonials-manage', {
+      layout: false,
+      items,
+      success,
+      csrfToken: (req.csrfToken && req.csrfToken()) || null,
+    });
   } catch (e) {
     console.error('Failed to load testimonials:', e);
     res.status(500).send('Failed to load testimonials');
@@ -23,7 +26,13 @@ const listTestimonials = async (req, res) => {
 
 // Create form
 const getCreateTestimonial = (req, res) => {
-  res.render('testimonials-form', { layout: false, mode: 'create', item: {}, formError: null });
+  res.render('testimonials-form', {
+    layout: false,
+    mode: 'create',
+    item: {},
+    formError: null,
+    csrfToken: (req.csrfToken && req.csrfToken()) || null,
+  });
 };
 
 // Create submit
@@ -40,7 +49,8 @@ const postCreateTestimonial = async (req, res) => {
         layout: false,
         mode: 'create',
         item: payload,
-        formError: 'Name and Quote are required.'
+        formError: 'Name and Quote are required.',
+        csrfToken: (req.csrfToken && req.csrfToken()) || null,
       });
     }
     await Testimonial.create(payload);
@@ -51,7 +61,8 @@ const postCreateTestimonial = async (req, res) => {
       layout: false,
       mode: 'create',
       item: req.body,
-      formError: 'Failed to create testimonial.'
+      formError: 'Failed to create testimonial.',
+      csrfToken: (req.csrfToken && req.csrfToken()) || null,
     });
   }
 };
@@ -61,13 +72,18 @@ const getEditTestimonial = async (req, res) => {
   try {
     const item = await Testimonial.findById(req.params.id).lean();
     if (!item) return res.status(404).send('Not found');
-    res.render('testimonials-form', { layout: false, mode: 'edit', item, formError: null });
+    res.render('testimonials-form', {
+      layout: false,
+      mode: 'edit',
+      item,
+      formError: null,
+      csrfToken: (req.csrfToken && req.csrfToken()) || null,
+    });
   } catch (err) {
     console.error('Error loading testimonial edit form:', err);
     res.status(500).send('Error loading testimonial');
   }
 };
-
 
 // Update submit
 const postUpdateTestimonial = async (req, res) => {
@@ -83,7 +99,8 @@ const postUpdateTestimonial = async (req, res) => {
         layout: false,
         mode: 'edit',
         item: { ...payload, _id: req.params.id },
-        formError: 'Name and Quote are required.'
+        formError: 'Name and Quote are required.',
+        csrfToken: (req.csrfToken && req.csrfToken()) || null,
       });
     }
     await Testimonial.findByIdAndUpdate(req.params.id, payload, { runValidators: true });
@@ -94,7 +111,8 @@ const postUpdateTestimonial = async (req, res) => {
       layout: false,
       mode: 'edit',
       item: { ...req.body, _id: req.params.id },
-      formError: 'Failed to update testimonial.'
+      formError: 'Failed to update testimonial.',
+      csrfToken: (req.csrfToken && req.csrfToken()) || null,
     });
   }
 };
@@ -118,6 +136,7 @@ module.exports = {
   postUpdateTestimonial,
   postDeleteTestimonial,
 };
+
 
 
 

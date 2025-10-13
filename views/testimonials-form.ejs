@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -64,12 +64,16 @@
     .btn.teal{background:var(--teal); color:#fff}
     .btn.teal:hover{background:var(--teal-d)}
     .btn.secondary{background:#eef2f7; color:#0b1220; border:1px solid var(--border)}
-    .btn.link{background:transparent; color:#0b1220; text-decoration:underline}
+    .btn[disabled]{opacity:.6; cursor:not-allowed}
     .topbar{
       display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
     }
     .topbar a{ text-decoration:none }
     .muted{ color:var(--muted); font-size:14px }
+    .alert{
+      background:#fdecec;color:#991b1b;border:1px solid #fecaca;padding:10px 12px;border-radius:8px;margin-bottom:12px;
+    }
+    .note{color:#6b7280; font-size:14px; margin-top:6px}
   </style>
 </head>
 <body>
@@ -85,12 +89,16 @@
       <h1><%= mode === 'edit' ? 'Edit Testimonial' : 'Add Testimonial' %></h1>
 
       <% if (formError) { %>
-        <div style="background:#fdecec;color:#991b1b;border:1px solid #fecaca;padding:10px 12px;border-radius:8px;margin-bottom:12px;">
-          <%= formError %>
-        </div>
+        <div class="alert"><%= formError %></div>
       <% } %>
 
       <form method="POST" action="<%= mode === 'edit' ? ('/admin/testimonials/' + item._id) : '/admin/testimonials' %>">
+        <% if (typeof csrfToken !== 'undefined' && csrfToken) { %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% } else { %>
+          <div class="note">CSRF token missing — submit will be disabled until it’s available.</div>
+        <% } %>
+
         <label for="name">Name</label>
         <input id="name" name="name" type="text" value="<%= item.name || '' %>" required />
 
@@ -109,7 +117,9 @@
         </div>
 
         <div class="actions">
-          <button class="btn teal" type="submit"><%= mode === 'edit' ? 'Save Changes' : 'Create' %></button>
+          <button class="btn teal" type="submit" <%= (typeof csrfToken === 'undefined' || !csrfToken) ? 'disabled title="Missing CSRF token"' : '' %>>
+            <%= mode === 'edit' ? 'Save Changes' : 'Create' %>
+          </button>
           <a class="btn secondary" href="/admin/testimonials">Cancel</a>
         </div>
       </form>
@@ -117,4 +127,5 @@
   </div>
 </body>
 </html>
+
 

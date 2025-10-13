@@ -56,13 +56,10 @@ router.get('/login', getLoginView);
 /* -------------------- Admin-only Views -------------------- */
 router.get('/adminportal', requireAdmin, getAdminPortalView);
 router.get('/content-management', requireAdmin, getContentManagementView);
-router.get('/user-login', getUserLoginView);
-router.get('/user-signup', getUserSignUpView);
-router.get('/user-dashboard', getUserDashboardView);
+router.get('/user-login', getLoginView);     // reuse existing login view
+router.get('/user-signup', getLoginView);    // reuse existing login view
 router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagementView);
 router.get('/clientmanagement', requireAdmin, getClientManagementView);
-router.get('/clientmanagement/prequiz-results', requireAdmin, getPreQuizResults);
-router.get('/clientmanagement/chakraquiz-results', requireAdmin, getChakraQuizResults);
 
 /* -------------------- Client Management -------------------- */
 router.get('/clientmanagement/add', requireAdmin, (req, res) => {
@@ -99,40 +96,14 @@ router.post('/admin/testimonials/:id/delete', requireAdmin, postDeleteTestimonia
 /* -------------------- Applications -------------------- */
 router.post('/application', submitApplication);
 
-//router.get('/login', getAdminPortalView); // This is for me to go to adminportal faster
-
-router.get('/', (req, res) => {
-  res.render('login', { ok: req.query.ok, csrfToken: req.csrfToken() });
-});
-
-router.post('/', async (req, res) => {
-  // auth...
-  return res.status(401).render('login', {
-    csrfToken: req.csrfToken(), // new token for re-render
-    error: 'Invalid username or password'
-  });
-});
-
-router.post('/admin/add-review', requireAdmin, async (req, res) => {
-    try {
-      const { name, quote, location, event } = req.body;
-  
-      await Testimonial.create({ name, quote, location, event });
-  
-      res.redirect('/adminportal?submitted=true');
-    } catch (error) {
-      console.error('Error saving testimonial:', error);
-      res.status(500).send('Something went wrong.');
-    }
-  });
-
-  function requireAdmin(req, res, next) {
-    if (req.session && req.session.isAdmin) return next();
-
-    return res.status(403).redirect('/login');
-  }
+/* -------------------- Auth Guard -------------------- */
+function requireAdmin(req, res, next) {
+  if (req.session && req.session.isAdmin) return next();
+  return res.status(403).redirect('/login');
+}
 
 module.exports = {
   routes: router,
 };
+
 
