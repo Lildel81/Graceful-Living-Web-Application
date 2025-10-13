@@ -15,7 +15,6 @@ const ResourcesText = require('../models/resourcesText');
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
 const mongoose = require("mongoose");
-const ChakraAssessment = require("../models/chakraAssessment");
 
 const MOCK_USERS = [
   {
@@ -726,6 +725,18 @@ const getLoginView = async (req, res, next) => {
   res.render("login");
 };
 
+const getUserSignUpView = async (req, res, next) => {
+  res.render("user-signup");
+};
+
+const getUserLoginView = async (req, res, next) => {
+  res.render("user-login");
+};
+
+const getUserDashboardView = async (req, res, next) => {
+  res.render("user-dashboard");
+};
+
 const getContentManagementView = (req, res) => {
   res.render("content-management");
 };
@@ -769,6 +780,9 @@ module.exports = {
   getResourcesManagementView,
   getEditResourcesImageView,
   getLoginView,
+  getUserSignUpView,
+  getUserLoginView,
+  getUserDashboardView,
   getClientManagementView,
   getPreQuizResults,
   getChakraQuizResults,

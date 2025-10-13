@@ -1,0 +1,149 @@
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body, html {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.login-page-wrapper, 
+.signup-page-wrapper {
+  height: 100%;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  position: relative;
+}
+
+.login-page-wrapper .label, 
+.signup-page-wrapper .label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* admin login link */
+.login-page-wrapper .admin-login, 
+.signup-page-wrapper .admin-login {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  font-size: 0.9rem;
+}
+
+.login-page-wrapper .admin-login a, 
+.signup-page-wrapper .admin-login a {
+  color: #00796b;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.login-page-wrapper .admin-login a:hover, 
+.signup-page-wrapper .admin-login a:hover {
+  color: #004d40;
+}
+
+/* forms */
+.login-page-wrapper form#login-form, 
+.signup-page-wrapper form#signup-form {
+  display: grid;
+  gap: 16px;
+  text-align: left;
+}
+
+.login-page-wrapper .form-group, 
+.signup-page-wrapper .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* inputs */
+.login-page-wrapper input[type="text"],
+.login-page-wrapper input[type="password"],
+.signup-page-wrapper input[type="text"],
+.signup-page-wrapper input[type="password"] {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 1px solid black;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.login-page-wrapper input[type="text"]:focus,
+.login-page-wrapper input[type="password"]:focus,
+.signup-page-wrapper input[type="text"]:focus,
+.signup-page-wrapper input[type="password"]:focus {
+  border-color: #008080;
+  box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.2);
+}
+
+.login-page-wrapper .login_button,
+.signup-page-wrapper .signup_button {
+  font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #E0F2F1;
+  color: #000;
+  padding: 12px 20px;
+  border: 2px solid #008080;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.login-page-wrapper .login_button:hover,
+.signup-page-wrapper .signup_button:hover {
+  background-color: #b2dfdb;
+}
+
+/* signup link */
+.login-page-wrapper .signup-link,
+.signup-page-wrapper .login-link {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+.login-page-wrapper .signup-link a,
+.signup-page-wrapper .login-link a {
+  color: #008080;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-page-wrapper .signup-link a:hover,
+.signup-page-wrapper .login-link a:hover {
+  text-decoration: underline;
+}
+
+/* messages */
+.login-page-wrapper #msg,
+.signup-page-wrapper #msg {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.login-page-wrapper .error,
+.signup-page-wrapper .error {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.login-page-wrapper .success,
+.signup-page-wrapper .success {
+  color: #388e3c;
+  font-weight: 600;
+}

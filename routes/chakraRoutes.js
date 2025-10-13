@@ -116,13 +116,13 @@ function determineArchetype(lifeQuadrantScores) {
   return selected;
 }
 
-// determine dominant chakra
+// determine weakest chakra
 function findFocusChakra(results) {
-  let maxTotal = -1,
+  let minTotal = Infinity,
     focusChakra = "";
   Object.entries(results).forEach(([chakra, data]) => {
-    if (data.total > maxTotal) {
-      maxTotal = data.total;
+    if (data.total < minTotal) {
+      minTotal = data.total;
       focusChakra = chakra;
     }
   });
@@ -274,6 +274,7 @@ router.post("/save", async (req, res) => {
 
     // save to DB
     const assessmentResponse = new ChakraAssessment({
+      user: null, // to be set if logged in
       submissionId: newId,
       fullName: req.body.fullName,
       email: req.body.email,
@@ -300,6 +301,11 @@ router.post("/save", async (req, res) => {
       scoredChakras,
       scoredLifeQuadrants,
     });
+
+    // associate with user if logged in
+    if (req.session.user) {
+      assessmentResponse.user = req.session.user;
+    }
 
     await assessmentResponse.save();
     // --- build email payload & notify admins (non-blocking) ---
@@ -424,19 +430,43 @@ router.post("/save", async (req, res) => {
 // send to results page
 router.get("/results", async (req, res) => {
   try {
-    const assessment = await ChakraAssessment.findOne({
-      submissionId: req.query.id,
-    });
+    const assessment = await ChakraAssessment.findOne({ submissionId: req.query.id });
     if (!assessment) return res.status(404).send("Assessment not found");
 
-    // look up the full chakra and archetype content
+    // if the assessment is linked to a user, enforce access
+    if (assessment.user &&
+      (!req.session.user || assessment.user.toString() !== req.session.user._id.toString())) {
+      console.log("Access denied - user mismatch");
+      return res.status(403).send("You are not authorized to view this result.");
+    }
+
     const chakraData = resultsContent.chakras[assessment.focusChakra];
     const archetypeData = resultsContent.archetypes[assessment.archetype];
 
-    // render the page with full objects
-    res.render('quiz/results', {
+    // determine if user is logged in
+    const isLoggedIn = !!req.session.user;
+
+    // if assessment has no user and current visitor is not logged in, treat as temporary
+    const tempSavePrompt = !assessment.user && !isLoggedIn;
+
+    // store temporary results in session so they can save after signing up
+    if (tempSavePrompt) {
+      req.session.tempResults = {
+        submissionId: assessment.submissionId,
+        focusChakra: assessment.focusChakra,
+        archetype: assessment.archetype,
+      };
+      req.session.tempResultsReturnUrl = req.originalUrl; // store current results URL
+    }
+
+    // checking session values - for debugging
+    // console.log('tempSavePrompt?', tempSavePrompt, 'assessment.user:', assessment.user, 'req.session.user:', req.session.user);
+
+    res.render("quiz/results", {
       chakraData,
       archetypeData,
+      isLoggedIn,
+      tempSavePrompt   // <--- flag used in EJS to show prompt to save results
     });
   } catch (err) {
     console.error("Error fetching assessment:", err);

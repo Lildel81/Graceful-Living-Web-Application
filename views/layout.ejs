@@ -27,7 +27,12 @@
             <li><a href="/resources">Resources</a></li>
             <!--<li><a href="/pre-app">Application</a></li>     added links in contact page -->
             <li><a href="/shop">Shop</a></li>
-            <li><a href="/adminportal" class="btn">Sign In</a></li>
+            <% if (user) { %>
+                <li><a href="/user-dashboard" class="btn">Dashboard</a></li>
+                <li><a href="/logout" class="btn">Logout</a></li>
+            <% } else { %>
+                <li><a href="/user-login" class="btn">Login</a></li>
+            <% } %>
         </ul>
         <div class="menu-toggle">&#9776;</div> <!-- Mobile menu icon -->
     </div>

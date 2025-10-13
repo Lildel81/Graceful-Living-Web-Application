@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Graceful Living Results</title>
   <link rel="stylesheet" href="/css/results.css">
+  <script src="/js/results-page.js" defer></script>
 </head>
 <!--Modified by Terry to prevent crashing with csrf verification-->
 <body>
@@ -14,6 +15,23 @@
 
   <main>
     <% const c = chakraData || {}; const a = archetypeData || {}; %>
+
+    <!-- save results modal -->
+    <% if (tempSavePrompt) { %>
+    <div id="saveResultsModal" class="modal">
+      <div class="modal-content">
+        <h2>Save Your Results?</h2>
+        <p><strong>Sign up</strong> or <strong>log in</strong> to save your <strong>Energy Leak Quiz</strong>
+           results and track your progress over time.</p>
+        <div class="modal-buttons">
+          <a href="/user-signup" class="btn start-btn">Sign Up</a>
+          <a href="/user-login" class="btn view-btn">Log In</a>
+          <button id="modalClose" class="btn close-btn">Continue Without Saving</button>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
 
     <!-- chakra Section -->
     <section id="chakra-section">

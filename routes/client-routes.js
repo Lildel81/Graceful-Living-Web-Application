@@ -1,6 +1,6 @@
 const express = require('express');
 const {getHubView,getHomeView,getAssessmentView,getIntroductionView,getGettingToKnowYouView,getAdminPortalView,getContactView,getResourcesView,getNotFoundView,getServicesView,getShopView,
-    getApplicationView, getPreAppView, getReviewsView, getContentManagementView, getResourcesManagementView, getLoginView,
+    getApplicationView, getPreAppView, getReviewsView, getContentManagementView, getResourcesManagementView, getLoginView, getUserSignUpView, getUserLoginView, getUserDashboardView,
     getApplicationSuccessView,getClientManagementView,getPreQuizResults,getChakraQuizResults,postCreateClient} = require ('../controllers/clientController');
 
 
@@ -27,6 +27,10 @@ router.get('/application', getApplicationView);
 router.get('/app-success', getApplicationSuccessView);
 router.get('/reviews', getReviewsView)
 router.get('/content-management', requireAdmin, getContentManagementView);
+router.get('/login', getLoginView);
+router.get('/user-login', getUserLoginView);
+router.get('/user-signup', getUserSignUpView);
+router.get('/user-dashboard', getUserDashboardView);
 router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagementView);
 router.get('/clientmanagement', requireAdmin, getClientManagementView); 
 router.get('/clientmanagement/prequiz-results', requireAdmin, getPreQuizResults);

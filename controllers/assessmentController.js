@@ -10,6 +10,7 @@ const DOMpurify = createDOMPurify(window);
 
 function groupAnswers(body) {
   const identity = {
+    user: req.session.userId || null, // safe: null means "anonymous"
     fullName: DOMpurify.sanitize(body.fullName) || null,
     email: DOMpurify.sanitize(body.email) || null,
     contactNumber: DOMpurify.sanitize(body.contactNumber) || null,

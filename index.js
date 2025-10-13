@@ -20,6 +20,7 @@ const carouselRoutes = require("./routes/carousel-routes");
 const resourcesRoutes = require("./routes/resources-routes");
 const homeRoutes = require("./routes/homeRoutes");
 const chakraRoutes = require("./routes/chakraRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const loginController = require("./controllers/loginController");
 const passwordResetRoutes = require("./routes/passwordReset");
 const resetPageRoutes = require("./routes/resetPage");
@@ -27,6 +28,7 @@ const clientApplications = require('./routes/clientApplications');
 const chakraApplications = require('./routes/chakraApplications');
 const appointmentRoutes = require("./routes/appointment-routes");
 const googleCalendarService = require("./services/googleCalendar");
+const userAuthRoutes = require("./routes/userAuth");
 
 const app = express();
 
@@ -134,6 +136,12 @@ app.use(csurf({
   }
 }));
 
+// middleware to make user available in all views (for nav bar)
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
 // Only here: pass the token to the view that has the form
 app.get('/application', (req, res) => {
   req.session.appFlow = true;        // touching the session triggers Set-Cookie: sid=...
@@ -144,12 +152,23 @@ app.get('/assessment', (req, res) => {
   res.render('quiz/assessment', { csrfToken: req.csrfToken() });
 });
 
+app.get('/user-login', (req, res) => {
+  res.render('user-login', { csrfToken: req.csrfToken()});
+});
+
+app.get('/user-signup', (req, res) => {
+  res.render('user-signup', { csrfToken: req.csrfToken()});
+});
+
 const rateLimit = require("express-rate-limit");
 const resetLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
 app.use("/auth/reset/request", resetLimiter);
 
 app.use("/auth/reset", passwordResetRoutes);
 app.use("/reset", resetPageRoutes);
+
+// Home Page Route with Reviews
+app.use("/", homeRoutes);
 
 app.use("/assessment", chakraRoutes);
 app.use("/login", loginController);
@@ -216,7 +235,8 @@ app.use((err, req, res, next) => {
 
 //end debugging
 
-
+app.use("/user-dashboard", dashboardRoutes);
+app.use("/", userAuthRoutes);
 app.use("/", homeRoutes);
 app.use(resourcesRoutes);
 app.use(carouselRoutes);
