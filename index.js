@@ -152,14 +152,6 @@ app.get('/assessment', (req, res) => {
   res.render('quiz/assessment', { csrfToken: req.csrfToken() });
 });
 
-app.get('/user-login', (req, res) => {
-  res.render('user-login', { csrfToken: req.csrfToken()});
-});
-
-app.get('/user-signup', (req, res) => {
-  res.render('user-signup', { csrfToken: req.csrfToken()});
-});
-
 const rateLimit = require("express-rate-limit");
 const resetLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5 });
 app.use("/auth/reset/request", resetLimiter);
