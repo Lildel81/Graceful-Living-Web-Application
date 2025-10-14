@@ -274,6 +274,7 @@ router.post("/save", async (req, res) => {
 
     // save to DB
     const assessmentResponse = new ChakraAssessment({
+      ...req.body,
       user: null, // to be set if logged in
       submissionId: newId,
       fullName: req.body.fullName,
@@ -297,7 +298,6 @@ router.post("/save", async (req, res) => {
       focusChakra,
       archetype,
 
-      ...req.body, // keeps all raw answers, can replace with selective fields if preferred
       scoredChakras,
       scoredLifeQuadrants,
     });
