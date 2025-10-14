@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      <%= typeof title !== 'undefined' ? title : 'Appointment • GracefuLiving' %>
+    </title>
+    <link rel="stylesheet" href="/css/admin-appointment-portal.css" />
+    <link rel="stylesheet" href="/css/appointments-modal.css" />
+  </head>
+  <body>
+    <div class="ap-grid">
+      <!-- Sidebar -->
+      <aside class="gl-sidebar">
+        <div class="gl-brand">
+          <div class="gl-logo">GL</div>
+          <span>GracefuLiving</span>
+        </div>
+        <nav class="gl-nav">
+          <a class="active" href="?view=scheduling" data-view="scheduling">Scheduling</a>
+          <a href="?view=integrations" data-view="integrations">Integrations &amp; Apps</a>
+          <a href="#">Meetings</a>
+          <a href="#">Availability</a>
+          <a href="#">Contacts</a>
+          <a href="#">Workflows</a>
+          <a href="#">Routing</a>
+        </nav>
+      </aside>
+
+      <!-- Main -->
+      <main class="gl-main">
+        <header class="gl-topbar">
+          <h1>Scheduling</h1>
+          <% if (typeof zoomConnected !== 'undefined' && zoomConnected) { %>
+            <span class="badge" style="margin-left: 12px">Zoom connected</span>
+          <% } %>
+        </header>
+
+        <!-- VIEW: Scheduling -->
+        <section id="view-scheduling">
+          <div class="gl-actions" style="margin-bottom: 12px">
+            <button class="gl-btn gl-btn-primary" type="button" data-open="appointment-modal">+ Create</button>
+          </div>
+
+          <div class="gl-tabs">
+            <button class="gl-tab active">Event types</button>
+            <button class="gl-tab">Single-use links</button>
+            <button class="gl-tab">Meeting polls</button>
+          </div>
+
+          <div class="gl-search">
+            <input type="text" placeholder="Search event types" />
+          </div>
+
+          <section class="gl-card-list" id="ap-list"></section>
+        </section>
+
+        <!-- VIEW: Integrations & Apps (Zoom live, 2 placeholders) -->
+        <section id="view-integrations" hidden>
+          <div class="apps">
+            <!-- Zoom (live) -->
+            <article class="app">
+              <img src="/images/zoom-icon.svg" alt="Zoom" width="48" height="48" />
+              <div>
+                <h3>Zoom</h3>
+                <p>Include Zoom details in your appointments.</p>
+                <div class="actions">
+                  <% if (typeof zoomConnected !== 'undefined' && zoomConnected) { %>
+                    <span class="badge">Connected as <%= zoomEmail %></span>
+                    <a class="gl-btn" href="/integrations/zoom/disconnect">Disconnect</a>
+                  <% } else { %>
+                    <a class="gl-btn gl-btn-primary" href="/integrations/zoom/connect">Connect</a>
+                  <% } %>
+                </div>
+              </div>
+            </article>
+
+            <!-- Placeholder 1 -->
+            <article class="app disabled">
+              <img src="/images/google.png" alt="Google Calendar" width="48" height="48" />
+              <div>
+                <h3>Google Calendar</h3>
+                <p>Add events to your calendar and prevent double-booking.</p>
+                <div class="actions">
+                  <button class="gl-btn" disabled>Coming soon</button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Placeholder 2 -->
+            <article class="app disabled">
+              <img src="/images/stripe.png" alt="Stripe" width="48" height="48" />
+              <div>
+                <h3>Stripe</h3>
+                <p>Collect payment before your meetings.</p>
+                <div class="actions">
+                  <button class="gl-btn" disabled>Coming soon</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Create Appointment Modal -->
+        <div id="appointment-modal" class="ap-modal" hidden>
+          <div class="ap-modal__backdrop" data-close></div>
+          <div class="ap-modal__dialog" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="ap-modal-title">
+            <header class="ap-modal__header">
+              <h2 id="ap-modal-title">Create appointment</h2>
+              <button class="ap-modal__close" type="button" aria-label="Close" data-close>×</button>
+            </header>
+
+            <form class="ap-form" method="POST" action="/appointments">
+              <div class="grid">
+                <label>
+                  <span>Title</span>
+                  <input name="title" type="text" value="GracefuLiving Session" />
+                </label>
+                <label>
+                  <span>Client name</span>
+                  <input name="clientName" type="text" placeholder="Client name" />
+                </label>
+                <label>
+                  <span>Client email *</span>
+                  <input name="clientEmail" type="email" required placeholder="name@example.com" autocomplete="email" />
+                </label>
+                <label>
+                  <span>Date *</span>
+                  <input name="date" type="date" required />
+                </label>
+                <label>
+                  <span>Time *</span>
+                  <input name="time" type="time" required />
+                </label>
+                <label>
+                  <span>Duration (mins)</span>
+                  <select name="duration">
+                    <option value="15">15</option>
+                    <option value="30" selected>30</option>
+                    <option value="45">45</option>
+                    <option value="60">60</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Meeting type</span>
+                  <select name="location_type">
+                    <% const zoomDefault =
+                         (typeof zoomConnected !== 'undefined' && zoomConnected) &&
+                         (typeof zoomEnabled === 'undefined' || zoomEnabled); %>
+                    <option value="zoom" <%= zoomDefault ? 'selected' : '' %>>Zoom</option>
+                    <option value="in_person">In-person</option>
+                    <option value="phone">Phone</option>
+                  </select>
+                </label>
+                <label class="full">
+                  <span>Notes</span>
+                  <textarea name="notes" rows="3" placeholder="Optional notes"></textarea>
+                </label>
+              </div>
+
+              <div class="actions">
+                <button class="gl-btn gl-btn-ghost" type="button" data-close>Cancel</button>
+                <button class="gl-btn gl-btn-primary" type="submit">Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Edit Appointment Modal -->
+    <div id="edit-appointment-modal" class="ap-modal" hidden>
+      <div class="ap-modal__backdrop" data-close></div>
+      <div class="ap-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="ap-edit-title">
+        <header class="ap-modal__header">
+          <h2 id="ap-edit-title">Reschedule appointment</h2>
+          <button class="ap-modal__close" type="button" aria-label="Close" data-close>×</button>
+        </header>
+
+        <form class="ap-form">
+          <input type="hidden" name="id" />
+
+          <div class="grid">
+            <label>
+              <span>Date *</span>
+              <input name="date" type="date" required />
+            </label>
+            <label>
+              <span>Time *</span>
+              <input name="time" type="time" required />
+            </label>
+            <label>
+              <span>Duration (mins)</span>
+              <select name="duration">
+                <option value="15">15</option>
+                <option value="30" selected>30</option>
+                <option value="45">45</option>
+                <option value="60">60</option>
+              </select>
+            </label>
+            <label>
+              <span>Timezone</span>
+              <input name="timezone" type="text" value="America/Los_Angeles" />
+            </label>
+          </div>
+
+          <div class="actions">
+            <button class="gl-btn gl-btn-ghost" type="button" data-close>Cancel</button>
+            <button class="gl-btn gl-btn-primary" type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- In-page view toggle -->
+    <script src="/js/admin-appointment-portal.js" defer></script>
+    <script src="/js/appointments-modal.js" defer></script>
+    <script src="/js/appointment-list.js" defer></script>
+    <script src="/js/appointments-edit.js" defer></script>
+  </body>
+</html>
