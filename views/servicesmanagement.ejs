@@ -1,0 +1,54 @@
+<!--FORM FOR ADMINPORTAL/CONTENTMANAGEMENT/SERVICES-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Services Management</title>
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/carousel-mangement.css">
+</head>
+
+<body>
+    <h2>Manage Services</h2>
+
+    <form action="/adminportal/contentmanagement/create" method="POST">
+        <!-- ALL FORMS MUST CONTAIN THIS FOR THE CSRF TOKEN-->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label>Service Name <span style="color: red;">*</span> </label>
+        <input type="text" name="serviceName" required>
+
+        <label>Description</label>
+        <textarea name="serviceDescription"></textarea>
+
+        <label>Button Text</label>
+        <input type="text" name="buttonText">
+
+        <label>Button URL</label>
+        <input type="text" name="buttonUrl">
+
+        <!-- ADD IMAGE FUNCTIONALITY LATER -->
+
+        <button type="submit">Add Service</button>
+    </form>
+
+    <!-- CREATE A LIST TO SEE THE SERVICES IN MONGO-->
+    <hr>
+
+     <ul>
+        <% services.forEach(service => { %>
+            <li>
+            <!--<img src="<%= service.imageUrl %>" width="100">-->
+            <strong><%= service.serviceName %></strong> - <%= service.serviceDescription %> - <%= service.buttonText %> - <%= service.buttonUrl %>
+            <!--
+            <a href="/adminportal/services/<%= service._id %>/edit">Edit</a>
+            <form action="/adminportal/services/<%= service._id %>/delete" method="POST" style="display:inline;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
+                <button type="submit">Delete</button>
+            </form> -->
+
+            </li>
+        <% }) %>
+    </ul>
+</body>

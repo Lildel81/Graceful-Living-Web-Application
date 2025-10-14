@@ -275,4 +275,11 @@ app.use(clientRoutes.routes);
 app.use('/', clientApplications);
 app.use('/', chakraApplications);
 
+// DANI TESTING PURPOSES ONLY
+const simpleFormRoutes = require("./routes/simpleFormRoutes");
+app.use("/", simpleFormRoutes);
+
+const servicesRoutes = require("./routes/servicesRoutes");
+app.use("/", servicesRoutes);
+
 app.listen(config.port, () => winston.info("App is listening on http://localhost:" + config.port));

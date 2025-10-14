@@ -1,0 +1,22 @@
+<!-- THIS IS FOR TESTING PURPOSES ONLY -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Form for Testing purposes only</title>
+</head>
+
+<body>
+    <h1>Submit a Message</h1>
+
+    <form action="/simple-form" method="POST">
+        <!-- ALL FORMS MUST CONTAIN THIS FOR THE CSRF TOKEN-->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label>Name:</label>
+        <input type="text" name="name" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
