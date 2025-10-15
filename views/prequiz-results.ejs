@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pre-Applicatin Results</title>
+  <link rel="stylesheet" href="/css/prequiz-results.css">
+</head>
+<body>
+    <main class="wrap">
+        <h1>Pre-Application Results</h1>
+
+        <!--Total Sumbissions-->
+        <section class="stats">
+            <div class="card">
+                <h3>Total Submissions</h3>
+                <p class="stat"><%= stats.total %></p>
+            </div>
+        </section>
+
+        <!--Filters-->
+        <form id="filters" class="filters" method="get" action="/clientmanagement/applications">
+            <div class="field">
+                <label for="q">Search</label>
+                <input id="q" name="q" value="<%= q %>" placeholder="Name, email, phone, job title…">
+            </div>
+
+            <!--Age Bracket Filter-->
+            <div class="field">
+            <label for="ageBracket">Age Bracket</label>
+            <select id="ageBracket" name="ageBracket">
+                <option value="">Any</option>
+                <option <%= ageBracket==='20-30'?'selected':'' %>>20-30</option>
+                <option <%= ageBracket==='30-40'?'selected':'' %>>30-40</option>
+                <option <%= ageBracket==='40-50'?'selected':'' %>>40-50</option>
+                <option <%= ageBracket==='50+'?'selected':'' %>>50+</option>
+            </select>
+            </div>
+
+
+            <!--Healtcare Worker Filter-->
+            <div class="field">
+                <label for="isHealthcareWorker">Healthcare Worker</label>
+                <select id="isHealthcareWorker" name="isHealthcareWorker">
+                    <option value="">Any</option>
+                    <option value="Yes" <%= isHealthcareWorker==='Yes'?'selected':'' %>>Yes</option>
+                    <option value="No"  <%= isHealthcareWorker==='No'?'selected':'' %>>No</option>
+                </select>
+            </div>
+
+
+            <!--Worked with Practitionar Filter-->
+            <div class="field">
+                <label for="workedWithPractitioner">Worked With Practitioner</label>
+                <select id="workedWithPractitioner" name="workedWithPractitioner">
+                    <option value="">Any</option>
+                    <option value="Currently working with one" <%= workedWithPractitioner==='Currently working with one'?'selected':'' %>>Currently working with one</option>
+                    <option value="In the past" <%= workedWithPractitioner==='In the past'?'selected':'' %>>In the past</option>
+                    <option value="First time" <%= workedWithPractitioner==='First time'?'selected':'' %>>First time</option>
+                    <option value="Not sure" <%= workedWithPractitioner==='Not sure'?'selected':'' %>>Not sure</option>
+                    <option value="Other" <%= workedWithPractitioner==='Other'?'selected':'' %>>Other</option>
+                </select>
+            </div>
+
+
+            <!--Experience Filter-->
+            <div class="field">
+                <label>Familiar With</label>
+                <div class="checkbx">
+                <% const fam = familiarWith || []; %>
+                <% ['Kundalini Yoga','Sound Baths','Life Coaching','Emotional Freedom Technique','None of the above'].forEach(opt => { %>
+                    <label class="cb">
+                    <input type="checkbox" name="familiarWith" value="<%= opt %>" <%= fam.includes(opt)?'checked':'' %> />
+                    <span><%= opt %></span>
+                    </label>
+                <% }) %>
+                </div>
+            </div>
+
+            <!--Challenges Filter-->
+            <div class="field">
+                <label>Challenges</label>
+                <div class="checkbx">
+                <% const ch = challenges || []; %>
+                <% ['Physical','Emotional','Mental','Spiritual','Other'].forEach(opt => { %>
+                    <label class="cb">
+                    <input type="checkbox" name="challenges" value="<%= opt %>" <%= ch.includes(opt)?'checked':'' %> />
+                    <span><%= opt %></span>
+                    </label>
+                <% }) %>
+                </div>
+            </div>
+
+
+            <!--Date Filter-->
+            <div class="field">
+                <label for="from">From</label>
+                <input type="date" id="from" name="from" value="<%= from %>">
+            </div>
+
+            <div class="field">
+                <label for="to">To</label>
+                <input type="date" id="to" name="to" value="<%= to %>">
+            </div>
+
+            <div class="actions">
+                <button class="btn" type="submit">Apply</button>
+                <a class="btn ghost" href="/clientmanagement/applications">Reset</a>
+            </div>
+  
+
+        </form>
+
+            <!-- Table -->
+        <section class="card">
+            <div class="table-wrap">
+                <table id="results">
+                    <thead>
+                        <tr>
+                        <th>Date</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Contact #</th>
+                        <th>Age</th>
+                        <th>HC Worker</th>
+                        <th>Role</th>
+                        <th>Years</th>
+                        <th>Job Title</th>
+                        <th>Practitioner</th>
+                        <th>Familiar With</th>
+                        <th>Challenges</th>
+                        <th>Goals</th>
+                        <th>Experience</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (rows.length === 0) { %>
+                        <tr><td colspan="14" class="empty">No submissions match your filters.</td></tr>
+                        <% } %>
+                        <% rows.forEach(r => { %>
+                        <tr>
+                            <td><%= new Date(r.submittedAt).toLocaleDateString() %></td>
+                            <td><%= r.fullName %></td>
+                            <td><%= r.email %></td>
+                            <td><%= r.contactNumber %></td>
+                            <td><%= r.ageBracket %></td>
+                            <td><%= r.isHealthcareWorker %></td>
+                            <td><%= r.healthcareRole || '—' %></td>
+                            <td><%= (r.healthcareYears ?? '') === '' ? '—' : r.healthcareYears %></td>
+                            <td><%= r.jobTitle %></td>
+                            <td><%= r.workedWithPractitioner %></td>
+                            <td><%= (r.familiarWith||[]).join(', ') %></td>
+                            <td><%= (r.challenges||[]).join(', ') %></td>
+                            <td class="wrap"><%= r.goals %></td>
+                            <td class="wrap"><%= r.experience || '—' %></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/prequiz-results.js" defer></script>
+</body>

@@ -12,7 +12,29 @@ const CarouselSlide = require("../models/carouselSlide");
 const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
-const mongoose = require("mongoose");
+const Application = require('../models/appSchema');
+const ChakraAssessment = require('../models/chakraAssessment');
+const mongoose = require("mongoose"); 
+
+// --- Allow admin iframes & local form posts (http/https localhost + YouTube) ---
+function allowAdminEmbeds(res) {
+  const extra = [
+    "frame-ancestors 'self'",
+    "frame-src 'self' http://localhost:8080 https://localhost:8080 https://www.youtube.com https://www.youtube-nocookie.com",
+    "form-action 'self' http://localhost:8080 https://localhost:8080"
+  ].join('; ');
+
+  const existing = res.get('Content-Security-Policy') || '';
+  const cleaned = existing
+    .replace(/frame-ancestors[^;]*;?/ig, '')
+    .replace(/frame-src[^;]*;?/ig, '')
+    .replace(/form-action[^;]*;?/ig, '')
+    .trim();
+
+  res.set('Content-Security-Policy', cleaned ? `${cleaned}; ${extra}` : extra);
+  res.set('X-Frame-Options', 'SAMEORIGIN');
+}
+
 
 const MOCK_USERS = [
   {
@@ -362,21 +384,43 @@ const getAdminPortalView = async (req, res) => {
       .sort({ firstname: 1, lastname: 1 })
       .lean();
 
+    // --- Fetch all the submitted assessments --- //
+    const assessments = await ChakraAssessment.find().lean();
+    
+    // --- Calculate total submissions --- //
+    const totalSubmissions = assessments.length;
+
+    // --- Calculate average chakra balance across all submissions --- //
+    let avgChakraBalance = 0;
+    if (totalSubmissions > 0) {
+      const totalAverages = assessments.reduce((sum, assessment) => {
+        if (assessment.results) {
+          const chakraAverages = Object.values(assessment.results)
+            .map(r => parseFloat(r.average))
+            .filter(n => !isNaN(n));
+          const avg = chakraAverages.reduce((a, b) => a + b, 0) / chakraAverages.length;
+          return sum + avg;
+        }
+        return sum;
+      }, 0);
+      avgChakraBalance = (totalAverages / totalSubmissions).toFixed(2);
+    }
+
+    // --- render the page with the stats ---//
     res.render('adminportal', {
       userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
-      upcomingSessions: '',
-      notifications: '',
-      recentActivities: '',
-      users
+      users,
+      totalSubmissions,
+      avgChakraBalance,
     });
+  
   } catch (err) {
     console.error('Failed to load admin portal:', err);
     res.render('adminportal', {
       userName: 'Admin',
-      upcomingSessions: '',
-      notifications: '',
-      recentActivities: '',
-      users: []           // no mock — just empty if DB fails
+      users: [],           // no mock — just empty if DB fails
+      totalSubmissions: 0,
+      avgChakraBalance: 0,
     });
   }
 };
@@ -533,6 +577,160 @@ const getApplicationSuccessView = (req, res) =>{
   res.render('prequiz/app-success');
 };
 
+
+// PreQuiz results 
+async function getPreQuizResults(req, res, next ){
+  try {
+    const {
+      q,
+      ageBracket,
+      isHealthcareWorker,
+      workedWithPractitioner,
+      familiarWith,
+      challenges,
+      from,
+      to
+    } = req.query;
+
+    
+    const filter = {};
+    if (q) {
+      const rx = new RegExp(q, 'i');
+      filter.$or = [
+        { fullName: rx },
+        { email: rx },
+        { contactNumber: rx },
+        { jobTitle: rx }
+      ];
+    }
+    if (ageBracket) filter.ageBracket = ageBracket;
+    if (isHealthcareWorker) filter.isHealthcareWorker = isHealthcareWorker;
+    if (workedWithPractitioner) filter.workedWithPractitioner = workedWithPractitioner;
+
+    const toArr = v => (Array.isArray(v) ? v : v ? [v] : []);
+    const fam = toArr(familiarWith);
+    if (fam.length) filter.familiarWith = { $all: fam };
+
+    const ch = toArr(challenges);
+    if (ch.length) filter.challenges = { $all: ch };
+
+    if (from || to) {
+      filter.submittedAt = {};
+      if (from) filter.submittedAt.$gte = new Date(from);
+      if (to) {
+        const d = new Date(to);
+        d.setHours(23, 59, 59, 999);
+        filter.submittedAt.$lte = d;
+      }
+    }
+
+    const [totalSubmissions, rows] = await Promise.all([
+      Application.countDocuments(filter),
+      Application.find(filter).sort({ submittedAt: -1 }).lean()
+    ]);
+
+    res.render('prequiz-results', {
+      title: 'Pre-Application Results',
+      stats: { total: totalSubmissions },
+      rows,
+     
+      q: q || '',
+      ageBracket: ageBracket || '',
+      isHealthcareWorker: isHealthcareWorker || '',
+      workedWithPractitioner: workedWithPractitioner || '',
+      familiarWith: toArr(familiarWith),
+      challenges: toArr(challenges),
+      from: from || '',
+      to: to || ''
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
+// Chakra Quiz Results 
+async function getChakraQuizResults(req, res, next){
+  try {
+    const {
+      q,
+      ageBracket,
+      healthcareWorker,
+      workedWithPractitioner,
+      familiarWith,
+      challenges,
+      from,
+      to,
+      focusChakra, 
+      archetype
+    } = req.query;
+
+    
+    const filter = {};
+    if (q) {
+      const rx = new RegExp(q, 'i');
+      filter.$or = [
+        { fullName: rx },
+        { email: rx },
+        { contactNumber: rx },
+        { jobTitle: rx }
+      ];
+    }
+    if (ageBracket) filter.ageBracket = ageBracket;
+    if (healthcareWorker) filter.healthcareWorker = healthcareWorker;
+
+    const toArr = v => (Array.isArray(v) ? v : v ? [v] : []);
+    const fam = toArr(familiarWith);
+    if (fam.length) filter.familiarWith = { $all: fam };
+
+    const ch = toArr(challenges);
+    if (ch.length) filter.challenges = { $all: ch };
+
+    const fc = toArr(focusChakra);
+    if (fc.length) filter.focusChakra = { $in: fc };
+
+    const arch = toArr(archetype);
+    if (arch.length) filter.archetype = { $in: arch };
+
+    if (from || to) {
+      filter.createdAt = {};
+      if (from) filter.createdAt.$gte = new Date(from);
+      if (to) {
+        const d = new Date(to);
+        d.setHours(23, 59, 59, 999);
+        filter.createdAt.$lte = d;
+      }
+    }
+
+    const [totalSubmissions, rows] = await Promise.all([
+      ChakraAssessment.countDocuments(filter),
+      ChakraAssessment.find(filter).sort({ createdAt: -1 }).lean()
+    ]);
+
+    res.render('chakraquiz-results', {
+      title: 'Energy Leak Results',
+      stats: { total: totalSubmissions },
+      rows,
+     
+      q: q || '',
+      ageBracket: ageBracket || '',
+      healthcareWorker: healthcareWorker || '',
+      workedWithPractitioner: workedWithPractitioner || '',
+      familiarWith: toArr(familiarWith),
+      challenges: toArr(challenges),
+      from: from || '',
+      to: to || '',
+      focusChakra: req.query.focusChakra || '',
+      archetype: req.query.archetype || ''
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
 const getReviewsView = async (req, res, next) => {
   try {
     const testimonialData = await testimonials.find({});
@@ -547,9 +745,24 @@ const getLoginView = async (req, res, next) => {
   res.render("login");
 };
 
+const getUserSignUpView = async (req, res, next) => {
+  res.render("user-signup");
+};
+
+const getUserLoginView = async (req, res, next) => {
+  res.render("user-login");
+};
+
+const getUserDashboardView = async (req, res, next) => {
+  res.render("user-dashboard");
+};
+
 const getContentManagementView = (req, res) => {
+  // loosen CSP only for this admin page (it hosts the testimonials iframe)
+  allowAdminEmbeds(res);
   res.render("content-management");
 };
+
 
 const getResourcesManagementView = (req, res) => {
   res.render("resourcesmanagement");
@@ -590,6 +803,11 @@ module.exports = {
   getResourcesManagementView,
   getEditResourcesImageView,
   getLoginView,
+  getUserSignUpView,
+  getUserLoginView,
+  getUserDashboardView,
   getClientManagementView,
+  getPreQuizResults,
+  getChakraQuizResults,
   router,
 };

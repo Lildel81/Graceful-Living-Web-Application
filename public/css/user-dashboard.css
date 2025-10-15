@@ -1,0 +1,69 @@
+.dashboard-wrapper {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #2a2a2a;
+  border-bottom: 2px solid #008080;
+  display: inline-block;
+}
+
+.assessment-list {
+  list-style: none;
+  padding: 0;
+}
+
+.assessment-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+.assessment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.empty-state {
+  color: #777;
+  font-style: italic;
+}
+
+.empty-state p {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  text-decoration: none;
+}
+
+.btn.start-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  text-align: center;
+  font-style: normal;
+}
+
+.btn.delete-btn {
+  background-color: #d9534f;
+  color: #fff;
+}
+
+.btn.delete-btn:hover {
+  background-color: #c9302c;
+}

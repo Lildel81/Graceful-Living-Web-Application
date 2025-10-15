@@ -1,0 +1,131 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= mode === 'edit' ? 'Edit Testimonial' : 'Add Testimonial' %></title>
+
+  <!-- Standalone, minimal styles so we DON'T inherit the content-management background -->
+  <style>
+    :root {
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --teal:#1d8888;
+      --teal-d:#15706f;
+      --danger:#b91c1c;
+      --border:#e5e7eb;
+      --panel:#ffffff;
+      --bg:#f7fafc;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--ink);
+      background:var(--bg) !important;   /* kill the hero background */
+    }
+    .wrap{
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:24px;
+      box-shadow:0 4px 24px rgba(0,0,0,.06);
+    }
+    h1{
+      margin:0 0 16px;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+    label{display:block;font-weight:600;margin:16px 0 8px}
+    input[type="text"], textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:12px 12px;
+      font-size:16px;
+      outline:none;
+      background:#fff;
+    }
+    textarea{min-height:140px; resize:vertical}
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+    .row > .col{flex:1 1 320px}
+    .actions{
+      display:flex; gap:10px; align-items:center; margin-top:20px; flex-wrap:wrap
+    }
+    .btn{
+      appearance:none; border:0; border-radius:10px; cursor:pointer;
+      padding:10px 16px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center
+    }
+    .btn.teal{background:var(--teal); color:#fff}
+    .btn.teal:hover{background:var(--teal-d)}
+    .btn.secondary{background:#eef2f7; color:#0b1220; border:1px solid var(--border)}
+    .btn[disabled]{opacity:.6; cursor:not-allowed}
+    .topbar{
+      display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
+    }
+    .topbar a{ text-decoration:none }
+    .muted{ color:var(--muted); font-size:14px }
+    .alert{
+      background:#fdecec;color:#991b1b;border:1px solid #fecaca;padding:10px 12px;border-radius:8px;margin-bottom:12px;
+    }
+    .note{color:#6b7280; font-size:14px; margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <a class="btn secondary" href="/admin/testimonials">← Back</a>
+      </div>
+      <div class="muted"><%= mode === 'edit' ? 'Edit an existing testimonial' : 'Create a new testimonial' %></div>
+    </div>
+
+    <div class="panel">
+      <h1><%= mode === 'edit' ? 'Edit Testimonial' : 'Add Testimonial' %></h1>
+
+      <% if (formError) { %>
+        <div class="alert"><%= formError %></div>
+      <% } %>
+
+      <form method="POST" action="<%= mode === 'edit' ? ('/admin/testimonials/' + item._id) : '/admin/testimonials' %>">
+        <% if (typeof csrfToken !== 'undefined' && csrfToken) { %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% } else { %>
+          <div class="note">CSRF token missing — submit will be disabled until it’s available.</div>
+        <% } %>
+
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" value="<%= item.name || '' %>" required />
+
+        <label for="quote">Quote</label>
+        <textarea id="quote" name="quote" required><%= item.quote || '' %></textarea>
+
+        <div class="row">
+          <div class="col">
+            <label for="location">Location</label>
+            <input id="location" name="location" type="text" value="<%= item.location || '' %>" />
+          </div>
+          <div class="col">
+            <label for="event">Event</label>
+            <input id="event" name="event" type="text" value="<%= item.event || '' %>" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn teal" type="submit" <%= (typeof csrfToken === 'undefined' || !csrfToken) ? 'disabled title="Missing CSRF token"' : '' %>>
+            <%= mode === 'edit' ? 'Save Changes' : 'Create' %>
+          </button>
+          <a class="btn secondary" href="/admin/testimonials">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
+

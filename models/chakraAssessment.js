@@ -23,6 +23,7 @@ const lifeQuadrantSchema = new mongoose.Schema({
 }, { _id: false });
 
 const chakraAssessmentSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   submissionId: { type: String, required: true, unique: true },
 
   // user info

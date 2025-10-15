@@ -1,30 +1,38 @@
 // controllers/assessmentController.js
 const { notifyAdmins } = require("../services/adminNotifications");
 
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+const window = new JSDOM('').window;
+const DOMpurify = createDOMPurify(window);
+
+
 function groupAnswers(body) {
   const identity = {
-    fullName: body.fullName || null,
-    email: body.email || null,
-    contactNumber: body.contactNumber || null,
-    ageBracket: body.ageBracket || null,
-    healthcareWorker: body.healthcareWorker || null,
-    healthcareYears: body.healthcareYears || null,
-    jobTitle: body.jobTitle || null,
-    experience: body.experience || null,
-    experienceOtherText: body.experienceOtherText || null,
+    user: req.session.userId || null, // safe: null means "anonymous"
+    fullName: DOMpurify.sanitize(body.fullName) || null,
+    email: DOMpurify.sanitize(body.email) || null,
+    contactNumber: DOMpurify.sanitize(body.contactNumber) || null,
+    ageBracket: DOMpurify.sanitize(body.ageBracket) || null,
+    healthcareWorker: DOMpurify.sanitize(body.healthcareWorker) || null,
+    healthcareYears: DOMpurify.sanitize(body.healthcareYears) || null,
+    jobTitle: DOMpurify.sanitize(body.jobTitle) || null,
+    experience: DOMpurify.sanitize(body.experience) || null,
+    experienceOtherText: DOMpurify.sanitize(body.experienceOtherText) || null,
     familiarWith: Array.isArray(body.familiarWith)
       ? body.familiarWith
       : body.familiarWith
       ? [body.familiarWith]
       : [],
-    experienceDetails: body.experienceDetails || null,
-    goals: body.goals || null,
+    experienceDetails: DOMpurify.sanitize(body.experienceDetails) || null,
+    goals: DOMpurify.sanitize(body.goals) || null,
     challenges: Array.isArray(body.challenges)
       ? body.challenges
       : body.challenges
       ? [body.challenges]
       : [],
-    challengeOtherText: body.challengeOtherText || null,
+    challengeOtherText: DOMpurify.sanitize(body.challengeOtherText) || null,
   };
 
   const root = {

@@ -1,0 +1,416 @@
+<!--
+    ================================================
+    BOOKING PAGE - APPOINTMENT SCHEDULING INTERFACE
+    ================================================
+    
+    This page provides a Calendly-style appointment booking experience for clients
+    to schedule coaching sessions with the GracefuLiving admin.
+    
+    Features:
+    - Multi-step booking process (Date → Time → Details → Confirmation)
+    - Interactive calendar for date selection
+    - Dynamic time slot loading based on availability
+    - Form validation and submission
+    - Google Calendar integration
+    - Email notifications
+    - CSRF protection
+    
+    Step Flow:
+    1. Step 1: Select a date from the calendar
+    2. Step 2: Choose an available time slot
+    3. Step 3: Enter contact information and notes
+    4. Step 4: Confirmation screen with appointment details
+    
+    Dependencies:
+    - /css/booking.css - Styling for the booking interface
+    - /js/booking.js - Client-side logic and interactions
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding for proper text display -->
+    <meta charset="UTF-8">
+    
+    <!-- Responsive design for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Page title shown in browser tab -->
+    <title>Book Appointment - Graceful Living</title>
+    
+    <!-- Booking page styles -->
+    <link rel="stylesheet" href="/css/booking.css">
+</head>
+<body>
+    <!-- Main container for the entire booking interface -->
+    <div class="booking-container">
+        
+        <!-- ==========================================
+             HEADER SECTION
+             ========================================== -->
+        <!-- 
+            Page header with title and description.
+            Provides context for the booking process.
+        -->
+        <div class="booking-header">
+            <h1>Schedule an Appointment with Coach Tay</h1>
+            <p>Select a date and time that works best for you</p>
+        </div>
+
+        <!-- ==========================================
+             PROGRESS INDICATOR
+             ========================================== -->
+        <!-- 
+            Visual progress tracker showing the current step.
+            Updates dynamically as user progresses through booking.
+            
+            Steps:
+            1. Date - Select appointment date
+            2. Time - Choose time slot
+            3. Details - Enter contact information
+        -->
+        <div class="progress-steps">
+            <!-- Step 1: Date Selection -->
+            <div class="step" id="step-indicator-1">
+                <div class="step-circle active">1</div>
+                <div class="step-label">Date</div>
+            </div>
+            
+            <!-- Step 2: Time Selection -->
+            <div class="step" id="step-indicator-2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Time</div>
+            </div>
+            
+            <!-- Step 3: Details Entry -->
+            <div class="step" id="step-indicator-3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Details</div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             MAIN CONTENT - STEP CONTAINERS
+             ========================================== -->
+        <!-- 
+            Contains all four steps of the booking process.
+            Only one step is visible at a time (controlled by JavaScript).
+        -->
+        <div class="booking-content">
+            
+            <!-- ==========================================
+                 STEP 1: DATE SELECTION
+                 ========================================== -->
+            <!-- 
+                Interactive calendar for selecting appointment date.
+                
+                Features:
+                - Month navigation (previous/next)
+                - Only shows dates with availability
+                - Disables past dates
+                - Disables blocked dates
+                - Visual feedback on hover/selection
+                
+                Flow:
+                1. Calendar loads available dates from server
+                2. User clicks on available date
+                3. "Next" button becomes enabled
+                4. Proceeds to time selection
+            -->
+            <div class="booking-step active" id="step1">
+                <div class="step-content">
+                    <!-- Calendar icon for visual context -->
+                    <div class="calendar-icon">🗓️</div>
+                    <h2>Select a Date</h2>
+                    
+                    <!-- Loading indicator shown while fetching available dates -->
+                    <div class="loading-message" id="loadingSlots">
+                        <div class="loading-spinner"></div>
+                        Loading available times...
+                    </div>
+                    
+                    <!-- Error message if loading fails -->
+                    <div class="error-message" id="errorMessage" style="display: none;">
+                        Unable to load available times. Please try again later.
+                    </div>
+
+                    <!-- Calendar widget (hidden until slots are loaded) -->
+                    <div class="calendar-container" id="calendarContainer" style="display: none;">
+                        <!-- Month navigation header -->
+                        <div class="calendar-header">
+                            <button class="nav-btn" id="prevMonth">‹</button>
+                            <h3 id="currentMonth">October 2025</h3>
+                            <button class="nav-btn" id="nextMonth">›</button>
+                        </div>
+                        
+                        <!-- Calendar grid layout -->
+                        <div class="calendar-grid">
+                            <!-- Day of week headers (Sun-Sat) -->
+                            <div class="calendar-days">
+                                <div class="day-header">Sun</div>
+                                <div class="day-header">Mon</div>
+                                <div class="day-header">Tue</div>
+                                <div class="day-header">Wed</div>
+                                <div class="day-header">Thu</div>
+                                <div class="day-header">Fri</div>
+                                <div class="day-header">Sat</div>
+                            </div>
+                            
+                            <!-- Date cells (populated by JavaScript) -->
+                            <div class="calendar-dates" id="calendarDates">
+                                <!-- Calendar dates will be dynamically generated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation buttons -->
+                    <div class="step-actions">
+                        <!-- Next button (disabled until date is selected) -->
+                        <button class="btn btn-primary" id="continueBtn" disabled>
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 STEP 2: TIME SELECTION
+                 ========================================== -->
+            <!-- 
+                Display available time slots for the selected date.
+                
+                Features:
+                - Shows selected date at the top
+                - Grid layout of available 30-minute time slots
+                - Only shows available (non-booked) slots
+                - Visual selection feedback
+                - Back button to change date
+                
+                Flow:
+                1. Displays time slots for selected date
+                2. User clicks on desired time slot
+                3. "Next" button becomes enabled
+                4. Proceeds to details form
+            -->
+            <div class="booking-step" id="step2">
+                <div class="step-content">
+                    <!-- Back link to return to date selection -->
+                    <a href="#" class="back-link" id="backToDate">
+                        ← Change Date
+                    </a>
+                    
+                    <!-- Time icon for visual context -->
+                    <div class="time-icon">🕐</div>
+                    <h2>Select a Time</h2>
+                    
+                    <!-- Display selected date for reference -->
+                    <div class="selected-date-info" id="selectedDateInfo"></div>
+                    
+                    <!-- Time slots grid container -->
+                    <div class="time-slots-container" id="timeSlotsContainer">
+                        <!-- Time slot buttons (populated by JavaScript) -->
+                        <div class="time-slots-grid" id="timeSlots">
+                            <!-- Time slots will be dynamically generated here -->
+                            <!-- Example: "9:00 AM", "9:30 AM", "10:00 AM", etc. -->
+                        </div>
+                    </div>
+
+                    <!-- Navigation buttons -->
+                    <div class="step-actions">
+                        <!-- Back button to return to date selection -->
+                        <button type="button" class="btn btn-secondary" id="backToDateBtn">
+                            Back
+                        </button>
+                        
+                        <!-- Next button (disabled until time is selected) -->
+                        <button class="btn btn-primary" id="continueToDetailsBtn" disabled>
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 STEP 3: CONTACT DETAILS & NOTES
+                 ========================================== -->
+            <!-- 
+                Form for collecting client information.
+                
+                Features:
+                - Shows appointment summary (date & time)
+                - Required fields: name, email, phone
+                - Optional notes field
+                - CSRF protection
+                - Form validation (HTML5 + JavaScript)
+                - Back button to change time
+                
+                Flow:
+                1. User enters contact information
+                2. Optionally adds notes about the session
+                3. Clicks "Confirm Appointment"
+                4. Form submits via JavaScript
+                5. Appointment saved to database
+                6. Google Calendar event created
+                7. Proceeds to confirmation screen
+            -->
+            <div class="booking-step" id="step3">
+                <div class="step-content">
+                    <!-- Back link to return to time selection -->
+                    <a href="#" class="back-link" id="backToTime">
+                        ← Change Time
+                    </a>
+                    
+                    <!-- Details icon for visual context -->
+                    <div class="details-icon">📝</div>
+                    <h2>Enter Your Details</h2>
+                    
+                    <!-- Appointment summary showing selected date and time -->
+                    <div class="appointment-summary">
+                        <div class="summary-text">Selected: <span id="summaryText"></span></div>
+                    </div>
+
+                    <!-- Booking form (submitted via JavaScript) -->
+                    <form id="bookingForm">
+                        <!-- CSRF token for security (prevents cross-site request forgery) -->
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        
+                        <!-- Full Name field (required) -->
+                        <div class="form-group">
+                            <label for="clientName">Full Name *</label>
+                            <input type="text" id="clientName" name="clientName" required 
+                                   placeholder="John Doe">
+                        </div>
+
+                        <!-- Email Address field (required) -->
+                        <div class="form-group">
+                            <label for="clientEmail">Email Address *</label>
+                            <input type="email" id="clientEmail" name="clientEmail" required 
+                                   placeholder="john@example.com">
+                        </div>
+
+                        <!-- Phone Number field (required) -->
+                        <div class="form-group">
+                            <label for="clientPhone">Phone Number *</label>
+                            <input type="tel" id="clientPhone" name="clientPhone" required 
+                                   placeholder="(555) 123-4567">
+                        </div>
+
+                        <!-- Additional Notes field (optional) -->
+                        <div class="form-group">
+                            <label for="notes">Additional Notes (Optional)</label>
+                            <textarea id="notes" name="notes" rows="4" 
+                                      placeholder="Any specific topics you'd like to discuss..."></textarea>
+                        </div>
+
+                        <!-- Navigation buttons -->
+                        <div class="step-actions">
+                            <!-- Back button to return to time selection -->
+                            <button type="button" class="btn btn-secondary" id="backToTimeBtn">
+                                Back
+                            </button>
+                            
+                            <!-- Submit button to confirm and book appointment -->
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                Confirm Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 STEP 4: CONFIRMATION
+                 ========================================== -->
+            <!-- 
+                Success screen showing appointment confirmation.
+                
+                Features:
+                - Success checkmark icon
+                - Confirmation message
+                - Appointment details card (date, time, name)
+                - Session duration (30 minutes)
+                - Action buttons (home or book another)
+                
+                What happens:
+                - Appointment is saved to database
+                - Google Calendar event created
+                - Email notification sent to client
+                - Calendar invitation sent to client's email
+                
+                Flow:
+                1. Shows confirmation of successful booking
+                2. Displays appointment details
+                3. User can return home or book another appointment
+            -->
+            <div class="booking-step" id="step4">
+                <div class="step-content">
+                    <!-- Success checkmark icon -->
+                    <div class="success-icon">✓</div>
+                    <h2>You're scheduled!</h2>
+                    <p>We've sent you a calendar invitation with all the details.</p>
+                    
+                    <!-- Confirmation details card -->
+                    <div class="confirmation-card">
+                        <!-- Card header with session title and duration -->
+                        <div class="confirmation-header">
+                            <h3>Graceful Living Session</h3>
+                            <span class="duration-badge">30 min</span>
+                        </div>
+                        
+                        <!-- Appointment details (populated by JavaScript) -->
+                        <div class="confirmation-details">
+                            <!-- Appointment date -->
+                            <div class="detail-row">
+                                <span id="confirmDate"></span>
+                            </div>
+                            
+                            <!-- Appointment time -->
+                            <div class="detail-row">
+                                <span id="confirmTime"></span>
+                            </div>
+                            
+                            <!-- Client name -->
+                            <div class="detail-row">
+                                <span id="confirmName"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="confirmation-actions">
+                        <!-- Return to homepage -->
+                        <a href="/" class="btn btn-primary">Back to Home</a>
+                        
+                        <!-- Book another appointment (resets the form) -->
+                        <button class="btn btn-secondary" id="bookAnotherBtn">
+                            Schedule another meeting
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of booking-content -->
+    </div>
+    <!-- End of booking-container -->
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+    <!-- 
+        Client-side booking logic and interactions.
+        
+        Functions:
+        - Load available time slots from server
+        - Generate interactive calendar
+        - Handle date/time selection
+        - Form validation and submission
+        - Step navigation
+        - Display confirmation
+        
+        API Endpoints Used:
+        - GET /appointments/available-slots - Get available dates/times
+        - POST /appointments/book - Book new appointment
+    -->
+    <script src="/js/booking.js"></script>
+</body>
+</html>
+

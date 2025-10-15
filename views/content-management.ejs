@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="/css/content-management.css">
 </head>
 <body>
-        <!-- Fixed Back Button -->
-        <div class="fixed-back-button">
-            <a href="/adminportal"><button>Back to Admin Portal</button></a>
-        </div>
+    <!-- Fixed Back Button -->
+    <div class="fixed-back-button">
+        <a href="/adminportal"><button>Back to Admin Portal</button></a>
+    </div>
 
-        <!-- Main Content -->
+    <!-- Main Content -->
     <main>
         <!-- Hero Section -->
         <div class="hero-text">
@@ -34,11 +34,21 @@
         </nav>
 
         <!-- Panels -->
+        <!-- Carousel panel (restored so tab has a target) -->
         <section id="panel-carousel" class="panel active">
             <h2>Carousel Management</h2>
             <p>Manage homepage carousel images and ordering.</p>
             <div class="iframe-container">
                 <iframe src="/adminportal/carouselmanagement" title="Carousel Manager"></iframe>
+            </div>
+        </section>
+
+        <!-- Testimonials panel (single source of truth -> iframe to manager) -->
+        <section id="panel-voices" class="panel">
+            <h2>Testimonials</h2>
+            <p>Manage testimonials shown on the Reviews page.</p>
+            <div class="iframe-container">
+                <iframe src="/admin/testimonials" title="Testimonials Manager"></iframe>
             </div>
         </section>
 
@@ -66,6 +76,13 @@
 
         <section id="panel-services" class="panel">
             <h2>Services</h2>
+
+            <!-- TESTING -->
+             <div class="iframe-container">
+                <iframe src="/adminportal/servicesmanagement" title="SIMPLE FORM TEST"></iframe>
+            </div>
+
+            <!--
             <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save services content.');">
                 <label for="servicesContent">Services content (Markdown or HTML)</label>
                 <textarea id="servicesContent" name="servicesContent" placeholder="List your services, descriptions, pricing, etc."></textarea>
@@ -73,30 +90,10 @@
                     <button class="btn" type="submit">Save Services</button>
                 </div>
             </form>
+            -->
         </section>
 
-        <section id="panel-voices" class="panel">
-            <h2>Testimonials</h2>
-            <p>Manage testimonials shown on the Reviews page.</p>
-            <form action="/admin/add-review" method="POST">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="quote">Quote</label>
-                <textarea id="quote" name="quote" rows="3" required></textarea>
-
-                <label for="location">Location</label>
-                <input type="text" id="location" name="location">
-
-                <label for="event">Event</label>
-                <input type="text" id="event" name="event">
-
-                <div class="actions">
-                    <button class="btn" type="submit">Add Testimonial</button>
-                    <a class="btn secondary" href="/reviews">View All Testimonials</a>
-                </div>
-            </form>
-        </section>
+        <!-- Removed duplicated second #panel-voices with old /admin/add-review form -->
 
         <section id="panel-about" class="panel">
             <h2>About Us</h2>
@@ -156,7 +153,6 @@
               alert('✅ Testimonial submitted successfully!');
             }
           </script> -->
-    
     </main>
 </body>
 </html>

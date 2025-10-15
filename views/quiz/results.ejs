@@ -4,43 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Graceful Living Results</title>
-
   <link rel="stylesheet" href="/css/results.css">
+  <script src="/js/results-page.js" defer></script>
 </head>
-
+<!--Modified by Terry to prevent crashing with csrf verification-->
 <body>
   <header>
     <h1>Your Chakra & Archetype Insights</h1>
   </header>
 
   <main>
+    <% const c = chakraData || {}; const a = archetypeData || {}; %>
+
+    <!-- save results modal -->
+    <% if (tempSavePrompt) { %>
+    <div id="saveResultsModal" class="modal">
+      <div class="modal-content">
+        <h2>Save Your Results?</h2>
+        <p><strong>Sign up</strong> or <strong>log in</strong> to save your <strong>Energy Leak Quiz</strong>
+           results and track your progress over time.</p>
+        <div class="modal-buttons">
+          <a href="/user-signup" class="btn start-btn">Sign Up</a>
+          <a href="/user-login" class="btn view-btn">Log In</a>
+          <button id="modalClose" class="btn close-btn">Continue Without Saving</button>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+
     <!-- chakra Section -->
     <section id="chakra-section">
-      <h2><%= chakraData.title || "Chakra Insights" %></h2>
-      <% chakraData.description.forEach(paragraph => { %>
+      <h2><%= c.title || "Chakra Insights" %></h2>
+
+      <% (Array.isArray(c.description) ? c.description : (c.description ? [c.description] : [])).forEach(paragraph => { %>
         <p><%= paragraph %></p>
       <% }) %>
 
       <h3>Bija Mantra</h3>
-      <p><%= chakraData.mantra || "N/A" %></p>
+      <p><%= c.mantra || "N/A" %></p>
 
       <h3>Yoga Poses</h3>
       <ul>
-        <% chakraData.yogaPoses?.forEach(pose => { %>
+        <% (c.yogaPoses || []).forEach(pose => { %>
           <li><%= pose %></li>
         <% }) %>
       </ul>
 
       <h3>Affirmations</h3>
       <ul>
-        <% chakraData.affirmations?.forEach(aff => { %>
+        <% (c.affirmations || []).forEach(aff => { %>
           <li><%= aff %></li>
         <% }) %>
       </ul>
 
       <h3>Journal Prompts</h3>
       <ol>
-        <% chakraData.journalPrompts?.forEach(prompt => { %>
+        <% (c.journalPrompts || []).forEach(prompt => { %>
           <li><%= prompt %></li>
         <% }) %>
       </ol>
@@ -48,29 +68,29 @@
 
     <!-- archetype Section -->
     <section id="archetype-section">
-      <h2><%= archetypeData.title || "Archetype Insights" %></h2>
-      <p><%= archetypeData.description || archetypeData.overview || "No description available." %></p>
+      <h2><%= a.title || "Archetype Insights" %></h2>
+      <p><%= a.description || a.overview || "No description available." %></p>
 
       <h3>Core Characteristics</h3>
       <ul>
-        <% archetypeData.coreCharacteristics?.forEach(char => { %>
+        <% (a.coreCharacteristics || []).forEach(char => { %>
           <li><%= char %></li>
         <% }) %>
       </ul>
 
       <h3>The Persona (Light Side)</h3>
-      <p><%= archetypeData.persona || "No persona description available." %></p>
+      <p><%= a.persona || "No persona description available." %></p>
 
       <h3>The Shadow</h3>
       <ul>
-        <% archetypeData.shadow?.forEach(sh => { %>
+        <% (a.shadow || []).forEach(sh => { %>
           <li><%= sh %></li>
         <% }) %>
       </ul>
 
       <h3>Growth Invitations / Resolutions</h3>
       <ul>
-        <% archetypeData.growthInvitations?.forEach(resolution => { %>
+        <% (a.growthInvitations || []).forEach(resolution => { %>
           <li><%= resolution %></li>
         <% }) %>
       </ul>

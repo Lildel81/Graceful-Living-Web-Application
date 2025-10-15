@@ -1,6 +1,8 @@
 const mongoose = require('mongoose'); 
 const Joi = require('joi');
 
+
+
 const PRACTITIONER_ENUM = [
     'Currently working with one',
     'In the past',
@@ -140,10 +142,15 @@ const appSchema = new mongoose.Schema({
 
 const Application = mongoose.model('Application', appSchema);
 
-
+//terry modified the schema validation to better fit mongoose and work with csrf
 const validateApplication = (app) => {
-    const schema = Joi.object({
-        email: Joi.string().min(1).max(100).required(),
+  const schema = Joi.object({
+    csrfToken: Joi.any().strip(),
+    _csrf: Joi.any().strip(),
+
+    challengesOtherText: Joi.any().strip(),
+
+     email: Joi.string().min(1).max(100).required(),
         fullName: Joi.string().min(1).max(50).required(),
         contactNumber:Joi.string().min(10).max(20).required(),
         ageBracket: Joi.string().valid(...AGE_BRACKETS).required(),
@@ -153,12 +160,13 @@ const validateApplication = (app) => {
         healthcareRole: Joi.alternatives().conditional('isHealthcareWorker', {
         is: 'Yes',
         then: Joi.string().min(1).max(100).required(),
-        otherwise: Joi.string().allow('', null)
+        //otherwise: Joi.string().empty('').optional()
+        otherwise: Joi.any().strip()
         }),
         healthcareYears: Joi.alternatives().conditional('isHealthcareWorker', {
         is: 'Yes',
         then: Joi.number().integer().min(0).max(80).required(),
-        otherwise: Joi.any().optional()
+        otherwise: Joi.any().strip()
         }),
 
         jobTitle: Joi.string().max(100).required(),
@@ -180,10 +188,13 @@ const validateApplication = (app) => {
             .items(Joi.string().valid(...CHALLENGES_ENUM))
             .single(true)
             .default([])
-        });
+        })
 
-    return schema.validate(app);
+  .prefs({ abortEarly: false, stripUnknown: true });
+
+  return schema.validate(app);
 };
+
 
 
 module.exports = Application;

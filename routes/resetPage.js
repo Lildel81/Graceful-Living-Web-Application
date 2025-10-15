@@ -4,7 +4,7 @@ const router = express.Router();
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const PasswordResetToken = require('../models/PasswordResetToken');
+const PasswordResetToken = require('../models/passwordResetToken');
 
 
 const mongoose = require('mongoose');

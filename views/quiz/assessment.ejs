@@ -30,7 +30,10 @@
         action="/assessment/save"
         method="POST"
         novalidate
+        
       >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
         <!-- getting to know you questions -->
         <div
           class="chakra-section active"

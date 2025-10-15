@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard</title>
+
+  <link rel="stylesheet" href="/css/user-dashboard.css">
+</head>
+
+<body>
+  <div class="dashboard-wrapper">
+    <header class="dashboard-header">
+      <h1 class="dashboard-title">My Dashboard</h1>
+      <p class="dashboard-subtitle">Welcome back, <%= user?.fullName || user?.email || "Friend" %></p>
+    </header>
+
+    <section class="dashboard-section">
+      <h2 class="section-title">Energy Leak Quiz</h2>
+
+      <% if (assessments.length === 0) { %>
+        <div class="empty-state">
+          <p>You haven't completed any assessments yet.</p>
+          <a href="/intro" class="btn start-btn">Take Your First Assessment</a>
+        </div>
+      <% } else { %>
+        <ul class="assessment-list">
+          <% assessments.forEach(a => { %>
+          <li class="assessment-card">
+            <div class="assessment-info">
+              <h3><%= a.focusChakra %></h3>
+              <p class="archetype">Archetype: <strong><%= a.archetype %></strong></p>
+              <p class="timestamp"><%= new Date(a.createdAt).toLocaleString() %></p>
+            </div>
+            <div class="assessment-actions">
+              <a href="/assessment/results?id=<%= a.submissionId %>" class="btn view-btn">View</a>
+              <form action="/user-dashboard/delete/<%= a._id %>" method="POST" class="delete-form" 
+                onsubmit="return confirm('Are you sure you want to delete this assessment?');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn delete-btn">Delete</button>
+              </form>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </section>
+  </div>
+</body>
+</html>
