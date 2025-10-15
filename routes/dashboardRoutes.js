@@ -1,6 +1,8 @@
 const express = require("express");
 const ChakraAssessment = require("../models/chakraAssessment");
 const router = express.Router();
+const csrfProtection = require('../middleware/csrf');
+
 
 router.post("/delete/:id", requireLogin, async (req, res) => {
   const id = req.params.id;
@@ -16,7 +18,7 @@ function requireLogin(req, res, next) {
   next();
 }
 
-router.get("/", requireLogin, async (req, res) => {
+router.get("/", requireLogin, csrfProtection, async (req, res) => {
   try {
     const assessments = await ChakraAssessment.find({ user: req.session.user })
       .sort({ createdAt: -1 })

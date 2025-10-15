@@ -111,6 +111,8 @@ app.use(session({
 app.use(hpp());
 app.use(mongoSanitize());
 app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 
 // ✅ Allow same-origin iframing ONLY for the testimonials manager pages
 app.use(["/admin/testimonials", "/admin/testimonials/*"], (req, res, next) => {
@@ -164,7 +166,7 @@ app.use(async (req, res, next) => {
 
 app.use(cookieParser(process.env.SESSION_SECRET || 'dev-secret'));
 
-app.use(csurf({
+const csrfProtection = csurf({
   cookie: {
     key: '_csrf',
     httpOnly: true,
@@ -172,7 +174,7 @@ app.use(csurf({
     secure: process.env.NODE_ENV === 'production',
     path: '/'
   }
-}));
+});
 
 // middleware to make user available in all views (for nav bar)
 app.use((req, res, next) => {
@@ -181,12 +183,12 @@ app.use((req, res, next) => {
 });
 
 // Only here: pass the token to the view that has the form
-app.get('/application', (req, res) => {
+app.get('/application', csrfProtection, (req, res) => {
   req.session.appFlow = true;        // touching the session triggers Set-Cookie: sid=...
   res.render('prequiz/application', { csrfToken: req.csrfToken() });
 });
 
-app.get('/assessment', (req, res) => {
+app.get('/assessment', csrfProtection, (req, res) => {
   res.render('quiz/assessment', { csrfToken: req.csrfToken() });
 });
 
@@ -214,12 +216,12 @@ app.get("/about", (req, res) => {
 });
 
 // Appointment booking routes
-app.get("/booking", (req, res) => {
+app.get("/booking", csrfProtection, (req, res) => {
   res.render("booking", { csrfToken: req.csrfToken() });
 });
 
 // Admin appointment management
-app.get("/adminportal/appointments", (req, res) => {
+app.get("/adminportal/appointments", csrfProtection, (req, res) => {
   if (req.session && req.session.isAdmin) {
     res.render("appointment-management", { csrfToken: req.csrfToken() });
   } else {
