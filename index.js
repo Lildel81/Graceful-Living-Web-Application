@@ -25,7 +25,6 @@ const passwordResetRoutes = require("./routes/passwordReset");
 const resetPageRoutes = require("./routes/resetPage");
 const clientApplications = require("./routes/clientApplications");
 const chakraApplications = require("./routes/chakraApplications");
-const appointmentRoutes = require("./routes/appointments");
 const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 
@@ -242,7 +241,7 @@ app.get("/adminportal/appointments", (req, res) => {
   }
 });
 
-app.use("/appointments", appointmentRoutes);
+//app.use("/appointments", appointmentRoutes);
 //terry added for debugging purposes
 
 const { submitApplication } = require("./controllers/applicationController");
@@ -259,9 +258,9 @@ app.use("/", zoomIntegrations);
 app.use("/", appointmentsRoutes);
 
 // Start the Server
-app.listen(config.port, () =>
+/*app.listen(config.port, () =>
   winston.info("App is listening on http://localhost:" + config.port)
-);
+);*/
 
 app.use((err, req, res, next) => {
   if (err && err.code === "EBADCSRFTOKEN") {
