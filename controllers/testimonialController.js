@@ -1,5 +1,6 @@
 // controllers/testimonialController.js
 const Testimonial = require('../models/testimonialSchema');
+const csrfProtection = require('../middleware/csrf');
 
 // List (admin)
 const listTestimonials = async (req, res) => {
@@ -12,7 +13,7 @@ const listTestimonials = async (req, res) => {
     if (req.query.updated) success = 'Testimonial updated successfully.';
     if (req.query.deleted) success = 'Testimonial deleted successfully.';
 
-    res.render('testimonials-manage', {
+    res.render('testimonials-manage', csrfProtection,{
       layout: false,
       items,
       success,
@@ -26,7 +27,7 @@ const listTestimonials = async (req, res) => {
 
 // Create form
 const getCreateTestimonial = (req, res) => {
-  res.render('testimonials-form', {
+  res.render('testimonials-form', csrfProtection,{
     layout: false,
     mode: 'create',
     item: {},
@@ -45,7 +46,7 @@ const postCreateTestimonial = async (req, res) => {
       event: (req.body.event || '').trim(),
     };
     if (!payload.name || !payload.quote) {
-      return res.status(400).render('testimonials-form', {
+      return res.status(400).render('testimonials-form', csrfProtection,{
         layout: false,
         mode: 'create',
         item: payload,
@@ -57,7 +58,7 @@ const postCreateTestimonial = async (req, res) => {
     return res.redirect('/admin/testimonials?created=1');
   } catch (e) {
     console.error('Create failed:', e);
-    res.status(500).render('testimonials-form', {
+    res.status(500).render('testimonials-form', csrfProtection,{
       layout: false,
       mode: 'create',
       item: req.body,
@@ -72,7 +73,7 @@ const getEditTestimonial = async (req, res) => {
   try {
     const item = await Testimonial.findById(req.params.id).lean();
     if (!item) return res.status(404).send('Not found');
-    res.render('testimonials-form', {
+    res.render('testimonials-form', csrfProtection,{
       layout: false,
       mode: 'edit',
       item,
@@ -95,7 +96,7 @@ const postUpdateTestimonial = async (req, res) => {
       event: (req.body.event || '').trim(),
     };
     if (!payload.name || !payload.quote) {
-      return res.status(400).render('testimonials-form', {
+      return res.status(400).render('testimonials-form', csrfProtection,{
         layout: false,
         mode: 'edit',
         item: { ...payload, _id: req.params.id },
@@ -107,7 +108,7 @@ const postUpdateTestimonial = async (req, res) => {
     return res.redirect('/admin/testimonials?updated=1');
   } catch (e) {
     console.error('Update failed:', e);
-    res.status(500).render('testimonials-form', {
+    res.status(500).render('testimonials-form', csrfProtection,{
       layout: false,
       mode: 'edit',
       item: { ...req.body, _id: req.params.id },

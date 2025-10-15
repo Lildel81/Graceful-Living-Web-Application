@@ -63,7 +63,7 @@ const loginLimiter = rateLimit({
 router.get('/', csrfProtection, (req, res) => {
   // res.locals.csrfToken is already set by your GET middleware,
   // but passing explicitly is fine too:
-  res.render('login', {
+  res.render('login', csrfProtection, {
     ok: req.query.ok || false,
     error: null,
     username: '',
@@ -80,7 +80,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
   const { error, value } = formSchema.validate(
     { username: cleanUsername, password: cleanPassword }, { abortEarly: false });
   if (error) {
-    return res.status(400).render('login', {
+    return res.status(400).render('login', csrfProtection,{
       ok: false,
       error: 'Please fill in both fields.',
       username: req.body.username || '',
@@ -93,7 +93,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
 
     if (!user) {
       await bcrypt.compare(value.password, DUMMY_BCRYPT_HASH);
-      return res.status(401).render('login', {
+      return res.status(401).render('login', csrfProtection,{
         ok: false,
         error: 'Invalid username or password.',
         username: value.username,
@@ -103,7 +103,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
 
     if (user.isLocked()) {
       const minutes = Math.max(1, Math.ceil((user.lockUntil - Date.now()) / 60000));
-      return res.status(429).render('login', {
+      return res.status(429).render('login', csrfProtection,{
         ok: false,
         error: `Too many failed attempts. Try again in ${minutes} minute(s).`,
         username: value.username,
@@ -129,7 +129,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           { _id: user._id },
           { $set: { failedLoginCount: 0, failWindowStart: null, lockUntil: new Date(now + 15 * 60 * 1000) } }
         );
-        return res.status(429).render('login', {
+        return res.status(429).render('login', csrfProtection,{
           ok: false,
           error: 'Too many failed attempts. Try again in 15 minutes.',
           username: value.username,
@@ -140,7 +140,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           { _id: user._id },
           { $set: { failedLoginCount: failed, failWindowStart: windowStart } }
         );
-        return res.status(401).render('login', {
+        return res.status(401).render('login', csrfProtection,{
           ok: false,
           error: 'Invalid username or password.',
           username: value.username,
@@ -156,7 +156,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
 
     req.session.regenerate(err => {
       if (err) {
-        return res.status(500).render('login', {
+        return res.status(500).render('login', csrfProtection,{
           ok: false,
           error: 'Session error. Please try again.',
           username: value.username,
@@ -172,7 +172,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
 
       req.session.save(err2 => {
         if (err2) {
-          return res.status(500).render('login', {
+          return res.status(500).render('login', csrfProtection,{
             ok: false,
             error: 'Session save error. Please try again.',
             username: value.username,
@@ -184,7 +184,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
     });
   } catch (e) {
     console.error('Login DB error:', e);
-    return res.status(500).render('login', {
+    return res.status(500).render('login', csrfProtection,{
       ok: false,
       error: 'Unexpected error. Please try again.',
       username: req.body.username || '',

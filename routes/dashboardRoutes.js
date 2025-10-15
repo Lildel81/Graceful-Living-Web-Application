@@ -24,7 +24,7 @@ router.get("/", requireLogin, csrfProtection, async (req, res) => {
       .sort({ createdAt: -1 })
       .select("submissionId focusChakra archetype createdAt");
 
-    res.render("user-dashboard", {
+    res.render("user-dashboard",{
       assessments,
       csrfToken: req.csrfToken()
     });
