@@ -3,12 +3,13 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const User = require("../models/userSchema");
 const ChakraAssessment = require("../models/chakraAssessment")
+const csrfProtection = require("../middleware/csrf");
 
 const router = express.Router();
 
 /* get routes */
 // signup form
-router.get("/user-signup", (req, res) => {
+router.get("/user-signup", csrfProtection, (req, res) => {
   res.render("user-signup", { 
     csrfToken: req.csrfToken(),
     error: null,
@@ -18,7 +19,7 @@ router.get("/user-signup", (req, res) => {
 });
 
 // login form
-router.get("/user-login", (req, res) => {
+router.get("/user-login", csrfProtection, (req, res) => {
   res.render("user-login", {
     csrfToken: req.csrfToken(),
     error: null,
@@ -52,7 +53,7 @@ async function saveTempResultsToUser(req, userId) {
 }
 
 /* -------- SIGNUP -------- */
-router.post("/user-signup", async (req, res) => {
+router.post("/user-signup", csrfProtection, async (req, res) => {
   const { fullName, email, password } = req.body;
 
   if (!fullName || !email || !password) {
@@ -67,7 +68,7 @@ router.post("/user-signup", async (req, res) => {
   try {
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(409).render("user-signup", {
+      return res.status(409).render("user-signup", csrfProtection,{
         csrfToken: req.csrfToken(),
         error: "Email is already registered.",
         fullName,
@@ -90,7 +91,7 @@ router.post("/user-signup", async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).render("user-signup", {
+    res.status(500).render("user-signup", csrfProtection,{
       csrfToken: req.csrfToken(),
       error: "Unexpected error. Please try again.",
       fullName,
@@ -100,7 +101,7 @@ router.post("/user-signup", async (req, res) => {
 });
 
 /* -------- LOGIN -------- */
-router.post("/user-login", async (req, res) => {
+router.post("/user-login", csrfProtection, async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -123,7 +124,7 @@ router.post("/user-login", async (req, res) => {
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).render("user-login", { 
+      return res.status(401).render("user-login", csrfProtection,{ 
         csrfToken: req.csrfToken(),
         error: "Invalid email or password", 
         email 
@@ -140,7 +141,7 @@ router.post("/user-login", async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).render("user-login", { 
+    res.status(500).render("user-login", csrfProtection,{ 
       csrfToken: req.csrfToken(),
       error: "Unexpected error. Please try again.", 
       email 

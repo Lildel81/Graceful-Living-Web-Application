@@ -121,6 +121,7 @@ app.use(
 app.use(hpp());
 app.use(mongoSanitize());
 app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // ✅ Allow same-origin iframing ONLY for the testimonials manager pages
 app.use(["/admin/testimonials", "/admin/testimonials/*"], (req, res, next) => {
@@ -227,13 +228,24 @@ app.get("/about", (req, res) => {
   res.render("aboutUs");
 });
 
+//Cong added this
+const csrfProtection = csurf({
+  cookie: {
+    key: "_csrf",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: isProd,
+    path: "/",
+  },
+});
+
 // Appointment booking routes
-app.get("/booking", (req, res) => {
+app.get("/booking", csrfProtection, (req, res) => {
   res.render("booking", { csrfToken: req.csrfToken() });
 });
 
 // Admin appointment management
-app.get("/adminportal/appointments", (req, res) => {
+app.get("/adminportal/appointments", csrfProtection, (req, res) => {
   if (req.session && req.session.isAdmin) {
     res.render("appointment-management", { csrfToken: req.csrfToken() });
   } else {

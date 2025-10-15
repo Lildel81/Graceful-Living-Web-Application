@@ -16,23 +16,25 @@ exports.getServicesPage = async (req, res) => {
   }
 };
 
-// insert a new service (POST)
 exports.createService = async (req, res) => {
   try {
     const { serviceName, serviceDescription, buttonText, buttonUrl } = req.body;
+
+    const imageUrl = req.file ? `/public/images/uploads/${req.file.filename}` : null;
 
     const newService = new Services({
       serviceName,
       serviceDescription,
       buttonText,
       buttonUrl,
+      imageUrl
     });
 
     await newService.save();
-    console.log("Service added:", newService);
-    res.redirect("/adminportal/servicesmanagement");
+    res.redirect('/adminportal/servicesmanagement');
   } catch (err) {
-    console.error("Error creating service:", err);
-    res.status(500).send("Error creating service");
+    console.error('Error creating service:', err);
+    if (err.code === 'LIMIT_FILE_SIZE') return res.status(400).send('Image too large (max 5MB).');
+    res.status(500).send('Error creating service');
   }
 };

@@ -3,6 +3,8 @@ const rateLimit = require('express-rate-limit');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const csrfProtection = require('../middleware/csrf');
+
 
 const router = express.Router();
 
@@ -58,7 +60,7 @@ const loginLimiter = rateLimit({
 });
 
 /* ---------- GET /login ---------- */
-router.get('/', (req, res) => {
+router.get('/', csrfProtection, (req, res) => {
   // res.locals.csrfToken is already set by your GET middleware,
   // but passing explicitly is fine too:
   res.render('login', {

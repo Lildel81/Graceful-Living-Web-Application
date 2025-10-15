@@ -12,26 +12,46 @@
 <body>
     <h2>Manage Services</h2>
 
-    <form action="/adminportal/contentmanagement/create" method="POST">
-        <!-- ALL FORMS MUST CONTAIN THIS FOR THE CSRF TOKEN-->
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <form action="/adminportal/contentmanagement/create" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-        <label>Service Name <span style="color: red;">*</span> </label>
-        <input type="text" name="serviceName" required>
+  <label>Service Name <span style="color: red;">*</span></label>
+  <input type="text" name="serviceName" required>
 
-        <label>Description</label>
-        <textarea name="serviceDescription"></textarea>
+  <label>Description</label>
+  <textarea name="serviceDescription"></textarea>
 
-        <label>Button Text</label>
-        <input type="text" name="buttonText">
+  <label>Button Text</label>
+  <input type="text" name="buttonText">
 
-        <label>Button URL</label>
-        <input type="text" name="buttonUrl">
+  <label>Button URL</label>
+  <input type="text" name="buttonUrl">
 
-        <!-- ADD IMAGE FUNCTIONALITY LATER -->
+  <!-- New: upload -->
 
-        <button type="submit">Add Service</button>
-    </form>
+  <!-- Image upload -->
+<label for="image">Image</label>
+<input
+  id="image"
+  type="file"
+  name="image"
+  accept="image/png, image/jpeg, image/webp, image/gif"
+/>
+
+<!-- Preview + meta -->
+<div id="imagePreview" style="display:none; margin-top:8px;">
+  <img id="imageThumb" alt="Selected image preview" style="max-width:180px; height:auto; border:1px solid #ccc; padding:2px; border-radius:4px;">
+  <div id="imageMeta" style="font-size:0.9em; color:#555; margin-top:4px;"></div>
+  <button type="button" id="clearImage" style="margin-top:6px;">Remove selection</button>
+</div>
+
+<!-- Optional validation message -->
+<p id="imageError" style="display:none; color:#b00020; margin-top:6px;"></p>
+  
+  
+  <button type="submit">Add Service</button>
+</form>
+
 
     <!-- CREATE A LIST TO SEE THE SERVICES IN MONGO-->
     <hr>
@@ -51,4 +71,7 @@
             </li>
         <% }) %>
     </ul>
+
+    <script src="/js/service-image-preview.js" defer></script>
+
 </body>
