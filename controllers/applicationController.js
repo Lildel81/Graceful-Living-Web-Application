@@ -33,10 +33,10 @@ const submitApplication = async (req, res) => {
     : undefined,
   jobTitle: DOMPurify.sanitize(req.body.jobTitle),
   workedWithPractitioner: DOMPurify.sanitize(req.body.workedWithPractitioner),
-  familiarWith: DOMPurify.sanitize(req.body.familiarWith),  //terry fixed problem... sanitizeArray is not a function
+  familiarWith: sanitizeArray(req.body.familiarWith),
   experience: DOMPurify.sanitize(req.body.experience),
   goals: DOMPurify.sanitize(req.body.goals),
-  challenges: DOMPurify.sanitize(req.body.challenges),  //terry fixed problem... sanitizeArray is not a function
+  challenges: sanitizeArray(req.body.challenges),
     }
 
    

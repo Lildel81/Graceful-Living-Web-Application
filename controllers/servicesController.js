@@ -1,12 +1,11 @@
 // reference schema
 const Services = require("../models/servicesSchema");
-const csrfProtection = require('../middleware/csrf');
 
 // show services (GET)
 exports.getServicesPage = async (req, res) => {
   try {
     const services = await Services.find().sort({ createdAt: -1 });
-    res.render("servicesmanagement", csrfProtection,{
+    res.render("servicesmanagement", {
       csrfToken: req.csrfToken(),
       services,
       layout: false
