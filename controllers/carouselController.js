@@ -10,7 +10,7 @@ const getCarouselManagement = async(req, res) => {
 
 const getEditSlideView = async(req, res) => {
     const slide = await CarouselSlide.findById(req.params.id);
-    res.render('editslide', {slide});
+    res.render('editslide', {slide, layout: false});
 };
 
 const createSlide = async(req, res) => {
@@ -75,22 +75,30 @@ const deleteSlide = async(req, res) => {
 
 const editSlide = async (req, res) => {
     const { title, description, buttonText, buttonUrl, imageOption, imageUrl } = req.body;
-    let imagePath = imageUrl;
 
     try {
       const existing = await CarouselSlide.findById(req.params.id);
       const hadLocalUpload = existing && existing.imageUrl && existing.imageUrl.startsWith('/images/uploads/') && !existing.imageUrl.includes('default-fallback');
+      let imagePath = existing.imageUrl; // Keep existing image by default
 
       if (imageOption === 'upload' && req.file) {
+        // User uploaded a new image
         imagePath = `/images/uploads/${req.file.filename}`;
+        // Delete old uploaded file if it exists
         if (hadLocalUpload) {
           const oldAbs = path.join(__dirname, '..', 'public', existing.imageUrl.replace(/^\//, ''));
           try { await fs.promises.unlink(oldAbs); } catch (err) { if (err.code !== 'ENOENT') console.error('Failed to remove old slide image:', oldAbs, err.message); }
         }
-      } else if (imageOption === 'url' && imageUrl && hadLocalUpload) {
-        const oldAbs = path.join(__dirname, '..', 'public', existing.imageUrl.replace(/^\//, ''));
-        try { await fs.promises.unlink(oldAbs); } catch (err) { if (err.code !== 'ENOENT') console.error('Failed to remove old slide image:', oldAbs, err.message); }
+      } else if (imageOption === 'url' && imageUrl) {
+        // User provided a new URL
+        imagePath = imageUrl;
+        // Delete old uploaded file if switching from upload to URL
+        if (hadLocalUpload) {
+          const oldAbs = path.join(__dirname, '..', 'public', existing.imageUrl.replace(/^\//, ''));
+          try { await fs.promises.unlink(oldAbs); } catch (err) { if (err.code !== 'ENOENT') console.error('Failed to remove old slide image:', oldAbs, err.message); }
+        }
       }
+      // If imageOption === 'keep' or not specified, imagePath remains as existing.imageUrl
 
       await CarouselSlide.findByIdAndUpdate(req.params.id, {
         title,

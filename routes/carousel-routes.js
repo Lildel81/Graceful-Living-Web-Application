@@ -10,12 +10,12 @@ const uploadDir = path.join(__dirname, '..', 'public', 'images', 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
-
+// Storage configuration for multer
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
+  destination: (req, file, cb) => cb(null, uploadDir), // save to public/images/uploads
   filename: (req, file, cb) => {
     const base = path.basename(file.originalname).replace(/[^a-zA-Z0-9._-]/g, '_');
-    cb(null, `${Date.now()}-${base}`);
+    cb(null, `${Date.now()}-${base}`); // add timestamp to filename to avoid conflicts
   }
 });
 
