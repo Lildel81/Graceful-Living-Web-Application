@@ -13,7 +13,6 @@ const mongoSanitize = require("express-mongo-sanitize");
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
 
-
 const config = require("./startup/config");
 const clientRoutes = require("./routes/client-routes");
 const carouselRoutes = require("./routes/carousel-routes");
@@ -29,6 +28,7 @@ const chakraApplications = require('./routes/chakraApplications');
 const appointmentRoutes = require("./routes/appointment-routes");
 const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
+const statsRoutes = require("./routes/statsRoutes");
 
 const app = express();
 
@@ -82,6 +82,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
+app.use('/js', express.static(path.join(__dirname, 'node_modules/chart.js/dist')));
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -214,6 +215,8 @@ app.get("/contact", (req, res) => {
 app.get("/about", (req, res) => {
   res.render("aboutUs");
 });
+
+app.use('/stats', statsRoutes);
 
 // Appointment booking routes
 app.get("/booking", csrfProtection, (req, res) => {

@@ -1,4 +1,4 @@
-<!-- EJS Template File -->
+<!-- adminportal.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +12,12 @@
 
   <!-- js for resources page -->
   <script src="/js/adminportal.js" defer></script> 
+
+  <!-- chart.js library -->
+  <script src="/js/chart.umd.js" defer></script>
+
+  <!-- js for chakra stats -->
+  <script src="/js/stats.js" defer></script>
 
   <style>
     body {
@@ -137,6 +143,127 @@
       <div class="chart">Score Distribution</div>
     </section>
   </main>
+
+  <!-- Chakra Assessment Statistics Section -->
+  <section class="stats-dashboard-section">
+    <div class="stats-dashboard-header">
+      <h2>📊 Chakra Assessment Statistics</h2>
+
+      <div class="stats-controls">
+        <div class="month-filter">
+          <label for="statsMonthPicker" class="filter-label">Month</label>
+          <input type="month" id="statsMonthPicker" class="month-input" />
+          <button id="clearMonthBtn" class="btn-secondary" type="button">All time</button>
+          <button id="refreshStatsBtn" class="refresh-btn" type="button">
+            <span class="refresh-text">Refresh Data</span>
+          </button>
+        </div>
+
+        <div class="filter-status">
+          <span id="filterLabel" class="badge badge-muted">All time</span>
+          <span id="submissionCountBadge" class="badge badge-strong">0 submissions</span>
+        </div>
+      </div>
+    </div>
+    
+    <div id="statsLoadingMessage" class="loading-message">
+      Loading fresh statistics...
+    </div>
+
+    <div id="statsContent">
+      <!-- Charts Grid -->
+      <div class="stats-charts-grid">
+        <!-- Chakra Radar Chart -->
+        <div class="stats-chart-container large">
+          <h3>Chakra Balance Overview</h3>
+          <canvas id="chakraRadarChart"></canvas>
+        </div>
+
+        <!-- Life Quadrants Bar Chart -->
+        <div class="stats-chart-container large">
+          <h3>Life Quadrants Analysis</h3>
+          <canvas id="lifeQuadrantsChart"></canvas>
+        </div>
+
+        <!-- Archetype Distribution -->
+        <div class="stats-chart-container medium">
+          <h3>Archetype Distribution</h3>
+          <canvas id="archetypeChart"></canvas>
+        </div>
+
+        <!-- Focus Chakra Distribution -->
+        <div class="stats-chart-container medium">
+          <h3>Focus Chakra Distribution</h3>
+          <canvas id="focusChakraChart"></canvas>
+        </div>
+
+        <!-- Age Distribution -->
+        <div class="stats-chart-container medium">
+          <h3>Age Distribution</h3>
+          <canvas id="ageBracketChart"></canvas>
+        </div>
+
+        <!-- Top Challenges -->
+        <div class="stats-chart-container medium">
+          <h3>Top Challenges</h3>
+          <canvas id="challengesChart"></canvas>
+        </div>
+
+        <!-- Experience with practitioners -->
+        <div class="stats-chart-container medium">
+          <h3>Worked with Practitioner Before?</h3>
+          <canvas id="experienceChart"></canvas>
+        </div>
+
+        <!-- Familiarity with modalities -->
+        <div class="stats-chart-container medium">
+          <h3>Familiar With the Following Techniques</h3>
+          <canvas id="familiarityChart"></canvas>
+        </div>
+
+        <!-- Healthcare Worker -->
+        <div class="stats-chart-container medium">
+          <h3>Healthcare Workers</h3>
+          <canvas id="healthcareChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Data Tables -->
+      <div class="stats-tables">
+        <div class="stats-table-wrapper">
+          <h3>Chakra Averages</h3>
+          <table class="stats-data-table">
+            <thead>
+              <tr>
+                <th>Chakra</th>
+                <th>Average Score</th>
+                <th>Mode Score</th>
+              </tr>
+            </thead>
+            <tbody id="chakraTableBody">
+              <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="stats-table-wrapper">
+          <h3>Life Quadrant Averages</h3>
+          <table class="stats-data-table">
+            <thead>
+              <tr>
+                <th>Life Quadrant</th>
+                <th>Average Score</th>
+                <th>Mode Score</th>
+              </tr>
+            </thead>
+            <tbody id="quadrantTableBody">
+              <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
 
  
 <!-- rest of homepage content -->
