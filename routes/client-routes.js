@@ -21,6 +21,9 @@ const {
   getApplicationSuccessView,
   getClientManagementView,
   postCreateClient,
+  getClientEditView,
+  postUpdateClient,
+  postDeleteClient,
   getChakraQuizResults, 
   getPreQuizResults
 } = require('../controllers/clientController');
@@ -71,6 +74,11 @@ router.get('/clientmanagement/add', requireAdmin, (req, res) => {
   res.render('client-add', { formError: null, formValues: {} });
 });
 router.post('/admin/clients', requireAdmin, postCreateClient);
+
+// --- Client CRUD (edit + delete) ---
+router.get('/clientmanagement/:id/edit', requireAdmin, getClientEditView);
+router.post('/clientmanagement/:id/update', requireAdmin, postUpdateClient);
+router.post('/clientmanagement/:id/delete', requireAdmin, postDeleteClient);
 
 /* ---------- Allow iframe only for testimonials manager (same-origin) ---------- */
 router.use('/admin/testimonials', (req, res, next) => {

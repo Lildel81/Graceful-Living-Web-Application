@@ -791,6 +791,67 @@ const getClientManagementView = async (req, res, next) => {
 
 
 
+// GET: edit form
+const getClientEditView = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) return res.status(404).render('notFound');
+
+    const client = await Client.findById(id).lean();
+    if (!client) return res.status(404).render('notFound');
+
+    res.render('client-edit', {
+      client, // used to prefill the form
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+      formError: null
+    });
+  } catch (err) { next(err); }
+};
+
+// POST: update
+const postUpdateClient = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const payload = {
+      firstname:   (req.body.firstname   || '').trim(),
+      lastname:    (req.body.lastname    || '').trim(),
+      phonenumber: (req.body.phonenumber || '').trim(),
+      email:       (req.body.email       || '').trim(),
+      closedChakra:(req.body.closedChakra|| '').trim(),
+    };
+
+    // optional: basic guards
+    if (!payload.firstname || !payload.lastname || !payload.email) {
+      const client = { _id: id, ...payload };
+      return res.status(400).render('client-edit', {
+        client, formError: 'First, Last, and Email are required.'
+      });
+    }
+
+    await Client.findByIdAndUpdate(id, { $set: payload }, { runValidators: true });
+    return res.redirect('/clientmanagement?updated=1');
+  } catch (err) {
+    console.error('Update client failed:', err);
+    const client = { _id: req.params.id, ...req.body };
+    return res.status(500).render('client-edit', {
+      client, formError: 'Something went wrong updating the client.'
+    });
+  }
+};
+
+// POST: delete
+const postDeleteClient = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Client.findByIdAndDelete(id);
+    return res.redirect('/clientmanagement?deleted=1');
+  } catch (err) {
+    console.error('Delete client failed:', err);
+    return res.redirect('/clientmanagement?error=delete');
+  }
+};
+
+
 
 const getEditResourcesImageView = async (req, res) => {
   const resource = await ResourcesImage.findById(req.params.id);
@@ -825,6 +886,10 @@ module.exports = {
   getUserLoginView,
   getUserDashboardView,
   getClientManagementView,
+  postCreateClient,
+  getClientEditView,
+  postUpdateClient,
+  postDeleteClient,
   getPreQuizResults,
   getChakraQuizResults,
   router,
