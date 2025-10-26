@@ -79,7 +79,8 @@ const editSlide = async (req, res) => {
     try {
       const existing = await CarouselSlide.findById(req.params.id);
       const hadLocalUpload = existing && existing.imageUrl && existing.imageUrl.startsWith('/images/uploads/') && !existing.imageUrl.includes('default-fallback');
-      let imagePath = existing.imageUrl; // Keep existing image by default
+      // let imagePath = existing.imageUrl; // Keep existing image by default
+      let imagePath = existing ? existing.imageUrl : 'images/default-fallback.jpg'; // Keep the exising image by default, replace with default image if there's no current one 
 
       if (imageOption === 'upload' && req.file) {
         // User uploaded a new image
