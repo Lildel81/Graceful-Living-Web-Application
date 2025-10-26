@@ -353,7 +353,6 @@ const postCreateClient = async (req, res) => {
       currentDate: new Date().toISOString()
     };
 
-    // Validate with your existing Joi validator if exported
     if (typeof Client.validate === 'function') {
       const { error } = Client.validate(payload);
       if (error) {
@@ -364,7 +363,6 @@ const postCreateClient = async (req, res) => {
       }
     }
 
-    // Optional: prevent duplicate emails
     const existing = await Client.findOne({ email: payload.email }).lean();
     if (existing) {
       return res.status(400).render('client-add', {
@@ -374,7 +372,8 @@ const postCreateClient = async (req, res) => {
     }
 
     await Client.create(payload);
-    return res.redirect('/adminportal?created=1'); // back to the list with success flag
+    // CHANGED: go to Client Management, not Admin Portal
+    return res.redirect('/clientmanagement?created=1');
   } catch (err) {
     console.error('Failed to create client:', err);
     return res.status(500).render('client-add', {
@@ -385,12 +384,10 @@ const postCreateClient = async (req, res) => {
 };
 
 
+
 const getAdminPortalView = async (req, res) => {
   try {
-    const users = await Client
-      .find({}, 'firstname lastname phonenumber email closedChakra')
-      .sort({ firstname: 1, lastname: 1 })
-      .lean();
+   
 
     // --- Fetch all the submitted assessments --- //
     const assessments = await ChakraAssessment.find().lean();
@@ -776,9 +773,22 @@ const getResourcesManagementView = (req, res) => {
   res.render("resourcesmanagement");
 };
 
-const getClientManagementView = (req, res) => {
-  res.render('clientmanagement');
+const getClientManagementView = async (req, res, next) => {
+  try {
+    const users = await Client
+      .find({}, 'firstname lastname phonenumber email closedChakra')
+      .sort({ firstname: 1, lastname: 1 })
+      .lean();
+
+    res.render('clientmanagement', {
+      users,
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+    });
+  } catch (err) {
+    next(err);
+  }
 };
+
 
 
 

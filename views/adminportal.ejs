@@ -138,91 +138,14 @@
     </section>
   </main>
 
-  <!-- rest of homepage content -->
+ 
+<!-- rest of homepage content -->
 
-  <div class="user-section">
-    <div class="overview">
-      <h2>User List</h2>
+ 
+ 
+        
 
-      <!-- Add Client button -->
-      <div style="text-align:right; margin: 0 0 8px;">
-        <a class="btn-add" href="/clientmanagement/add">+ Add Client</a>
-      </div>
 
-      <input id="adminUserFilter" type="text" placeholder="Filter by name or email">
-
-      <div class="user-table-container">
-        <table id="usersTable">
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Closed Chakra</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (typeof users !== 'undefined' && users.length) { %>
-              <% users.forEach(function(u){ %>
-                <tr>
-                  <td><%= u.firstname %></td>
-                  <td><%= u.lastname %></td>
-                  <td><%= u.phonenumber %></td>
-                  <td><%= u.email %></td>
-                  <td><%= u.closedChakra %></td>
-                </tr>
-              <% }) %>
-            <% } else { %>
-              <tr><td colspan="5">No users found.</td></tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Safe, isolated filter that won't conflict with other scripts
-    document.addEventListener('DOMContentLoaded', function () {
-      try {
-        const filter = document.getElementById('adminUserFilter');
-        const table  = document.getElementById('usersTable');
-        if (!filter || !table || !table.tBodies || !table.tBodies[0]) return;
-
-        const tbody = table.tBodies[0];
-        const rows  = Array.from(tbody.rows);
-
-        // Precompute searchable text per row (first + last + email)
-        const searchIndex = rows.map(row => {
-          const first = (row.cells[0]?.textContent || '').toLowerCase();
-          const last  = (row.cells[1]?.textContent || '').toLowerCase();
-          const email = (row.cells[3]?.textContent || '').toLowerCase();
-          return { row, text: `${first} ${last} ${email}` };
-        });
-
-        function applyFilter() {
-          const q = filter.value.trim().toLowerCase();
-          for (const item of searchIndex) {
-            const match = !q || item.text.includes(q);
-            item.row.style.display = match ? '' : 'none';
-          }
-        }
-
-        // Filter on both input & keyup for IME/edge cases
-        filter.addEventListener('input', applyFilter);
-        filter.addEventListener('keyup', applyFilter);
-
-        // First pass
-        applyFilter();
-
-        // Helpful console ping so you know it wired up
-        console.debug('[adminportal] live filter ready');
-      } catch (e) {
-        console.error('[adminportal] filter init failed:', e);
-      }
-    });
-  </script>
 
   <!--edit the resources page - Oanh moved it into content-management.ejs-->
   <!-- <a href="/adminportal/resourcesmanagement"><button>Manage Resources</button></a> -->
