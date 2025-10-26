@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Service</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/carousel-mangement.css">
+</head> 
+
+<body>
+    <form action="/adminportal/services/<%= service._id %>/edit" method="POST" enctype="multipart/form-data"> 
+        <!-- CSRF TOKEN-->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label>Service Name</label>
+        <input type="text" name="serviceName" value="<%= service.serviceName %>" required>
+
+        <label>Description</label>
+        <textarea name="serviceDescription"><%= service.serviceDescription %></textarea>
+
+        <label>Button Text</label>
+        <input type="text" name="buttonText" value="<%= service.buttonText %>">
+
+        <label>Button URL</label>
+        <input type="text" name="buttonUrl" value="<%= service.buttonUrl %>">
+
+        <label>Current Image</label><br>
+        <% if (service.imageUrl) { %>
+        <img src="<%= service.imageUrl %>" width="120" alt="Current image"><br>
+        <% } else { %>
+        <p>No image uploaded</p>
+        <% } %>
+
+        <label>Upload New Image (optional)</label>
+        <!--<input type="file" name="imageUrl" accept="image/png, image/jpeg, image/webp, image/gif">-->
+
+          <!-- Image upload -->
+        <label for="image">Image</label>
+        <input
+        id="image"
+        type="file"
+        name="imageUrl"
+        accept="image/png, image/jpeg, image/webp, image/gif"
+        />
+
+        <!-- Preview + meta -->
+        <div id="imagePreview" style="display:none; margin-top:8px;">
+        <img id="imageThumb" alt="Selected image preview" style="max-width:180px; height:auto; border:1px solid #ccc; padding:2px; border-radius:4px;">
+        <div id="imageMeta" style="font-size:0.9em; color:#555; margin-top:4px;"></div>
+        <button type="button" id="clearImage" style="margin-top:6px;">Remove selection</button>
+        </div>
+
+        <!-- Optional validation message -->
+        <p id="imageError" style="display:none; color:#b00020; margin-top:6px;"></p>
+
+        <button type="submit">Update Service</button>
+    </form>
+</body>

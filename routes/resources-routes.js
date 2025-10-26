@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const multer = require('multer');
+// const path = require('path');
+// const multer = require('multer');
+
+// upload is the multer 
+const upload = require('../middleware/upload.js');
 const resourcesController = require('../controllers/resourcesController');
 
 // debug middleware to log all requests hitting these routes
@@ -13,44 +16,59 @@ const resourcesController = require('../controllers/resourcesController');
 });*/
 
 // multer config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/images/uploads');
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const uniqueName = Date.now() + ext;
-    cb(null, uniqueName);
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'public/images/uploads');
+//   },
+//   filename: function (req, file, cb) {
+//     const ext = path.extname(file.originalname);
+//     const uniqueName = Date.now() + ext;
+//     cb(null, uniqueName);
+//   }
+// });
+// const upload = multer({ storage });
+
+// csrf 
+const csrf = require('csurf');
+
+const csrfProtection = csrf({
+  cookie: {
+    key: '_csrf',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/'
   }
 });
-const upload = multer({ storage });
 
 // management page
-router.get('/adminportal/resourcesmanagement', resourcesController.getResourcesManagement);
+router.get('/adminportal/resourcesmanagement', csrfProtection, resourcesController.getResourcesManagement);
 
 // update text
-router.post('/adminportal/resources/text/update', resourcesController.updateResourcesText);
+router.post('/adminportal/resources/text/update', csrfProtection, resourcesController.updateResourcesText);
 
 // add new image
-router.post('/adminportal/resources/create', upload.single('imageUpload'), resourcesController.createResourcesImage);
+router.post('/adminportal/resources/create', upload.single('imageUpload'), csrfProtection, resourcesController.createResourcesImage);
 
 // edit page
-router.get('/adminportal/resources/:id/edit', resourcesController.getEditResourcesImageView);
+router.get('/adminportal/resources/:id/edit', csrfProtection, resourcesController.getEditResourcesImageView);
 
 // update image
 router.post(
   '/adminportal/resources/:id/update',
   upload.single('imageUpload'),
+  /*
   (req, res, next) => {
     console.log("[DEBUG /update] BODY:", req.body);
     console.log("[DEBUG /update] FILE:", req.file);
     next();
-  },
+  },*/
+  csrfProtection,
   resourcesController.editResourcesImage
 );
 
 // delete image
-router.post('/adminportal/resources/:id/delete', resourcesController.deleteResourcesImage);
+router.post('/adminportal/resources/:id/delete', csrfProtection, resourcesController.deleteResourcesImage);
 
 module.exports = router;
 

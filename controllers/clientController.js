@@ -12,6 +12,7 @@ const CarouselSlide = require("../models/carouselSlide");
 const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
+const Services = require("../models/servicesSchema");
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
 const mongoose = require("mongoose"); 
@@ -315,7 +316,14 @@ const getHomeView = async (req, res, next) => {
     };
     const selectedReviews = getRandomReviews(allReviews, 3);
 
-    res.render("home", { slides, selectedReviews });
+    const services = await Services.find().sort({ createdAt: -1 }).limit(4);
+
+    res.render("home", { 
+      slides, 
+      selectedReviews,
+      //to view services 
+      services
+    });
   } catch (error) {
     console.error("Error fetching slides:", error.message);
     res.render("home", { slides: [], selectedReviews: [] });

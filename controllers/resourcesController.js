@@ -8,6 +8,7 @@ const getResourcesManagement = async (req, res) => {
     const resourcesText = await getOrCreateResourcesText();
 
     res.render('resourcesmanagement', { 
+      csrfToken: req.csrfToken(),
       resources,
       resourcesText,
       layout: false,
@@ -79,11 +80,12 @@ const updateResourcesText = async (req, res) => {
     }
 
     await text.save();
-    res.send(`
+    /*res.send(`
       <script>
         window.top.location.href = '/content-management';
       </script>
-    `);
+    `);*/
+    res.redirect("/adminportal/resourcesmanagement");
   } catch (err) {
     console.error("Error updating resources text:", err);
     res.status(500).send("Error updating resources text");
@@ -115,28 +117,35 @@ const createResourcesImage = async (req, res) => {
     buttonUrl
   });
 
+  /*
   res.send(`
   <script>
     window.top.location.href = '/content-management';
   </script>
-  `);
+  `);*/
+
+  res.redirect("/adminportal/resourcesmanagement");
 };
 
 // delete resource image
 const deleteResourcesImage = async (req, res) => {
   const id = req.params.id;
   await ResourcesImage.findByIdAndDelete(id);
+
+  /*
   res.send(`
   <script>
     window.top.location.href = '/content-management';
   </script>
-  `);
+  `);*/
+  res.redirect("/adminportal/resourcesmanagement");
 };
 
 // edit resource image page
 const getEditResourcesImageView = async (req, res) => {
   const resource = await ResourcesImage.findById(req.params.id);
   res.render('editresourcesimage', { 
+    csrfToken: req.csrfToken(),
     resource,
     layout: false
   });
@@ -159,6 +168,11 @@ const editResourcesImage = async (req, res) => {
       buttonUrl
     };
 
+    // if user uploaded a file but didn’t select "upload"
+    if (!imageOption && req.file) {
+      imageOption = "upload";
+    }
+
     // only update image if admin provided one
     if (imageOption === 'upload' && req.file) {
       updateData.imageUrl = `/images/uploads/${req.file.filename}`;
@@ -169,11 +183,8 @@ const editResourcesImage = async (req, res) => {
     // otherwise, imageUrl stays the same
 
     await ResourcesImage.findByIdAndUpdate(req.params.id, updateData);
-    res.send(`
-    <script>
-      window.top.location.href = '/content-management';
-    </script>
-    `);
+
+    res.redirect("/adminportal/resourcesmanagement");
   } catch (err) {
     console.error("Error editing resource image:", err);
     res.status(500).send("Error editing resource image");
