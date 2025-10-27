@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Graceful Living — Shop (clean tile layout)
+   Everything is namespaced under .gl-shop so it won't affect other pages.
+   ========================================================================== */
+
+:root {
+  --gl-shop-primary: var(--primary, #008080);
+  --gl-shop-text: var(--text, #222);
+  --gl-shop-muted: var(--muted, #666);
+  --gl-shop-bg: #ffffff;
+  --gl-shop-surface: #ffffff;
+  --gl-shop-border: #e6e9ee;
+  --gl-shop-radius: 14px;
+  --gl-shop-shadow: 0 10px 24px rgba(0,0,0,.06);
+  --gl-shop-shadow-hover: 0 16px 32px rgba(0,0,0,.10);
+  --navbar-height: var(--navbar-height, 120px); 
+}
+
+.gl-shop { margin-left: 50px; margin-top: 50px/*var(--navbar-height)*/; color: var(--gl-shop-text); }
+
+.gl-shop h1, .gl-shop h2 { margin: 0 0 .75rem; letter-spacing: .2px; }
+.gl-shop a { color: var(--gl-shop-primary); text-decoration: none; }
+.gl-shop a:hover { text-decoration: underline; }
+
+/* ---------- GRID ---------- */
+.gl-shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+/* ---------- CARD / TILE ---------- */
+.gl-shop-card {
+  background: var(--gl-shop-surface);
+  border: 1px solid var(--gl-shop-border);
+  border-radius: var(--gl-shop-radius);
+  overflow: hidden;
+  box-shadow: var(--gl-shop-shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.gl-shop-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--gl-shop-shadow-hover);
+  border-color: color-mix(in srgb, var(--gl-shop-primary) 18%, var(--gl-shop-border));
+}
+
+.gl-shop-card > a { display: block; color: inherit; text-decoration: none; }
+
+.gl-shop-card img {
+  display: block;
+  width: 100% !important;
+  height: 220px !important;
+  object-fit: cover;
+}
+
+/* Body area */
+.gl-shop-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: .85rem 1rem 0;
+  color: var(--gl-shop-text);
+}
+
+.gl-shop-card-price {
+  margin: .35rem 1rem 1rem;
+  font-weight: 800;
+  color: var(--gl-shop-primary);
+}
+
+/* ---------- PRODUCT DETAIL LAYOUT ---------- */
+.gl-shop-product {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.gl-shop-media img {
+  width: 30%;
+  height: auto;
+  border-radius: var(--gl-shop-radius);
+  border: 1px solid var(--gl-shop-border);
+  box-shadow: var(--gl-shop-shadow);
+}
+
+.gl-shop-meta {
+  background: var(--gl-shop-surface);
+  border: 1px solid var(--gl-shop-border);
+  border-radius: var(--gl-shop-radius);
+  padding: 1.25rem;
+  box-shadow: var(--gl-shop-shadow);
+}
+
+.gl-shop-product-title { margin: 0 0 .4rem; }
+.gl-shop-product-price { color: var(--gl-shop-primary); font-weight: 800; font-size: 1.3rem; margin-bottom: .8rem; }
+
+.gl-shop-qty { display: flex; gap: .5rem; align-items: center; margin: .8rem 0 1.2rem; }
+.gl-shop-qty input[type="number"] {
+  width: 90px;
+  padding: .55rem .65rem;
+  border-radius: 10px;
+  border: 1px solid var(--gl-shop-border);
+  background: var(--gl-shop-bg);
+  color: var(--gl-shop-text);
+}
+
+/* ---------- BUTTONS ---------- */
+.gl-shop button,
+.gl-shop .btn,
+.gl-shop .gl-btn {
+  display: inline-block;
+  padding: .65rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--gl-shop-primary);
+  background: var(--gl-shop-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .08s ease, filter .15s ease, box-shadow .2s ease;
+}
+.gl-shop .btn:hover,
+.gl-shop .gl-btn:hover,
+.gl-shop button:hover {
+  filter: brightness(.96);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+.gl-shop .btn:active,
+.gl-shop .gl-btn:active,
+.gl-shop button:active { transform: translateY(1px); }
+
+.gl-shop .gl-btn-outline {
+  background: #fff;
+  color: var(--gl-shop-primary);
+  border-color: var(--gl-shop-primary);
+}
+.gl-shop .gl-btn-outline:hover {
+  background: var(--gl-shop-primary);
+  color: #fff;
+}
+
+/* ---------- CART ---------- */
+.gl-shop-card.gl-shop-cart { padding: 1rem; }
+.gl-shop-cart-table { width: 100%; border-collapse: collapse; }
+.gl-shop-cart-table th, .gl-shop-cart-table td {
+  padding: .85rem 1rem; border-bottom: 1px solid var(--gl-shop-border); text-align: left;
+}
+.gl-shop-cart-table thead th {
+  background: linear-gradient(0deg, rgba(0,0,0,.02), rgba(0,0,0,.02));
+  color: var(--gl-shop-muted); font-weight: 700;
+}
+.gl-shop-cart-summary {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 0 0;
+}
+.gl-shop-subtotal strong { color: var(--gl-shop-primary); }
+
+/* ---------- UTILITIES ---------- */
+.gl-muted { color: var(--gl-shop-muted); }
+.gl-center { display: flex; justify-content: center; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 980px) { .gl-shop-product { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .gl-shop-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+  .gl-shop-cart-summary { flex-direction: column; align-items: stretch; }
+  .gl-shop .btn, .gl-shop .gl-btn, .gl-shop button { width: 100%; }
+}

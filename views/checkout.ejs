@@ -1,0 +1,32 @@
+
+
+<link rel="stylesheet" href="/css/shop.css">
+<div class="gl-shop">
+  <h1 class="gl-shop-title">Checkout</h1>
+  <p>Subtotal: $<%= (cart.subtotalCents/100).toFixed(2) %></p>
+
+  <form id="pay" method="POST" action="/checkout/intent">
+    <label>Email
+      <input type="email" name="email" required />
+    </label>
+    <button type="submit" class="gl-btn">Create Payment</button>
+  </form>
+</div>
+
+<script>
+document.getElementById('pay').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const form = e.target;
+  const res = await fetch('/checkout/intent', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ email: form.email.value })
+  });
+  const data = await res.json();
+  if (data.clientSecret) {
+    alert('PaymentIntent created. Next: load Stripe.js with your publishable key to confirm payment.');
+  } else {
+    alert('Error creating payment intent');
+  }
+});
+</script>

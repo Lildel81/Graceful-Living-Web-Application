@@ -1,0 +1,32 @@
+
+
+<link rel="stylesheet" href="/css/shop.css">
+<div class="gl-shop">
+  <div class="gl-shop-product">
+    <div class="gl-shop-media">
+      <% if (product.imagePath) { %>
+        <img src="<%= product.imagePath %>" alt="<%= product.title %>" width="20%" height="20%">
+      <% } %>
+    </div>
+
+    <div class="gl-shop-meta">
+      <h1 class="gl-shop-product-title"><%= product.title %></h1>
+      <div class="gl-shop-product-price">$<%= (product.priceCents/100).toFixed(2) %></div>
+
+      <form method="POST" action="/cart/add" class="gl-shop-add-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="productId" value="<%= product._id %>">
+        <label class="gl-shop-qty">
+          <span>Quantity</span>
+          <input type="number" name="qty" value="1" min="1">
+        </label>
+        <button type="submit" class="btn">Add to Cart</button>
+      </form>
+      <div class=""gl-center">
+      <div class="gl-shop-description"><%- product.description %></div>
+    </div>
+  </div>
+</div>
+</div>
+
+
