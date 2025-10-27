@@ -1,3 +1,6 @@
+:root { --nav-height: 72px; }
+body.section-page { padding-top: var(--nav-height); }
+
 .section-page {
     font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
     color: black;
@@ -21,7 +24,7 @@
 
 /* chakra hero colors */
 .section-page .hero.user-info {
-  background: linear-gradient(135deg, #5cade7, #9bd1fe); /* light blue */
+  background: linear-gradient(135deg, #008080, #1e9292); /* dark green */
 }
 
 .section-page .hero.chakra-root {

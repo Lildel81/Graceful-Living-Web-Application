@@ -17,7 +17,7 @@
 
 
 .section-page .hero {
-     background: linear-gradient(135deg, #5cade7, #9bd1fe);
+     background: linear-gradient(135deg, #008080, #1e9292);
     color: white; 
     padding: 80px 0; 
     text-align: center; 
@@ -25,7 +25,7 @@
  
 }
 .section-page .hero.user-info {
-    background: linear-gradient(135deg, #5cade7, #9bd1fe);
+    background: linear-gradient(135deg,#008080, #1e9292);
    
 }
 

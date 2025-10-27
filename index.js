@@ -247,6 +247,7 @@ const { submitApplication } = require('./controllers/applicationController');
 
 app.post(
   '/application',
+  
   (req, res, next) => {
     console.log('POST /application debug:', {
       hasSession: !!req.session,
