@@ -1,7 +1,7 @@
 /* Style page for the pre-application page*/
 
 .pre-app{
-    font-family: sans-serif; 
+    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif; 
     color:black; 
     line-height: 1.6;
     background-color: #f5f6fa;
@@ -23,7 +23,7 @@
 }
 
 .pre-app .hero h1 {
-    font-family: serif;
+    font-family: 'Source Serif Pro', 'Playfair Display', serif;
     font-size: 3rem;
     margin-bottom: 20px;
 }

@@ -90,7 +90,7 @@ form label {
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
   display: block;
-  border-left: 4px solid #6c63ff; /* purple accent */
+  border-left: 4px solid  #008080; /* purple accent */
   padding-left: 0.5rem;
 }
 
@@ -219,7 +219,7 @@ textarea:focus {
   display: inline-block;
   margin-top: 1.5rem;
   padding: 0.8rem 1.2rem;
-  background: #6c63ff;
+  background: #4CAF50;
   color: white;
   border: none;
   border-radius: 8px;
@@ -231,7 +231,7 @@ textarea:focus {
 .submit-btn:hover,
 .next-btn:hover,
 .prev-btn:hover {
-  background: #574fd6;
+  background: #4CAF50;
   transform: translateY(-2px);
 }
 

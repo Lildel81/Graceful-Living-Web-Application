@@ -4,6 +4,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from sklearn.linear_model import LinearRegression
 import numpy as np
+#import certifi 
 
 warnings.filterwarnings("ignore")
 
