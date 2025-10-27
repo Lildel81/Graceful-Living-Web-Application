@@ -385,51 +385,122 @@ const postCreateClient = async (req, res) => {
 
 
 
+// --- Robust getAdminPortalView (replace existing) ---
 const getAdminPortalView = async (req, res) => {
-  try {
-   
-    // dani added bc it was giving me errors
-    let users = [];
+  // chakraMap: keys are canonical stored focusChakra values (normalized)
+  // value is the friendly label shown in the UI
+  const chakraMap = {
+    rootchakra: "Root",
+    sacralchakra: "Sacral",
+    solarplexuschakra: "Solar Plexus",
+    heartchakra: "Heart",
+    throatchakra: "Throat",
+    thirdeyechakra: "Third Eye",
+    crownchakra: "Crown"
+  };
 
-    // --- Fetch all the submitted assessments --- //
-    const assessments = await ChakraAssessment.find().lean();
-    
-    // --- Calculate total submissions --- //
+  try {
+    // fetch all assessments (lean -> plain objects)
+    const assessments = (await ChakraAssessment.find().lean()) || [];
+
+    // total submissions
     const totalSubmissions = assessments.length;
 
-    // --- Calculate average chakra balance across all submissions --- //
+    // average chakra balance across all submissions (defensive)
     let avgChakraBalance = 0;
     if (totalSubmissions > 0) {
       const totalAverages = assessments.reduce((sum, assessment) => {
-        if (assessment.results) {
-          const chakraAverages = Object.values(assessment.results)
-            .map(r => parseFloat(r.average))
+        if (assessment && assessment.results && typeof assessment.results === 'object') {
+          const chakraValues = Object.values(assessment.results)
+            .map(r => {
+              if (r == null) return NaN;
+              if (typeof r === 'number') return r;
+              if (typeof r === 'object' && r.average != null) return parseFloat(r.average);
+              return NaN;
+            })
             .filter(n => !isNaN(n));
-          const avg = chakraAverages.reduce((a, b) => a + b, 0) / chakraAverages.length;
-          return sum + avg;
+
+          if (chakraValues.length > 0) {
+            const avg = chakraValues.reduce((a, b) => a + b, 0) / chakraValues.length;
+            return sum + avg;
+          }
         }
         return sum;
       }, 0);
       avgChakraBalance = (totalAverages / totalSubmissions).toFixed(2);
     }
 
-    // --- render the page with the stats ---//
-    res.render('adminportal', {
+    // Build counts map from assessments in a normalized way
+    const counts = Object.keys(chakraMap).reduce((acc, k) => {
+      acc[k] = 0;
+      return acc;
+    }, {});
+
+    assessments.forEach(a => {
+      // guard: a.focusChakra might be "rootChakra" or "rootchakra" or have extra whitespace
+      const raw = (a && a.focusChakra) ? String(a.focusChakra).trim().toLowerCase() : '';
+      if (raw) {
+        // normalize to remove spaces/hyphens etc (just letters+numbers)
+        const norm = raw.replace(/[^a-z0-9]/gi, '');
+        // If exact match exists, increment; otherwise try partial match
+        if (counts.hasOwnProperty(norm)) counts[norm] += 1;
+        else {
+          // fallback: try to find a key that contains the normalized raw (e.g. 'root' inside 'rootchakra')
+          const foundKey = Object.keys(counts).find(k => k.includes(norm) || norm.includes(k));
+          if (foundKey) counts[foundKey] += 1;
+        }
+      }
+    });
+
+    // Create chakra array in desired display order
+    const chakraOrder = [
+      'rootchakra',
+      'sacralchakra',
+      'solarplexuschakra',
+      'heartchakra',
+      'throatchakra',
+      'thirdeyechakra',
+      'crownchakra'
+    ];
+
+    const chakraArray = chakraOrder.map(key => ({
+      // keep the same shape that EJS expects: key, label, count
+      key,                    // used for CSS class (already normalized)
+      label: chakraMap[key] || key,
+      count: counts[key] || 0
+    }));
+
+    // server-side debug: log what we will send (remove/turn off in production)
+    //console.log('AdminPortal - totalSubmissions:', totalSubmissions);
+    //console.log('AdminPortal - chakraArray:', JSON.stringify(chakraArray, null, 2));
+
+    // render template
+    return res.render('adminportal', {
       userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
-      users,
       totalSubmissions,
       avgChakraBalance,
-      csrfToken: req.csrfToken()
+      csrfToken: req.csrfToken(),
+      chakras: chakraArray
     });
-  
+
   } catch (err) {
     console.error('Failed to load admin portal:', err);
-    res.render('adminportal', {
+    // Fallback: send zeros so the template still renders safely
+    const fallback = [
+      { key: 'rootchakra', label: 'Root', count: 0 },
+      { key: 'sacralchakra', label: 'Sacral', count: 0 },
+      { key: 'solarplexuschakra', label: 'Solar Plexus', count: 0 },
+      { key: 'heartchakra', label: 'Heart', count: 0 },
+      { key: 'throatchakra', label: 'Throat', count: 0 },
+      { key: 'thirdeyechakra', label: 'Third Eye', count: 0 },
+      { key: 'crownchakra', label: 'Crown', count: 0 },
+    ];
+    return res.render('adminportal', {
       userName: 'Admin',
-      users: [],           // no mock — just empty if DB fails
       totalSubmissions: 0,
       avgChakraBalance: 0,
-      csrfToken: req.csrfToken()
+      csrfToken: req.csrfToken(),
+      chakras: fallback
     });
   }
 };
