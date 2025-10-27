@@ -11,8 +11,7 @@ const csurf = require("csurf");
 const hpp = require("hpp");
 const mongoSanitize = require("express-mongo-sanitize");
 const session = require("express-session");
-const cookieParser = require('cookie-parser');
-
+const cookieParser = require("cookie-parser");
 
 const config = require("./startup/config");
 const clientRoutes = require("./routes/client-routes");
@@ -24,11 +23,12 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const loginController = require("./controllers/loginController");
 const passwordResetRoutes = require("./routes/passwordReset");
 const resetPageRoutes = require("./routes/resetPage");
-const clientApplications = require('./routes/clientApplications');
-const chakraApplications = require('./routes/chakraApplications');
+const clientApplications = require("./routes/clientApplications");
+const chakraApplications = require("./routes/chakraApplications");
 const appointmentRoutes = require("./routes/appointment-routes");
 const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
+const zoomIntegrations = require("./routes/zoom-integrations");
 
 const app = express();
 
@@ -49,18 +49,30 @@ app.use(
         "default-src": ["'self'"],
 
         // allow YouTube embeds (no inline scripts allowed)
-        "script-src": ["'self'", "https://www.youtube.com", "https://www.gstatic.com"],
+        "script-src": [
+          "'self'",
+          "https://www.youtube.com",
+          "https://www.gstatic.com",
+        ],
         "script-src-attr": ["'none'"],
 
         // allow framing self + YouTube
-        "frame-src": ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"],
+        "frame-src": [
+          "'self'",
+          "https://www.youtube.com",
+          "https://www.youtube-nocookie.com",
+        ],
 
         // forms can POST back to this origin
         "form-action": ["'self'"],
 
         // images/fonts/styles you already had
         "img-src": ["'self'", "data:", "https://i.ytimg.com"],
-        "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        "style-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+        ],
         "font-src": ["'self'", "https://fonts.gstatic.com"],
 
         // iframes should only be embedded by our own pages
@@ -77,27 +89,26 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cors());
 app.use(bodyParser.json());
 
-
-
-
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === "production";
 
-app.set('trust proxy', 1);
-app.use(session({
-  name: 'sid',
-  secret: process.env.SESSION_SECRET || 'dev-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 1000 * 60 * 60 * 2
-  }
-}));
+app.set("trust proxy", 1);
+app.use(
+  session({
+    name: "sid",
+    secret: process.env.SESSION_SECRET || "dev-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 2,
+    },
+  })
+);
 
 // app.use((req, res, next) => {
 //   // nuke old cookie-mode artifacts so they can't confuse things
@@ -106,13 +117,10 @@ app.use(session({
 //   next();
 // });
 
-
-
 app.use(hpp());
 app.use(mongoSanitize());
 app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // ✅ Allow same-origin iframing ONLY for the testimonials manager pages
 app.use(["/admin/testimonials", "/admin/testimonials/*"], (req, res, next) => {
@@ -156,7 +164,9 @@ mongoose.connection.once("open", async () => {
 const ResourcesImage = require("./models/resourcesImage");
 app.use(async (req, res, next) => {
   try {
-    res.locals.footerResources = await ResourcesImage.find().sort({ createdAt: -1 }).limit(3);
+    res.locals.footerResources = await ResourcesImage.find()
+      .sort({ createdAt: -1 })
+      .limit(3);
   } catch (err) {
     console.error("Error loading footer resources:", err);
     res.locals.footerResources = [];
@@ -164,16 +174,16 @@ app.use(async (req, res, next) => {
   next();
 });
 
-app.use(cookieParser(process.env.SESSION_SECRET || 'dev-secret'));
+app.use(cookieParser(process.env.SESSION_SECRET || "dev-secret"));
 
 const csrfProtection = csurf({
   cookie: {
-    key: '_csrf',
+    key: "_csrf",
     httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/'
-  }
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+  },
 });
 
 // middleware to make user available in all views (for nav bar)
@@ -183,13 +193,13 @@ app.use((req, res, next) => {
 });
 
 // Only here: pass the token to the view that has the form
-app.get('/application', csrfProtection, (req, res) => {
-  req.session.appFlow = true;        // touching the session triggers Set-Cookie: sid=...
-  res.render('prequiz/application', { csrfToken: req.csrfToken() });
+app.get("/application", csrfProtection, (req, res) => {
+  req.session.appFlow = true; // touching the session triggers Set-Cookie: sid=...
+  res.render("prequiz/application", { csrfToken: req.csrfToken() });
 });
 
-app.get('/assessment', csrfProtection, (req, res) => {
-  res.render('quiz/assessment', { csrfToken: req.csrfToken() });
+app.get("/assessment", csrfProtection, (req, res) => {
+  res.render("quiz/assessment", { csrfToken: req.csrfToken() });
 });
 
 const rateLimit = require("express-rate-limit");
@@ -223,7 +233,11 @@ app.get("/booking", csrfProtection, (req, res) => {
 // Admin appointment management
 app.get("/adminportal/appointments", csrfProtection, (req, res) => {
   if (req.session && req.session.isAdmin) {
-    res.render("appointment-management", { csrfToken: req.csrfToken() });
+    res.render("appointment-management", {
+      csrfToken: req.csrfToken(),
+      zoomConnected: !!req.session.zoomConnected,
+      zoomEmail: req.session.zoomEmail || null,
+    });
   } else {
     res.redirect("/login");
   }
@@ -232,35 +246,36 @@ app.get("/adminportal/appointments", csrfProtection, (req, res) => {
 app.use("/appointments", appointmentRoutes);
 //terry added for debugging purposes
 
-const { submitApplication } = require('./controllers/applicationController');
+const { submitApplication } = require("./controllers/applicationController");
 
 app.post(
-  '/application',
+  "/application",
   (req, res, next) => {
-    console.log('POST /application debug:', {
+    console.log("POST /application debug:", {
       hasSession: !!req.session,
       hasSecret: !!(req.session && req.session.csrfSecret),
-      bodyToken: req.body && req.body._csrf
+      bodyToken: req.body && req.body._csrf,
     });
     next();
   },
   submitApplication
 );
 
-
-
 app.use((err, req, res, next) => {
-  if (err && err.code === 'EBADCSRFTOKEN') {
-    console.error('CSRF FAIL', {
+  if (err && err.code === "EBADCSRFTOKEN") {
+    console.error("CSRF FAIL", {
       method: req.method,
       path: req.originalUrl,
       bodyCsrf: req.body?._csrf,
-      headerCsrf: req.headers['csrf-token'] || req.headers['x-csrf-token'] || req.headers['x-xsrf-token'],
+      headerCsrf:
+        req.headers["csrf-token"] ||
+        req.headers["x-csrf-token"] ||
+        req.headers["x-xsrf-token"],
       hasSession: !!req.session,
       sessionID: req.sessionID,
       cookies: Object.keys(req.cookies || {}),
     });
-    return res.status(403).send('Invalid CSRF token');
+    return res.status(403).send("Invalid CSRF token");
   }
   next(err);
 });
@@ -274,8 +289,8 @@ app.use(resourcesRoutes);
 app.use(carouselRoutes);
 //app.use(require("./routes/assessment"));
 app.use(clientRoutes.routes);
-app.use('/', clientApplications);
-app.use('/', chakraApplications);
+app.use("/", clientApplications);
+app.use("/", chakraApplications);
 
 // DANI TESTING PURPOSES ONLY
 const simpleFormRoutes = require("./routes/simpleFormRoutes");
@@ -284,4 +299,8 @@ app.use("/", simpleFormRoutes);
 const servicesRoutes = require("./routes/servicesRoutes");
 app.use("/", servicesRoutes);
 
-app.listen(config.port, () => winston.info("App is listening on http://localhost:" + config.port));
+app.use("/", zoomIntegrations);
+
+app.listen(config.port, () =>
+  winston.info("App is listening on http://localhost:" + config.port)
+);

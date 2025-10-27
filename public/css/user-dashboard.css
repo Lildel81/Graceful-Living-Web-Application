@@ -9,6 +9,14 @@
   margin-bottom: 2rem;
 }
 
+.dashboard-section {
+  padding: 3vh 0;
+}
+
+.section-description {
+  padding: 2vh 0;
+}
+
 .section-title {
   font-size: 1.5rem;
   margin-bottom: 1rem;
