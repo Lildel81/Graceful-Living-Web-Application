@@ -521,3 +521,57 @@ button:hover {
     padding: 8px;
   }
 }
+/* -------------------------------------
+  CHAKRA IMBALANCE OVERVIEW CARDS
+-------------------------------------- */
+.chakra-container-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 0 1rem;
+}
+
+/* Card Styling */
+.chakra-card {
+  border-radius: 14px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.chakra-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* Chakra Number */
+.chakra-count {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+/* Chakra Label BELOW number */
+.chakra-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+/* Chakra Colors 🌈 */
+.root { background: #b71c1c; }
+.sacral { background: #e65100; }
+.solar { background: #f9a825; color: #222; }
+.heart { background: #2e7d32; }
+.throat { background: #0277bd; }
+.third-eye { background: #4527a0; }
+.crown { background: #6a1b9a; }
