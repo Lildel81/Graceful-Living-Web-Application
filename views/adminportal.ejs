@@ -137,6 +137,18 @@
       </div>
     </section>
 
+
+    <!-- Chakra Imbalance Overview -->
+    <section class="chakra-container-grid">
+      <% chakras.forEach(chakra => { %>
+        <div class="chakra-card <%= chakra.key.toLowerCase() %>">
+          <h3><%= chakra.label %> Chakra</h3>
+          <p><span class="chakra-count"><%= chakra.count %></span> </p>
+        </div>
+      <% }) %>
+    </section>
+
+
     <!-- Charts -->
     <section class="charts">
       <div class="chart">Average Chakra Scores</div>
