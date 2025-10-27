@@ -58,8 +58,19 @@ router.get('/app-success', getApplicationSuccessView);
 router.get('/reviews', getReviewsView); // public testimonials page
 router.get('/login', getLoginView);
 
+/* -------------------- CSRF FOR ADMIN PORTAL -------------------- */
+const csrfProtection = require('csurf')({
+  cookie: {
+    key: '_csrf',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/'
+  }
+});
+
 /* -------------------- Admin-only Views -------------------- */
-router.get('/adminportal', requireAdmin, getAdminPortalView);
+router.get('/adminportal', csrfProtection, requireAdmin, getAdminPortalView);
 router.get('/content-management', requireAdmin, getContentManagementView);
 router.get('/user-login', getLoginView);     // reuse existing login view
 router.get('/user-signup', getLoginView);    // reuse existing login view

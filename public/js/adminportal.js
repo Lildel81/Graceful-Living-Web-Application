@@ -67,3 +67,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Dani added for chakra assessment 
+ document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("showTrendBtn");
+  const iframe = document.getElementById("trendFrame");
+
+  if (!btn || !iframe) return;
+
+  const alreadyViewed = sessionStorage.getItem("trendViewed");
+
+  if (alreadyViewed) {
+    iframe.style.display = "block";
+    iframe.src = "/adminportal/predict-chakra";
+  }
+
+  btn.addEventListener("click", () => {
+    iframe.style.display = "block";
+    iframe.src = "/adminportal/predict-chakra?t=" + Date.now();
+    sessionStorage.setItem("trendViewed", "true");
+  });
+});
+

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chakra Forecast</title>
+  <link rel="stylesheet" href="/css/chakra-forecast.css">
+</head>
+<body>
+  <div class="chakra-forecast-container">
+    <h2>🔮 Chakra Forecast</h2>
+
+    <% if (errorMessage) { %>
+      <p class="error"><%= errorMessage %></p>
+    <% } else if (predicted && counts) { %>
+      <p><b>Predicted next most closed chakra:</b> <%= predicted %></p>
+      <h3>All Chakra Counts:</h3>
+      <ul>
+        <% for (const [key, val] of Object.entries(counts)) { %>
+          <li><%= key %>: <%= val %></li>
+        <% } %>
+      </ul>
+    <% } else { %>
+      <p>⚠️ No forecast data available.</p>
+    <% } %>
+  </div>
+</body>
+</html>

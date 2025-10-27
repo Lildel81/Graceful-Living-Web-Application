@@ -284,7 +284,12 @@ app.use('/', chakraApplications);
 const simpleFormRoutes = require("./routes/simpleFormRoutes");
 app.use("/", simpleFormRoutes);
 
+// for services in content management & home page 
 const servicesRoutes = require("./routes/servicesRoutes");
 app.use("/", servicesRoutes);
+
+// for next month's chakra predictions 
+const predictRoutes = require("./routes/predictRoutes");
+app.use("/", predictRoutes);
 
 app.listen(config.port, () => winston.info("App is listening on http://localhost:" + config.port));

@@ -316,7 +316,7 @@ const getHomeView = async (req, res, next) => {
     };
     const selectedReviews = getRandomReviews(allReviews, 3);
 
-    const services = await Services.find().sort({ createdAt: -1 }).limit(4);
+    const services = await Services.find().sort({ createdAt: -1 }).limit(3);
 
     res.render("home", { 
       slides, 
@@ -388,6 +388,8 @@ const postCreateClient = async (req, res) => {
 const getAdminPortalView = async (req, res) => {
   try {
    
+    // dani added bc it was giving me errors
+    let users = [];
 
     // --- Fetch all the submitted assessments --- //
     const assessments = await ChakraAssessment.find().lean();
@@ -417,6 +419,7 @@ const getAdminPortalView = async (req, res) => {
       users,
       totalSubmissions,
       avgChakraBalance,
+      csrfToken: req.csrfToken()
     });
   
   } catch (err) {
@@ -426,6 +429,7 @@ const getAdminPortalView = async (req, res) => {
       users: [],           // no mock — just empty if DB fails
       totalSubmissions: 0,
       avgChakraBalance: 0,
+      csrfToken: req.csrfToken()
     });
   }
 };
