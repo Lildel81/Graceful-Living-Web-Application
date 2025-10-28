@@ -781,7 +781,7 @@ async function getPreQuizResults(req, res, next ){
 
 
 // Chakra Quiz Results 
-async function getChakraQuizResults(req, res, next){
+/*async function getChakraQuizResults(req, res, next){
   try {
     const {
       q,
@@ -853,6 +853,38 @@ async function getChakraQuizResults(req, res, next){
       to: to || '',
       focusChakra: req.query.focusChakra || '',
       archetype: req.query.archetype || ''
+    });
+  } catch (err) {
+    next(err);
+  }
+}*/
+
+const { buildChakraFilter, toArr } = require('./chakraFilter');
+
+async function getChakraQuizResults(req, res, next){
+  try {
+    const filter = buildChakraFilter(req.query);
+    
+    const [totalSubmissions, rows] = await Promise.all([
+      ChakraAssessment.countDocuments(filter),
+      ChakraAssessment.find(filter).sort({ createdAt: -1 }).lean()
+    ]);
+
+    res.render('chakraquiz-results', {
+      title: 'Energy Leak Results',
+      stats: { total: totalSubmissions },
+      rows,
+     
+      q: req.query.q || '',
+      ageBracket: req.query.ageBracket || '',
+      healthcareWorker: req.query.healthcareWorker || '',
+      workedWithPractitioner: req.query.workedWithPractitioner || '',
+      familiarWith: toArr(req.query.familiarWith),
+      challenges: toArr(req.query.challenges),
+      from: req.query.from || '',
+      to: req.query.to || '',
+      focusChakra: toArr(req.query.focusChakra) || '',
+      archetype:toArr(req.query.archetype) || ''
     });
   } catch (err) {
     next(err);
