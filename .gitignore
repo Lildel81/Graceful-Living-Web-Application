@@ -8,3 +8,5 @@ python/venv/
 venv/
 __pycache__/
 *.pyc
+*.md
+*.sh

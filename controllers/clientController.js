@@ -16,6 +16,8 @@ const Services = require("../models/servicesSchema");
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
 const mongoose = require("mongoose"); 
+// ML conversion prediction - uses centralized controller
+const {getMLConversionStats} = require('./conversionStatsController');
 
 // --- Allow admin iframes & local form posts (http/https localhost + YouTube) ---
 function allowAdminEmbeds(res) {
@@ -430,6 +432,7 @@ const getAdminPortalView = async (req, res) => {
       avgChakraBalance = (totalAverages / totalSubmissions).toFixed(2);
     }
 
+<<<<<<< Updated upstream
     // Build counts map from assessments in a normalized way
     const counts = Object.keys(chakraMap).reduce((acc, k) => {
       acc[k] = 0;
@@ -481,6 +484,44 @@ const getAdminPortalView = async (req, res) => {
       avgChakraBalance,
       csrfToken: req.csrfToken(),
       chakras: chakraArray
+=======
+    // -------------- Oanh: ML conversion rate prediction - Get comprehensive stats ---------------------
+    // Use the centralized function from conversionStatsController
+    const mlResult = await getMLConversionStats({ 
+      daysBack: 90, 
+      limit: 50, 
+      verbose: true 
+    });
+    
+    const conversionStats = mlResult.conversionStats;
+    const mlPredictions = mlResult.mlPredictions;
+    const highProbabilityLeads = mlResult.highProbabilityLeads || 0;
+
+    // --- render the page with the stats ---//
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 RENDERING ADMIN PORTAL WITH:');
+    console.log('='.repeat(60));
+    console.log('conversionStats:', conversionStats ? 'SET ✅' : 'NULL ❌');
+    console.log('mlPredictions:', mlPredictions ? `${mlPredictions.length} predictions ✅` : 'NULL ❌');
+    console.log('highProbabilityLeads:', highProbabilityLeads !== null ? `${highProbabilityLeads} leads ✅` : 'NULL ❌');
+    if (conversionStats) {
+      console.log('\nConversion Stats Summary:');
+      console.log('  - Conversion Rate:', (conversionStats.conversionRate * 100).toFixed(1) + '%');
+      console.log('  - Recent Assessments:', conversionStats.recentAssessments);
+      console.log('  - Recent Conversions:', conversionStats.recentConversions);
+      console.log('  - High Probability Count:', conversionStats.highProbabilityCount);
+    }
+    console.log('='.repeat(60) + '\n');
+    
+    res.render('adminportal', {
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+      //users,                // Oanh commented out bcz with uses my ML not showing
+      totalSubmissions,
+      avgChakraBalance,
+      conversionStats,        // From ML prediction model
+      mlPredictions,          //
+      highProbabilityLeads    //
+>>>>>>> Stashed changes
     });
 
   } catch (err) {
@@ -497,10 +538,19 @@ const getAdminPortalView = async (req, res) => {
     ];
     return res.render('adminportal', {
       userName: 'Admin',
+<<<<<<< Updated upstream
       totalSubmissions: 0,
       avgChakraBalance: 0,
       csrfToken: req.csrfToken(),
       chakras: fallback
+=======
+      //users: [],
+      totalSubmissions: 0,
+      avgChakraBalance: 0,
+      conversionStats: null,
+      mlPredictions: null,
+      highProbabilityLeads: 0
+>>>>>>> Stashed changes
     });
   }
 };
