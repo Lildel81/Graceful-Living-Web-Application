@@ -432,7 +432,6 @@ const getAdminPortalView = async (req, res) => {
       avgChakraBalance = (totalAverages / totalSubmissions).toFixed(2);
     }
 
-<<<<<<< Updated upstream
     // Build counts map from assessments in a normalized way
     const counts = Object.keys(chakraMap).reduce((acc, k) => {
       acc[k] = 0;
@@ -477,14 +476,15 @@ const getAdminPortalView = async (req, res) => {
     //console.log('AdminPortal - totalSubmissions:', totalSubmissions);
     //console.log('AdminPortal - chakraArray:', JSON.stringify(chakraArray, null, 2));
 
-    // render template
-    return res.render('adminportal', {
-      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
-      totalSubmissions,
-      avgChakraBalance,
-      csrfToken: req.csrfToken(),
-      chakras: chakraArray
-=======
+    // // render template
+    // return res.render('adminportal', {
+    //   userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+    //   totalSubmissions,
+    //   avgChakraBalance,
+    //   csrfToken: req.csrfToken(),
+    //   chakras: chakraArray
+    // });
+
     // -------------- Oanh: ML conversion rate prediction - Get comprehensive stats ---------------------
     // Use the centralized function from conversionStatsController
     const mlResult = await getMLConversionStats({ 
@@ -520,8 +520,10 @@ const getAdminPortalView = async (req, res) => {
       avgChakraBalance,
       conversionStats,        // From ML prediction model
       mlPredictions,          //
-      highProbabilityLeads    //
->>>>>>> Stashed changes
+      highProbabilityLeads,    //
+      csrfToken: req.csrfToken(),
+      chakras: chakraArray
+
     });
 
   } catch (err) {
@@ -538,19 +540,14 @@ const getAdminPortalView = async (req, res) => {
     ];
     return res.render('adminportal', {
       userName: 'Admin',
-<<<<<<< Updated upstream
-      totalSubmissions: 0,
-      avgChakraBalance: 0,
-      csrfToken: req.csrfToken(),
-      chakras: fallback
-=======
       //users: [],
       totalSubmissions: 0,
       avgChakraBalance: 0,
       conversionStats: null,
       mlPredictions: null,
-      highProbabilityLeads: 0
->>>>>>> Stashed changes
+      highProbabilityLeads: 0,
+      csrfToken: req.csrfToken(),
+      chakras: fallback
     });
   }
 };
