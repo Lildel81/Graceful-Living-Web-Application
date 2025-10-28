@@ -1,0 +1,24 @@
+
+
+<link rel="stylesheet" href="/css/shop.css">
+<div class="gl-shop">
+  <h1 class="gl-shop-title">Shop</h1>
+
+  <div class="gl-shop-grid">
+    <% if (products && products.length) { %>
+      <% products.forEach(p => { %>
+        <article class="gl-shop-card">
+          <a href="/shop/<%= p.slug %>">
+            <% if (p.imagePath) { %>
+              <img src="<%= p.imagePath %>" alt="<%= p.title %>" width="10%" height="10%">
+            <% } %>
+            <h2 class="gl-shop-card-title"><%= p.title %></h2>
+            <p class="gl-shop-card-price">$<%= (p.priceCents/100).toFixed(2) %></p>
+          </a>
+        </article>
+      <% }) %>
+    <% } else { %>
+      <p class="gl-muted">No products yet.</p>
+    <% } %>
+  </div>
+</div>

@@ -1,128 +1,128 @@
 /* -------------- application.css ------------------- */
 
-body{
-    background-color: #008080;
-    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
-    margin: 0; 
-    padding: 0; 
 
-}
-
-/*Center the form on the page and gives it a border */
-form {
-    background-color: #ffffff;
-    max-width: 700px;
-    margin: 50px auto; 
-    padding: 40px; 
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-/*Styling for the header */
-h2 {
-    text-align: center;
-    margin-bottom: 30px; 
+.section-page {
+    font-family: 'Futura','Inter','Avenir','Helvetica Neue',Arial,sans-serif;
     color: black;
+    line-height: 1.6;
+    background-color: #f5f6fa;
+}
+.section-page .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
 }
 
-/*styling for the subheading */
-.subtext{
-  text-align: center;
-  font-size: 1.0em;
-  color: grey;
-  margin-top: -10px; 
-  margin-bottom: 20px; 
+
+
+.section-page .hero {
+     background: linear-gradient(135deg, #008080, #1e9292);
+    color: white; 
+    padding: 80px 0; 
+    text-align: center; 
+    margin-bottom: 40px; 
+ 
+}
+.section-page .hero.user-info {
+    background: linear-gradient(135deg,#008080, #1e9292);
+   
 }
 
-/* styling for all the labels to prompt user for input*/
-label {
-  display: block; 
-  margin: 1rem 0 0.5rem;  
-  color: #333; 
-  font-weight: normal;
-}
 
-/*Field Labels*/
-label[for]{
-    font-weight: 600;
-}
 
-/*Red star for the req text*/
-.required {
-    color: #d93025;
+.section-page .hero h1 {
+    font-family: 'Source Serif Pro','Playfair Display',serif;
+    font-size: 3rem;
     font-weight: 700;
-    margin-left: 0.2rem;
+    margin-bottom: 20px;
+}
+.section-page .hero p {
+    font-size: 1.2rem;
+    opacity: .95;
+    max-width: 800px;
+    margin: 0 auto; 
 }
 
-/* Styles the text boxes for the inputs of email,name, number*/
+/* Form card */
+form#assessment-form {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+/* Headers  */
+form fieldset legend,
+form label[for] {
+    font-family: 'Source Serif Pro','Playfair Display',serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #222;
+    margin-top: 1.5rem;
+    margin-bottom: .5rem;
+    display: block;
+    border-left: 4px solid  #008080; 
+    padding-left: .5rem;
+}
+
+/* Checkbox styling  */
+fieldset label {
+    font-family: 'Inter','Helvetica Neue',Arial,sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #444;
+    display: block;
+    margin: .45rem 0;
+}
+fieldset input { margin-right: .5rem; }
+
+/* Inputs */
 input[type="text"],
 input[type="email"],
 input[type="number"],
 input[type="tel"],
-textarea{
+textarea {
     width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid#ccc; 
-    font-size: 16px;
-    box-sizing: border-box; 
-    font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
+    padding: .8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border .2s, box-shadow .2s;
+    resize: none;
+    box-sizing: border-box;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+textarea:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 6px rgba(108,99,255,.3);
+    outline: none;
 }
 
 
+.note { font-size: .95rem; color: #666; }
+.required { color: #d93025; font-weight: 700; margin-left: .2rem; }
 
-/*Aligns the check boxes in with the prompt */
-label input[type="radio"],
-label input[type="checkbox"]{
-    margin-right: 8px; 
-    /*margin-top: 10px; */
-    position: relative;
-    vertical-align: middle;
-    top: -1px;
-    accent-color: #4CAF50 ;
-}
-
-/* Make checkbox labels alligned  */
-label {
-    display: inline-flex;
-    align-items: center;    
-    gap: 8px;
-    margin-bottom: 10px;
-    font-weight: normal;     
-}
-
-/* add spacing */
-input[type="radio"] + label,
-input[type="checkbox"] + label{
-    margin-top: 10px;
-    margin-left: 6px;
-    font-weight: normal;
-}
-
-/*healthcare details block*/
-#healthcare-details {
-  margin-top: 10px;
-}
-#healthcare-details label[for] {
-  margin-top: 0.75rem;
-}
-
-/* Syling for the button */
-button[type="submit"]{
-    display: block; 
-    margin: 30px auto 0;
-    padding: 12px 24px; 
-    font-size: 18px; 
-    border: none; 
-    border-radius: 8px; 
-    background-color: #4CAF50;
-    color: white; 
+/* Button */
+.submit-btn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: .8rem 1.25rem;
+    background:  #2ba82f;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-
+    transition: background .2s ease, transform .1s ease;
 }
+.submit-btn:hover { background: #008106; transform: translateY(-2px); }
 
-/* Adds a darker color for the hover*/
-button[type="submit"]:hover{
-    background-color: rgb(73, 122, 73); 
-}
+/* error  */
+.form-error { color: #b00020; font-weight: 600; margin: 8px 0 16px; }
+fieldset { border: 0; margin: 1.25rem 0; padding: 0; }

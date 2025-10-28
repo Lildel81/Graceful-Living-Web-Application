@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
+// upload is the multer 
 const upload = require('../middleware/upload.js');
+
+// csrf 
 const csrf = require('csurf');
 
 const csrfProtection = csrf({
@@ -14,8 +16,10 @@ const csrfProtection = csrf({
   }
 });
 
+// svc is controller 
 const svc = require('../controllers/servicesController');
 
+// get the page 
 router.get('/adminportal/servicesmanagement', csrfProtection, svc.getServicesPage);
 
 // POST create: ***multer first***, then CSRF check, then controller
@@ -26,9 +30,10 @@ router.get('/adminportal/servicesmanagement', csrfProtection, svc.getServicesPag
 //   svc.createService        // then controller
 // );
 
+// create
 router.post(
   '/adminportal/contentmanagement/create',
-  upload.single('image'),
+  upload.single('imageUrl'),
   (req, res, next) => {
     console.log('MULTER DEBUG:', {
       hasFile: !!req.file,
@@ -48,5 +53,13 @@ router.post(
   svc.createService
 );
 
+// delete 
+router.post("/adminportal/services/:id/delete", svc.deleteService);
+
+// get edit 
+router.get("/adminportal/services/:id/edit", csrfProtection, svc.editService);
+
+// post update edit 
+router.post("/adminportal/services/:id/edit", upload.single("imageUrl"), csrfProtection, svc.updateService);
 
 module.exports = router;

@@ -12,6 +12,7 @@ const CarouselSlide = require("../models/carouselSlide");
 const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
+const Services = require("../models/servicesSchema");
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
 const mongoose = require("mongoose"); 
@@ -315,7 +316,14 @@ const getHomeView = async (req, res, next) => {
     };
     const selectedReviews = getRandomReviews(allReviews, 3);
 
-    res.render("home", { slides, selectedReviews });
+    const services = await Services.find().sort({ createdAt: -1 }).limit(3);
+
+    res.render("home", { 
+      slides, 
+      selectedReviews,
+      //to view services 
+      services
+    });
   } catch (error) {
     console.error("Error fetching slides:", error.message);
     res.render("home", { slides: [], selectedReviews: [] });
@@ -345,7 +353,6 @@ const postCreateClient = async (req, res) => {
       currentDate: new Date().toISOString()
     };
 
-    // Validate with your existing Joi validator if exported
     if (typeof Client.validate === 'function') {
       const { error } = Client.validate(payload);
       if (error) {
@@ -356,7 +363,6 @@ const postCreateClient = async (req, res) => {
       }
     }
 
-    // Optional: prevent duplicate emails
     const existing = await Client.findOne({ email: payload.email }).lean();
     if (existing) {
       return res.status(400).render('client-add', {
@@ -366,7 +372,8 @@ const postCreateClient = async (req, res) => {
     }
 
     await Client.create(payload);
-    return res.redirect('/adminportal?created=1'); // back to the list with success flag
+    // CHANGED: go to Client Management, not Admin Portal
+    return res.redirect('/clientmanagement?created=1');
   } catch (err) {
     console.error('Failed to create client:', err);
     return res.status(500).render('client-add', {
@@ -377,50 +384,123 @@ const postCreateClient = async (req, res) => {
 };
 
 
-const getAdminPortalView = async (req, res) => {
-  try {
-    const users = await Client
-      .find({}, 'firstname lastname phonenumber email closedChakra')
-      .sort({ firstname: 1, lastname: 1 })
-      .lean();
 
-    // --- Fetch all the submitted assessments --- //
-    const assessments = await ChakraAssessment.find().lean();
-    
-    // --- Calculate total submissions --- //
+// --- Robust getAdminPortalView (replace existing) ---
+const getAdminPortalView = async (req, res) => {
+  // chakraMap: keys are canonical stored focusChakra values (normalized)
+  // value is the friendly label shown in the UI
+  const chakraMap = {
+    rootchakra: "Root",
+    sacralchakra: "Sacral",
+    solarplexuschakra: "Solar Plexus",
+    heartchakra: "Heart",
+    throatchakra: "Throat",
+    thirdeyechakra: "Third Eye",
+    crownchakra: "Crown"
+  };
+
+  try {
+    // fetch all assessments (lean -> plain objects)
+    const assessments = (await ChakraAssessment.find().lean()) || [];
+
+    // total submissions
     const totalSubmissions = assessments.length;
 
-    // --- Calculate average chakra balance across all submissions --- //
+    // average chakra balance across all submissions (defensive)
     let avgChakraBalance = 0;
     if (totalSubmissions > 0) {
       const totalAverages = assessments.reduce((sum, assessment) => {
-        if (assessment.results) {
-          const chakraAverages = Object.values(assessment.results)
-            .map(r => parseFloat(r.average))
+        if (assessment && assessment.results && typeof assessment.results === 'object') {
+          const chakraValues = Object.values(assessment.results)
+            .map(r => {
+              if (r == null) return NaN;
+              if (typeof r === 'number') return r;
+              if (typeof r === 'object' && r.average != null) return parseFloat(r.average);
+              return NaN;
+            })
             .filter(n => !isNaN(n));
-          const avg = chakraAverages.reduce((a, b) => a + b, 0) / chakraAverages.length;
-          return sum + avg;
+
+          if (chakraValues.length > 0) {
+            const avg = chakraValues.reduce((a, b) => a + b, 0) / chakraValues.length;
+            return sum + avg;
+          }
         }
         return sum;
       }, 0);
       avgChakraBalance = (totalAverages / totalSubmissions).toFixed(2);
     }
 
-    // --- render the page with the stats ---//
-    res.render('adminportal', {
+    // Build counts map from assessments in a normalized way
+    const counts = Object.keys(chakraMap).reduce((acc, k) => {
+      acc[k] = 0;
+      return acc;
+    }, {});
+
+    assessments.forEach(a => {
+      // guard: a.focusChakra might be "rootChakra" or "rootchakra" or have extra whitespace
+      const raw = (a && a.focusChakra) ? String(a.focusChakra).trim().toLowerCase() : '';
+      if (raw) {
+        // normalize to remove spaces/hyphens etc (just letters+numbers)
+        const norm = raw.replace(/[^a-z0-9]/gi, '');
+        // If exact match exists, increment; otherwise try partial match
+        if (counts.hasOwnProperty(norm)) counts[norm] += 1;
+        else {
+          // fallback: try to find a key that contains the normalized raw (e.g. 'root' inside 'rootchakra')
+          const foundKey = Object.keys(counts).find(k => k.includes(norm) || norm.includes(k));
+          if (foundKey) counts[foundKey] += 1;
+        }
+      }
+    });
+
+    // Create chakra array in desired display order
+    const chakraOrder = [
+      'rootchakra',
+      'sacralchakra',
+      'solarplexuschakra',
+      'heartchakra',
+      'throatchakra',
+      'thirdeyechakra',
+      'crownchakra'
+    ];
+
+    const chakraArray = chakraOrder.map(key => ({
+      // keep the same shape that EJS expects: key, label, count
+      key,                    // used for CSS class (already normalized)
+      label: chakraMap[key] || key,
+      count: counts[key] || 0
+    }));
+
+    // server-side debug: log what we will send (remove/turn off in production)
+    //console.log('AdminPortal - totalSubmissions:', totalSubmissions);
+    //console.log('AdminPortal - chakraArray:', JSON.stringify(chakraArray, null, 2));
+
+    // render template
+    return res.render('adminportal', {
       userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
-      users,
       totalSubmissions,
       avgChakraBalance,
+      csrfToken: req.csrfToken(),
+      chakras: chakraArray
     });
-  
+
   } catch (err) {
     console.error('Failed to load admin portal:', err);
-    res.render('adminportal', {
+    // Fallback: send zeros so the template still renders safely
+    const fallback = [
+      { key: 'rootchakra', label: 'Root', count: 0 },
+      { key: 'sacralchakra', label: 'Sacral', count: 0 },
+      { key: 'solarplexuschakra', label: 'Solar Plexus', count: 0 },
+      { key: 'heartchakra', label: 'Heart', count: 0 },
+      { key: 'throatchakra', label: 'Throat', count: 0 },
+      { key: 'thirdeyechakra', label: 'Third Eye', count: 0 },
+      { key: 'crownchakra', label: 'Crown', count: 0 },
+    ];
+    return res.render('adminportal', {
       userName: 'Admin',
-      users: [],           // no mock — just empty if DB fails
       totalSubmissions: 0,
       avgChakraBalance: 0,
+      csrfToken: req.csrfToken(),
+      chakras: fallback
     });
   }
 };
@@ -768,8 +848,82 @@ const getResourcesManagementView = (req, res) => {
   res.render("resourcesmanagement");
 };
 
-const getClientManagementView = (req, res) => {
-  res.render('clientmanagement');
+const getClientManagementView = async (req, res, next) => {
+  try {
+    const users = await Client
+      .find({}, 'firstname lastname phonenumber email closedChakra')
+      .sort({ firstname: 1, lastname: 1 })
+      .lean();
+
+    res.render('clientmanagement', {
+      users,
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+// GET: edit form
+const getClientEditView = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) return res.status(404).render('notFound');
+
+    const client = await Client.findById(id).lean();
+    if (!client) return res.status(404).render('notFound');
+
+    res.render('client-edit', {
+      client, // used to prefill the form
+      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+      formError: null
+    });
+  } catch (err) { next(err); }
+};
+
+// POST: update
+const postUpdateClient = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const payload = {
+      firstname:   (req.body.firstname   || '').trim(),
+      lastname:    (req.body.lastname    || '').trim(),
+      phonenumber: (req.body.phonenumber || '').trim(),
+      email:       (req.body.email       || '').trim(),
+      closedChakra:(req.body.closedChakra|| '').trim(),
+    };
+
+    // optional: basic guards
+    if (!payload.firstname || !payload.lastname || !payload.email) {
+      const client = { _id: id, ...payload };
+      return res.status(400).render('client-edit', {
+        client, formError: 'First, Last, and Email are required.'
+      });
+    }
+
+    await Client.findByIdAndUpdate(id, { $set: payload }, { runValidators: true });
+    return res.redirect('/clientmanagement?updated=1');
+  } catch (err) {
+    console.error('Update client failed:', err);
+    const client = { _id: req.params.id, ...req.body };
+    return res.status(500).render('client-edit', {
+      client, formError: 'Something went wrong updating the client.'
+    });
+  }
+};
+
+// POST: delete
+const postDeleteClient = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Client.findByIdAndDelete(id);
+    return res.redirect('/clientmanagement?deleted=1');
+  } catch (err) {
+    console.error('Delete client failed:', err);
+    return res.redirect('/clientmanagement?error=delete');
+  }
 };
 
 
@@ -807,6 +961,10 @@ module.exports = {
   getUserLoginView,
   getUserDashboardView,
   getClientManagementView,
+  postCreateClient,
+  getClientEditView,
+  postUpdateClient,
+  postDeleteClient,
   getPreQuizResults,
   getChakraQuizResults,
   router,

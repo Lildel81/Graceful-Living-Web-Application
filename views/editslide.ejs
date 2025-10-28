@@ -3,53 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <title>Edit Slide</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2rem;
-    }
-    input, textarea {
-      display: block;
-      width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      background-color: #008080;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/carousel-mangement.css">
 </head>
 <body>
+
   <h2>Edit Slide</h2>
 
+  <!-- Edit Slide Form -->
   <form action="/adminportal/carousel/<%= slide._id %>/update" method="POST" enctype="multipart/form-data">
-    <label>Title</label>
-    <input type="text" name="title" value="<%= slide.title %>" required>
+    <!-- CSRF TOKEN-->
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-    <label>Description</label>
-    <textarea name="description" rows="3" required><%= slide.description %></textarea>
+    <div class="form-section">
+      <label for="title">Title:</label>
+      <input type="text" name="title" id="title" value="<%= slide.title %>" required>
 
-    <label>Button Text</label>
-    <input type="text" name="buttonText" value="<%= slide.buttonText %>" required>
+      <label for="description">Description:</label>
+      <textarea name="description" id="description" rows="3"><%= slide.description %></textarea>
 
-    <label>Button URL</label>
-    <input type="text" name="buttonUrl" value="<%= slide.buttonUrl %>" required>
+      <label for="buttonText">Button Text:</label>
+      <input type="text" name="buttonText" id="buttonText" value="<%= slide.buttonText %>" required>
 
-    <label>Image Source</label>
-    <label><input type="radio" name="imageOption" value="upload"> Upload New</label>
-    <input type="file" name="imageUpload">
-    
-    <label><input type="radio" name="imageOption" value="url" checked> Use Existing or New URL</label>
-    <input type="text" name="imageUrl" value="<%= slide.imageUrl %>">
+      <label for="buttonUrl">Button URL:</label>
+      <input type="text" name="buttonUrl" id="buttonUrl" value="<%= slide.buttonUrl %>" required>
+    </div>
 
-    <img src="<%= slide.imageUrl %>" alt="Current Image" style="max-width: 300px; display:block; margin-top: 10px;">
+    <div class="form-section">
+      <label>Choose Image Source:</label>
+      <div class="image-options">
+        <label><input type="radio" name="imageOption" value="keep" id="keepOption" checked> Keep Current Image</label>
+        <label><input type="radio" name="imageOption" value="upload" id="uploadOption"> Upload New Image</label>
+        <label><input type="radio" name="imageOption" value="url" id="urlOption"> From URL</label>
+      </div>
+
+      <div>
+        <label for="imageUpload">Upload Image:</label>
+        <input type="file" name="imageUpload" id="imageUpload">
+      </div>
+
+      <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" name="imageUrl" id="imageUrl" value="<%= slide.imageUrl %>" placeholder="Or paste image URL here">
+      </div>
+
+      <div>
+        <label>Current Image:</label>
+        <img src="<%= slide.imageUrl %>" alt="Current Image" class="slide-img" style="width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; border-radius: 4px; margin-top: 10px;">
+      </div>
+    </div>
 
     <button type="submit">Update Slide</button>
     <a href="/adminportal/carouselmanagement"><button type="button">Cancel</button></a>
   </form>
+
+  <script src="/js/editslide.js"></script>
 </body>
 </html>

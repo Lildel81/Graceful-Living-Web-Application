@@ -10,6 +10,7 @@
   <h2>Edit Resource Image</h2>
 
   <form action="/adminportal/resources/<%= resource._id %>/update" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <div class="form-section">
       <label>Current Image:</label><br>
       <img src="<%= resource.imageUrl %>" class="slide-img" alt="Current Resource Image">

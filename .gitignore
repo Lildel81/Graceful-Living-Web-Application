@@ -1,3 +1,10 @@
 
 node_modules/
 .env
+<<<<<<< Updated upstream
+
+# Python virtual environment
+python/venv/
+venv/
+__pycache__/
+*.pyc

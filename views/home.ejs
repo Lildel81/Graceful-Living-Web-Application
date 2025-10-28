@@ -123,12 +123,12 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 
   </div>
 
-  <!-- ✅ Added Services Section Here -->
+  <!-- Added Services Section Here 
   <section style="padding: 50px; background: #f3f3f3; text-align: center;">
       <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Services</h2>
       <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
           
-          <!-- Service 1 -->
+          Service 1 
           <div style="
             width: 18rem; 
             height: 28rem; 
@@ -141,7 +141,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             padding: 1rem;
           ">
-            <!-- Overlay box -->
+            Overlay box 
             <div style="
               background: rgba(0,0,0,0.5); 
               padding: 1rem; 
@@ -169,7 +169,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
             </div>
           </div>
 
-          <!-- Service 2 -->
+          Service 2 
           <div style="
             width: 18rem; 
             height: 28rem; 
@@ -182,7 +182,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             padding: 1rem;
           ">
-            <!-- Overlay box -->
+            Overlay box 
             <div style="
               background: rgba(0,0,0,0.5); 
               padding: 1rem; 
@@ -210,7 +210,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
             </div>
           </div>
 
-          <!-- Service 3 -->
+          Service 3 
           <div style="
             width: 18rem; 
             height: 28rem; 
@@ -223,7 +223,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             padding: 1rem;
           ">
-            <!-- Overlay box -->
+            Overlay box 
             <div style="
               background: rgba(0,0,0,0.5); 
               padding: 1rem; 
@@ -253,7 +253,47 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 
       </div>
   </section>
-  <!-- ✅ Services Section Ends Here -->
+  Services Section Ends Here -->
+
+  <!-- Services Section -->
+  
+<link rel="stylesheet" href="/css/home-services.css">
+
+<section class="services-section">
+  <h2 class="services-title">Services</h2>
+
+  <div class="services-wrapper">
+    <% if (services && services.length > 0) { %>
+      <% services.forEach(service => { %>
+        <div class="service-card">
+          <!-- service image -->
+          <img
+            src="<%= service.imageUrl %>"
+            alt="<%= service.serviceName %>"
+            class="service-image"
+          >
+
+          <!-- overlay text -->
+          <div class="text-overlay">
+            <h3><%= service.serviceName %></h3>
+            <p><%= service.serviceDescription %></p>
+          </div>
+
+          <!-- button (optional) -->
+          <% if (service.buttonText && service.buttonUrl) { %>
+            <a href="<%= service.buttonUrl %>" target="_blank">
+              <button class="service-button"><%= service.buttonText %></button>
+            </a>
+          <% } %>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="no-services">No services available yet. Please check back soon!</p>
+    <% } %>
+  </div>
+</section>
+
+
 
   <div class="review-section">
     <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Voices of the Healed</h2>

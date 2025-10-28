@@ -28,6 +28,7 @@ const chakraApplications = require("./routes/chakraApplications");
 const appointmentRoutes = require("./routes/appointment-routes");
 const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
+const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
 
 const app = express();
@@ -84,6 +85,9 @@ app.use(
   })
 );
 
+//this is the webhook to use for stripe (our payment system)
+app.post("/checkout/webhook", bodyParser.raw({ type: "application/json" }));
+
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cors());
@@ -91,6 +95,10 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
+app.use(
+  "/js",
+  express.static(path.join(__dirname, "node_modules/chart.js/dist"))
+);
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -225,6 +233,13 @@ app.get("/about", (req, res) => {
   res.render("aboutUs");
 });
 
+app.use("/stats", statsRoutes);
+
+// Routs for the shop
+app.use("/shop", require("./routes/shop"));
+app.use("/cart", require("./routes/cart"));
+app.use("/checkout", require("./routes/checkout"));
+
 // Appointment booking routes
 app.get("/booking", csrfProtection, (req, res) => {
   res.render("booking", { csrfToken: req.csrfToken() });
@@ -296,8 +311,13 @@ app.use("/", chakraApplications);
 const simpleFormRoutes = require("./routes/simpleFormRoutes");
 app.use("/", simpleFormRoutes);
 
+// for services in content management & home page
 const servicesRoutes = require("./routes/servicesRoutes");
 app.use("/", servicesRoutes);
+
+// for next month's chakra predictions
+const predictRoutes = require("./routes/predictRoutes");
+app.use("/", predictRoutes);
 
 app.use("/", zoomIntegrations);
 

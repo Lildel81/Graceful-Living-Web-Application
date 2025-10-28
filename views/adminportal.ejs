@@ -1,4 +1,4 @@
-<!-- EJS Template File -->
+<!-- adminportal.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +13,18 @@
   <!-- js for resources page -->
   <script src="/js/adminportal.js" defer></script> 
 
+  <!-- chart.js library -->
+  <script src="/js/chart.umd.js" defer></script>
+
+  <!-- js for chakra stats -->
+  <script src="/js/stats.js" defer></script>
+
   <style>
     body {
       margin: 0;
       font-family: 'Open Sans', sans-serif; /*using this font general text*/
       min-height: 100vh;
-      background: url('/images/admin_background.jpg') center/cover no-repeat fixed;
+      background: url('/images/pexels-pixabay-358457.jpg') center/cover no-repeat fixed;
     }
     .hero,
     .overview h2,
@@ -131,6 +137,18 @@
       </div>
     </section>
 
+
+    <!-- Chakra Imbalance Overview -->
+    <section class="chakra-container-grid">
+      <% chakras.forEach(chakra => { %>
+        <div class="chakra-card <%= chakra.key.toLowerCase() %>">
+          <h3><%= chakra.label %> Chakra</h3>
+          <p><span class="chakra-count"><%= chakra.count %></span> </p>
+        </div>
+      <% }) %>
+    </section>
+
+
     <!-- Charts -->
     <section class="charts">
       <div class="chart">Average Chakra Scores</div>
@@ -138,91 +156,146 @@
     </section>
   </main>
 
-  <!-- rest of homepage content -->
+  <!-- Chakra Assessment Statistics Section -->
+  <section class="stats-dashboard-section">
+    <div class="stats-dashboard-header">
+      <h2>📊 Chakra Assessment Statistics</h2>
 
-  <div class="user-section">
-    <div class="overview">
-      <h2>User List</h2>
+      <div class="stats-controls">
+        <div class="month-filter">
+          <label for="statsMonthPicker" class="filter-label">Month</label>
+          <input type="month" id="statsMonthPicker" class="month-input" />
+          <button id="clearMonthBtn" class="btn-secondary" type="button">All time</button>
+          <button id="refreshStatsBtn" class="refresh-btn" type="button">
+            <span class="refresh-text">Refresh Data</span>
+          </button>
+        </div>
 
-      <!-- Add Client button -->
-      <div style="text-align:right; margin: 0 0 8px;">
-        <a class="btn-add" href="/clientmanagement/add">+ Add Client</a>
-      </div>
-
-      <input id="adminUserFilter" type="text" placeholder="Filter by name or email">
-
-      <div class="user-table-container">
-        <table id="usersTable">
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Closed Chakra</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (typeof users !== 'undefined' && users.length) { %>
-              <% users.forEach(function(u){ %>
-                <tr>
-                  <td><%= u.firstname %></td>
-                  <td><%= u.lastname %></td>
-                  <td><%= u.phonenumber %></td>
-                  <td><%= u.email %></td>
-                  <td><%= u.closedChakra %></td>
-                </tr>
-              <% }) %>
-            <% } else { %>
-              <tr><td colspan="5">No users found.</td></tr>
-            <% } %>
-          </tbody>
-        </table>
+        <div class="filter-status">
+          <span id="filterLabel" class="badge badge-muted">All time</span>
+          <span id="submissionCountBadge" class="badge badge-strong">0 submissions</span>
+        </div>
       </div>
     </div>
+    
+    <div id="statsLoadingMessage" class="loading-message">
+      Loading fresh statistics...
+    </div>
+
+    <div id="statsContent">
+      <!-- Charts Grid -->
+      <div class="stats-charts-grid">
+        <!-- Chakra Radar Chart -->
+        <div class="stats-chart-container large">
+          <h3>Chakra Balance Overview</h3>
+          <canvas id="chakraRadarChart"></canvas>
+        </div>
+
+        <!-- Life Quadrants Bar Chart -->
+        <div class="stats-chart-container large">
+          <h3>Life Quadrants Analysis</h3>
+          <canvas id="lifeQuadrantsChart"></canvas>
+        </div>
+
+        <!-- Archetype Distribution -->
+        <div class="stats-chart-container medium">
+          <h3>Archetype Distribution</h3>
+          <canvas id="archetypeChart"></canvas>
+        </div>
+
+        <!-- Focus Chakra Distribution -->
+        <div class="stats-chart-container medium">
+          <h3>Focus Chakra Distribution</h3>
+          <canvas id="focusChakraChart"></canvas>
+        </div>
+
+        <!-- Age Distribution -->
+        <div class="stats-chart-container medium">
+          <h3>Age Distribution</h3>
+          <canvas id="ageBracketChart"></canvas>
+        </div>
+
+        <!-- Top Challenges -->
+        <div class="stats-chart-container medium">
+          <h3>Top Challenges</h3>
+          <canvas id="challengesChart"></canvas>
+        </div>
+
+        <!-- Experience with practitioners -->
+        <div class="stats-chart-container medium">
+          <h3>Worked with Practitioner Before?</h3>
+          <canvas id="experienceChart"></canvas>
+        </div>
+
+        <!-- Familiarity with modalities -->
+        <div class="stats-chart-container medium">
+          <h3>Familiar With the Following Techniques</h3>
+          <canvas id="familiarityChart"></canvas>
+        </div>
+
+        <!-- Healthcare Worker -->
+        <div class="stats-chart-container medium">
+          <h3>Healthcare Workers</h3>
+          <canvas id="healthcareChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Data Tables -->
+      <div class="stats-tables">
+        <div class="stats-table-wrapper">
+          <h3>Chakra Averages</h3>
+          <table class="stats-data-table">
+            <thead>
+              <tr>
+                <th>Chakra</th>
+                <th>Average Score</th>
+                <th>Mode Score</th>
+              </tr>
+            </thead>
+            <tbody id="chakraTableBody">
+              <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="stats-table-wrapper">
+          <h3>Life Quadrant Averages</h3>
+          <table class="stats-data-table">
+            <thead>
+              <tr>
+                <th>Life Quadrant</th>
+                <th>Average Score</th>
+                <th>Mode Score</th>
+              </tr>
+            </thead>
+            <tbody id="quadrantTableBody">
+              <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ 
+<!-- rest of homepage content -->
+  <!-- CHAKRA PREDICTION -->
+  <div style="margin: 1rem 0;">
+    <button id="showTrendBtn" class="btn btn-info">📊 View Chakra Trends</button>
   </div>
 
-  <script>
-    // Safe, isolated filter that won't conflict with other scripts
-    document.addEventListener('DOMContentLoaded', function () {
-      try {
-        const filter = document.getElementById('adminUserFilter');
-        const table  = document.getElementById('usersTable');
-        if (!filter || !table || !table.tBodies || !table.tBodies[0]) return;
+  <!-- Hidden iframe (starts invisible) -->
+  <iframe
+    id="trendFrame"
+    src="/adminportal/predict-chakra"
+    style="display:block;width:100%;height:400px;border:1px solid #ccc;border-radius:8px;">
+  </iframe>
 
-        const tbody = table.tBodies[0];
-        const rows  = Array.from(tbody.rows);
+ 
+ 
+        
 
-        // Precompute searchable text per row (first + last + email)
-        const searchIndex = rows.map(row => {
-          const first = (row.cells[0]?.textContent || '').toLowerCase();
-          const last  = (row.cells[1]?.textContent || '').toLowerCase();
-          const email = (row.cells[3]?.textContent || '').toLowerCase();
-          return { row, text: `${first} ${last} ${email}` };
-        });
 
-        function applyFilter() {
-          const q = filter.value.trim().toLowerCase();
-          for (const item of searchIndex) {
-            const match = !q || item.text.includes(q);
-            item.row.style.display = match ? '' : 'none';
-          }
-        }
-
-        // Filter on both input & keyup for IME/edge cases
-        filter.addEventListener('input', applyFilter);
-        filter.addEventListener('keyup', applyFilter);
-
-        // First pass
-        applyFilter();
-
-        // Helpful console ping so you know it wired up
-        console.debug('[adminportal] live filter ready');
-      } catch (e) {
-        console.error('[adminportal] filter init failed:', e);
-      }
-    });
-  </script>
 
   <!--edit the resources page - Oanh moved it into content-management.ejs-->
   <!-- <a href="/adminportal/resourcesmanagement"><button>Manage Resources</button></a> -->

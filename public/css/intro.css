@@ -1,3 +1,6 @@
+:root { --nav-height: 72px; }
+body.intro-page { padding-top: var(--nav-height); }
+
 .intro-page {
     font-family: 'Futura', 'Inter', 'Avenir', 'Helvetica Neue', Arial, sans-serif;
     color: black;
@@ -13,11 +16,27 @@
 }
 
 .intro-page .hero {
-    background: linear-gradient(135deg, #5cade7, #9bd1fe);
+    background:  url("/images/tree-forest-nature-landscape.jpg") center center / cover no-repeat;
     color: white;
     padding: 80px 0;
     text-align: center;
     margin-bottom: 40px;
+    position: relative;
+    padding: 120px 0 80px;
+}
+
+/* darken Image*/
+.intro-page .hero::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+}
+
+/*fix text over image*/
+.intro-page .hero .container{
+  position: relative;
+  z-index: 1;
 }
 
 .intro-page .hero h1 {
@@ -45,7 +64,7 @@
   width: fit-content;
   margin: 1.5rem auto 0 auto;
   padding: 0.8rem 1.2rem;
-  background: #6c63ff;
+  background: #2ba82f;
   color: white;
   border-radius: 8px;
   font-weight: 600;
@@ -55,7 +74,7 @@
 }
 
 .btn-next:hover {
-  background: #574fd6;
+  background: #008106;
   transform: translateY(-2px);
 }
 

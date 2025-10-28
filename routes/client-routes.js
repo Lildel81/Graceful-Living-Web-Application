@@ -21,6 +21,9 @@ const {
   getApplicationSuccessView,
   getClientManagementView,
   postCreateClient,
+  getClientEditView,
+  postUpdateClient,
+  postDeleteClient,
   getChakraQuizResults, 
   getPreQuizResults
 } = require('../controllers/clientController');
@@ -55,8 +58,19 @@ router.get('/app-success', getApplicationSuccessView);
 router.get('/reviews', getReviewsView); // public testimonials page
 router.get('/login', getLoginView);
 
+/* -------------------- CSRF FOR ADMIN PORTAL -------------------- */
+const csrfProtection = require('csurf')({
+  cookie: {
+    key: '_csrf',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/'
+  }
+});
+
 /* -------------------- Admin-only Views -------------------- */
-router.get('/adminportal', requireAdmin, getAdminPortalView);
+router.get('/adminportal', csrfProtection, requireAdmin, getAdminPortalView);
 router.get('/content-management', requireAdmin, getContentManagementView);
 router.get('/user-login', getLoginView);     // reuse existing login view
 router.get('/user-signup', getLoginView);    // reuse existing login view
@@ -71,6 +85,11 @@ router.get('/clientmanagement/add', requireAdmin, (req, res) => {
   res.render('client-add', { formError: null, formValues: {} });
 });
 router.post('/admin/clients', requireAdmin, postCreateClient);
+
+// --- Client CRUD (edit + delete) ---
+router.get('/clientmanagement/:id/edit', requireAdmin, getClientEditView);
+router.post('/clientmanagement/:id/update', requireAdmin, postUpdateClient);
+router.post('/clientmanagement/:id/delete', requireAdmin, postDeleteClient);
 
 /* ---------- Allow iframe only for testimonials manager (same-origin) ---------- */
 router.use('/admin/testimonials', (req, res, next) => {

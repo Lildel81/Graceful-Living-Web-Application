@@ -1,69 +1,113 @@
-<!-- CLIENT MANAGEMENT BAR -->
- <!DOCTYPE html>
- <html lang="en">
- <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Client Management</title>
-    <link rel="stylesheet" href="/css/clientmanagement.css"/>
- </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Client Management</title>
+  <link rel="stylesheet" href="/css/clientmanagement.css"/>
 
- <body>
-    <main>
-    <div class="hero"><b>Client Management</b> </div>
+  <style>
+    .hero { color:#fff; text-align:center; font-weight:700; margin:24px 0 8px; font-size:1.8rem; }
+    .client-mgmt_links { background:#dff3f4cc; display:flex; gap:28px; justify-content:center; padding:12px 16px; font-weight:600; }
+    .client-mgmt_links a { color:#134f4f; text-decoration:none; }
+    .client-mgmt_links a:hover { color:#1d8888; text-decoration:underline; }
+    .back-link { text-align:center; margin:16px 0; }
+    .back-link button { background:#1d8888; color:#fff; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; }
+    .back-link button:hover { background:#167070; }
+    .cm-card { max-width:1000px; margin:0 auto 80px; background:rgba(255,255,255,.95); border-radius:16px; box-shadow:0 8px 26px rgba(0,0,0,.12); padding:18px 20px; }
+    .cm-card__hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .cm-card__hdr h2 { margin:0; font-weight:600; }
+    .cm-btn { display:inline-block; padding:9px 14px; border-radius:10px; background:#0b8; color:#fff; text-decoration:none; font-weight:600; }
+    .cm-btn:hover { background:#0a7; }
+    .cm-input { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #cfe7e8; background:#f7fbfb; outline:0; margin:10px 0 12px; }
+    .cm-input:focus { border-color:#1d8888; box-shadow:0 0 0 3px rgba(29,136,136,.15); }
+    .cm-table-wrap { overflow-x:auto; border:1px solid #e7eef0; border-radius:12px; }
+    table.cm-table { width:100%; border-collapse:collapse; font-size:.95rem; }
+    .cm-table thead th { text-align:left; font-weight:600; background:#e9f5f6; color:#134f4f; padding:12px 14px; border-bottom:1px solid #dbe9ea; }
+    .cm-table tbody td { padding:12px 14px; border-bottom:1px solid #eef4f5; vertical-align:middle; }
+    .cm-table tbody tr:nth-child(even) td { background:#fafdfd; }
+    .cm-table tbody tr:hover td { background:#f2fbfb; }
+    .cm-empty { text-align:center; color:#6b7a7a; padding:18px 10px; }
+    /* actions */
+    .cm-actions { display:flex; gap:8px; }
+    .cm-link { display:inline-block; padding:6px 10px; border-radius:8px; text-decoration:none; font-weight:600; border:1px solid transparent; }
+    .cm-link.edit { background:#e9f5f6; color:#134f4f; border-color:#d4ecee; }
+    .cm-link.edit:hover { background:#dff3f4; }
+    .cm-link.del { background:#ffe9e9; color:#8a1f1f; border-color:#ffd0d0; }
+    .cm-link.del:hover { background:#ffdede; }
+    .cm-del-btn { background:transparent; border:none; padding:0; font:inherit; cursor:pointer; }
+  </style>
+</head>
 
-    <!--Client Mangagement Bar -->
+<body>
+  <main>
+    <div class="hero"><b>Client Management</b></div>
+
     <nav class="client-mgmt_links">
-      <a href="/clientmanagement/prequiz-results">Pre-Application Results</a></button>
-      <a href="/clientmanagement/chakraquiz-results">Energy Leak Results</a></button>
+      <a href="/clientmanagement/prequiz-results">Pre-Application Results</a>
+      <a href="/clientmanagement/chakraquiz-results">Energy Leak Results</a>
       <a href="/clientmanagement/add">Add Client</a>
       <a href="/adminportal/appointments">Admin Appointment Portal</a>
     </nav>
 
     <div class="back-link">
-        <a href="/adminportal"><button>← Back to Admin Portal</button></a>
+      <a href="/adminportal"><button type="button">← Back to Admin Portal</button></a>
     </div>
 
-
-    <!--Quick access search bar?-->
-    <section class="overview">
+    <section class="cm-card">
+      <div class="cm-card__hdr">
         <h2>User List</h2>
+        <a class="cm-btn" href="/clientmanagement/add">+ Add Client</a>
+      </div>
 
-        <!-- visual-only search -->
-        <input id="userFilter" type="text" placeholder="Filter by name or email">
+      <input id="cmUserFilter" class="cm-input" type="text" autocomplete="off" placeholder="Filter by name, email, or phone"/>
 
-        <div style="overflow-x:auto;">
-        <table id="usersTable">
-            <thead>
+      <div class="cm-table-wrap">
+        <table id="cmUsersTable" class="cm-table">
+          <thead>
             <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Closed Chakra</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Closed Chakra</th>
+              <th style="width:150px;">Actions</th>
             </tr>
-            </thead>
-            <tbody>
-            <% if (typeof users !== 'undefined' && users.length) { %>
-                <% users.forEach(function(u){ %>
+          </thead>
+          <tbody>
+            <% if (Array.isArray(users) && users.length) { %>
+              <% users.forEach(function(u){ %>
                 <tr>
-                    <td><%= u.firstname %></td>
-                    <td><%= u.lastname %></td>
-                    <td><%= u.phonenumber %></td>
-                    <td><%= u.email %></td>
-                    <td><%= u.closedChakra %></td>
+                  <td><%= u.firstname %></td>
+                  <td><%= u.lastname %></td>
+                  <td><%= u.phonenumber %></td>
+                  <td><%= u.email %></td>
+                  <td><%= u.closedChakra %></td>
+                  <td>
+                    <div class="cm-actions">
+                      <a class="cm-link edit" href="/clientmanagement/<%= u._id %>/edit">Edit</a>
+                      <form action="/clientmanagement/<%= u._id %>/delete" method="POST" onsubmit="return confirm('Delete this client?');">
+                        <% if (typeof csrfToken !== 'undefined') { %>
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <% } %>
+                        <button type="submit" class="cm-link del cm-del-btn">Delete</button>
+                      </form>
+                    </div>
+                  </td>
                 </tr>
-                <% }) %>
+              <% }) %>
             <% } else { %>
-                <tr><td colspan="5">No users found.</td></tr>
+              <tr><td colspan="6" class="cm-empty">No users found.</td></tr>
             <% } %>
-            </tbody>
+          </tbody>
         </table>
-        </div>
-  </section>
+      </div>
+    </section>
   </main>
 
- </body>
+  <script defer src="/js/clientmanagement.js"></script>
+</body>
+</html>
 
 
- </html>
+

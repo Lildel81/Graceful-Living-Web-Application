@@ -1,0 +1,40 @@
+
+<link rel="stylesheet" href="/css/shop.css">
+<div class="gl-shop">
+  <h1 class="gl-shop-title">Your Cart</h1>
+
+  <% if (!cart.count) { %>
+    <p class="gl-muted">Cart is empty.</p>
+  <% } else { %>
+    <div class="gl-shop-card gl-shop-cart">
+      <table class="gl-shop-cart-table">
+        <thead>
+          <tr><th>Item</th><th>Qty</th><th>Price</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% Object.values(cart.items).forEach(i => { %>
+            <tr>
+              <td><%= i.title %></td>
+              <td><%= i.qty %></td>
+              <td>$<%= ((i.qty*i.priceCents)/100).toFixed(2) %></td>
+              <td>
+                <form method="POST" action="/cart/remove/<%= i.productId %>">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="btn">Remove</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <div class="gl-shop-cart-summary">
+        <div class="gl-shop-subtotal">
+          Subtotal: <strong>$<%= (cart.subtotalCents/100).toFixed(2) %></strong>
+        </div>
+         <a class="btn" href="/checkout">Checkout (<%= cart.count %>)</a>
+      </div>
+    </div>
+  <% } %>
+</div>
+

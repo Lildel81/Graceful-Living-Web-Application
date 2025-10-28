@@ -5,12 +5,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>Services Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/carousel.css">
   <link rel="stylesheet" href="/css/carousel-mangement.css">
 </head>
 
 <body>
-    <h2>Manage Services</h2>
+
+  <h2>Manage Services</h2>
 
   <form action="/adminportal/contentmanagement/create" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -30,11 +32,11 @@
   <!-- New: upload -->
 
   <!-- Image upload -->
-<label for="image">Image</label>
+<label for="image">Image <span style="color: red;">*</label>
 <input
   id="image"
   type="file"
-  name="image"
+  name="imageUrl"
   accept="image/png, image/jpeg, image/webp, image/gif"
 />
 
@@ -48,7 +50,7 @@
 <!-- Optional validation message -->
 <p id="imageError" style="display:none; color:#b00020; margin-top:6px;"></p>
   
-  
+  <br>
   <button type="submit">Add Service</button>
 </form>
 
@@ -56,22 +58,41 @@
     <!-- CREATE A LIST TO SEE THE SERVICES IN MONGO-->
     <hr>
 
-     <ul>
-        <% services.forEach(service => { %>
-            <li>
-            <!--<img src="<%= service.imageUrl %>" width="100">-->
-            <strong><%= service.serviceName %></strong> - <%= service.serviceDescription %> - <%= service.buttonText %> - <%= service.buttonUrl %>
-            <!--
-            <a href="/adminportal/services/<%= service._id %>/edit">Edit</a>
-            <form action="/adminportal/services/<%= service._id %>/delete" method="POST" style="display:inline;">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
-                <button type="submit">Delete</button>
-            </form> -->
+    <table>
+      <!-- top row of table -->
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Button</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+    
+      <tbody>
+            <% services.forEach(service => { %>
+              <tr>
+                <td> <img src="<%= service.imageUrl %>" width="100"> </td>
+                <td> <%= service.serviceName %> </td>
+                <td> <%= service.serviceDescription %> </td>
+                <td> <a href="<%= service.buttonUrl %>" target="_blank"><%= service.buttonText %></a> </td>
+                <td> <a href="/adminportal/services/<%= service._id %>/edit">🖊️ Edit</a> </td>
 
-            </li>
-        <% }) %>
-    </ul>
+                <td>
+                  <form action="/adminportal/services/<%= service._id %>/delete" method="POST" style="display:inline;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
+                    <button type="submit">🗑️ Delete</button>
+                </form>
+                </td>
 
+              </tr>
+            <% }) %>
+      </tbody>
+
+    </table>
+
+    <!-- ASK TERRY WHAT THIS IS -->
     <script src="/js/service-image-preview.js" defer></script>
 
 </body>
