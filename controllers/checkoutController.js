@@ -1,6 +1,18 @@
 const Stripe = require('stripe');
 const Order = require('../models/order');
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// Oanh commented it out because it was causing an error when running the app
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Environment-based Stripe initialization
+// Development: Use fallback dummy key to prevent crashes
+// Production: Require actual STRIPE_SECRET_KEY environment variable
+const stripeKey = process.env.STRIPE_SECRET_KEY || (process.env.NODE_ENV === 'development' ? 'sk_test_dummy_key_for_development' : null);
+
+if (!stripeKey) {
+  throw new Error('STRIPE_SECRET_KEY environment variable is required in production');
+}
+
+const stripe = new Stripe(stripeKey);
 
 exports.getCheckout = (req, res) => {
   const cart = req.session.cart;
