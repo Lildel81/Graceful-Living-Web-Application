@@ -888,6 +888,28 @@ async function getChakraQuizResults(req, res, next){
   }
 }
 
+//delete from Chakra Quiz results 
+
+const postBulkDeleteChakraResults = async (req, res, next) => {
+   try {
+    console.log('[BULK DELETE] body:', req.body);        
+    let { ids } = req.body;
+
+    if (!ids) {
+      console.log('[BULK DELETE] No ids provided.');
+      return res.redirect('/clientmanagement/chakraquiz-results');
+    }
+    if (!Array.isArray(ids)) ids = [ids];
+
+    const result = await ChakraAssessment.deleteMany({ _id: { $in: ids } });
+    console.log('[BULK DELETE] deleteMany result:', result); // { acknowledged, deletedCount }
+
+    return res.redirect('/clientmanagement/chakraquiz-results');
+  } catch (err) {
+    console.error('[BULK DELETE] ERROR:', err);
+    next
+  }
+};
 
 
 const getReviewsView = async (req, res, next) => {
@@ -1046,5 +1068,6 @@ module.exports = {
   postDeleteClient,
   getPreQuizResults,
   getChakraQuizResults,
+  postBulkDeleteChakraResults, 
   router,
 };

@@ -1,3 +1,25 @@
+/* Add spacing to header*/
+:root { --nav-height: 72px; }  
+
+main.wrap {
+    padding-top: var(--nav-height);
+}
+
+/* Back button styling*/
+.page-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 12px;         
+}
+
+.btn {
+    font-weight: 600;          
+    font-size: .9rem;           
+}
+
+
 /* Body Styling */
 * { box-sizing: border-box; }
 body {
