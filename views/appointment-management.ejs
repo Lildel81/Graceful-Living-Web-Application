@@ -499,81 +499,110 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- End of content-left -->
 
-        <!-- ==========================================
+          <!-- ==========================================
                      TAB 6: CREATE APPOINTMENT
                      ========================================== -->
-        <div class="tab-content" id="create-appointment">
-          <div class="panel">
-            <h2>Create New Appointment</h2>
-            <p>Manually schedule an appointment on behalf of a client.</p>
+          <div class="tab-content" id="create-appointment">
+            <div class="panel">
+              <h2>Create New Appointment</h2>
+              <p>Manually schedule an appointment on behalf of a client.</p>
 
-            <form
-              id="adminCreateAppointmentForm"
-              action="/appointments/adminportal/create"
-              method="POST"
-            >
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <form
+                id="adminCreateAppointmentForm"
+                class="create-appointment-form"
+                action="/appointments/adminportal/create"
+                method="POST"
+              >
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-              <div class="form-group">
-                <label for="clientName">Client Name</label>
-                <input type="text" id="clientName" name="clientName" required />
-              </div>
+                <div class="form-grid">
+                  <!-- Client Name -->
+                  <div class="form-group">
+                    <label for="clientName">Client Name</label>
+                    <input
+                      type="text"
+                      id="clientName"
+                      name="clientName"
+                      required
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="clientEmail">Client Email</label>
-                <input
-                  type="email"
-                  id="clientEmail"
-                  name="clientEmail"
-                  required
-                />
-              </div>
+                  <!-- Client Email -->
+                  <div class="form-group">
+                    <label for="clientEmail">Client Email</label>
+                    <input
+                      type="email"
+                      id="clientEmail"
+                      name="clientEmail"
+                      required
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="clientPhone">Client Phone</label>
-                <input type="tel" id="clientPhone" name="clientPhone" />
-              </div>
+                  <!-- Client Phone (now required) -->
+                  <div class="form-group">
+                    <label for="clientPhone">Client Phone</label>
+                    <input
+                      type="tel"
+                      id="clientPhone"
+                      name="clientPhone"
+                      required
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="appointmentDate">Appointment Date</label>
-                <input
-                  type="date"
-                  id="appointmentDate"
-                  name="appointmentDate"
-                  required
-                />
-              </div>
+                  <!-- Appointment Date -->
+                  <div class="form-group">
+                    <label for="appointmentDate">Appointment Date</label>
+                    <input
+                      type="date"
+                      id="appointmentDate"
+                      name="appointmentDate"
+                      class="date-input"
+                      required
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="appointmentTime">Appointment Time</label>
-                <input
-                  type="time"
-                  id="appointmentTime"
-                  name="appointmentTime"
-                  required
-                />
-              </div>
+                  <!-- Appointment Time -->
+                  <div class="form-group">
+                    <label for="appointmentTime">Appointment Time</label>
+                    <input
+                      type="time"
+                      id="appointmentTime"
+                      name="appointmentTime"
+                      class="time-input"
+                      required
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="notes">Notes</label>
-                <textarea
-                  id="notes"
-                  name="notes"
-                  placeholder="Optional notes..."
-                ></textarea>
-              </div>
+                  <!-- Notes (optional) -->
+                  <div class="form-group full-width">
+                    <label for="notes"
+                      >Notes
+                      <span style="font-weight: 400; color: var(--text-muted)"
+                        >(optional)</span
+                      ></label
+                    >
+                    <textarea
+                      id="notes"
+                      name="notes"
+                      placeholder="Optional notes..."
+                    ></textarea>
+                  </div>
 
-              <button type="submit" class="gl-btn gl-btn-primary">
-                Create Appointment
-              </button>
-            </form>
+                  <!-- Submit Button -->
+                  <div class="submit-row full-width">
+                    <button type="submit" class="add-btn">
+                      Create Appointment
+                    </button>
+                  </div>
+                </div>
+              </form>
 
-            <div id="createAppointmentMessage" class="status-message"></div>
+              <div id="createAppointmentMessage" class="status-message"></div>
+            </div>
           </div>
         </div>
+        <!-- End of content-left -->
         <!-- ==========================================
                  RIGHT SIDEBAR
                  ========================================== -->
