@@ -52,7 +52,7 @@ const loginLimiter = rateLimit({
   skipSuccessfulRequests: true,
   keyGenerator: (req) => {
     const cleanUsername = DOMPurify.sanitize(req.body.username || '');
-    return `${req.ip}:${cleanUsername.toLowerCase()}`
+    return `${req.ip}:${cleanUsername.toLowerCase()}`;
   },
   handler: (req, res) => {
     return res.status(429).render('login', {
