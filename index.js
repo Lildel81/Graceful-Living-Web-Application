@@ -261,18 +261,23 @@ app.use((req, res, next) => {
 });
 
 app.use(['/application'], csrfProtection, (req, res, next) => {
-  res.locals.csrfToken = req.csrfToken(); // available to every render()
+  res.locals.csrfToken = req.csrfToken(); // This allows CSRF tokens  to access all redners in the application route
   next();
 });
 
 // Only here: pass the token to the view that has the form
 app.get("/application", csrfProtection, (req, res) => {
   req.session.appFlow = true; // touching the session triggers Set-Cookie: sid=...
-  res.render("prequiz/application");
+  res.render("prequiz/application",);
+});
+
+app.use(['/assessment'], csrfProtection, (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken(); // available to every render()
+  next();
 });
 
 app.get("/assessment", csrfProtection, (req, res) => {
-  res.render("quiz/assessment", { csrfToken: req.csrfToken() });
+  res.render("quiz/assessment");
 });
 
 const rateLimit = require("express-rate-limit");
