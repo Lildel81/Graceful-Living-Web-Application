@@ -8,6 +8,11 @@ const csrfProtection = require('../middleware/csrf');
 
 const router = express.Router();
 
+router.use(csrfProtection, (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 const createDOMPurify = require('dompurify')
 const { JSDOM } = require('jsdom')
 
@@ -54,7 +59,7 @@ const loginLimiter = rateLimit({
       ok: false,
       error: 'Too many failed login attempts. Try again in 15 minutes.',
       username: req.body.username || '',
-      //csrfToken: req.csrfToken(),          // <-- add token
+      csrfToken: res.locals.csrfToken,          // <-- add token
     });
   },
 });
@@ -67,7 +72,7 @@ router.get('/', csrfProtection, (req, res) => {
     ok: req.query.ok || false,
     error: null,
     username: '',
-    csrfToken: req.csrfToken(),            // <-- optional but safe
+    csrfToken: res.locals.csrfToken,            // <-- optional but safe
   });
 });
 
@@ -84,7 +89,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
       ok: false,
       error: 'Please fill in both fields.',
       username: req.body.username || '',
-      csrfToken: req.csrfToken(),          // <-- add token
+      csrfToken: res.locals.csrfToken,          // <-- add token
     });
   }
 
@@ -97,7 +102,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
         ok: false,
         error: 'Invalid username or password.',
         username: value.username,
-        csrfToken: req.csrfToken(),        // <-- add token
+        csrfToken: res.locals.csrfToken,        // <-- add token
       });
     }
 
@@ -107,7 +112,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
         ok: false,
         error: `Too many failed attempts. Try again in ${minutes} minute(s).`,
         username: value.username,
-        csrfToken: req.csrfToken(),        // <-- add token
+        csrfToken: res.locals.csrfToken,        // <-- add token
       });
     }
 
@@ -133,7 +138,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           ok: false,
           error: 'Too many failed attempts. Try again in 15 minutes.',
           username: value.username,
-          csrfToken: req.csrfToken(),      // <-- add token
+          csrfToken: res.locals.csrfToken,      // <-- add token
         });
       } else {
         await Passwd.updateOne(
@@ -144,7 +149,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           ok: false,
           error: 'Invalid username or password.',
           username: value.username,
-          csrfToken: req.csrfToken(),      // <-- add token
+          csrfToken: res.locals.csrfToken,      // <-- add token
         });
       }
     }
@@ -160,7 +165,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           ok: false,
           error: 'Session error. Please try again.',
           username: value.username,
-          csrfToken: req.csrfToken(),      // <-- add token
+          csrfToken: res.locals.csrfToken,      // <-- add token
         });
       }
 
@@ -176,7 +181,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
             ok: false,
             error: 'Session save error. Please try again.',
             username: value.username,
-            csrfToken: req.csrfToken(),    // <-- add token
+            csrfToken: res.locals.csrfToken,    // <-- add token
           });
         }
         return res.redirect(redirectTo);
@@ -188,7 +193,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
       ok: false,
       error: 'Unexpected error. Please try again.',
       username: req.body.username || '',
-      csrfToken: req.csrfToken(),          // <-- add token
+     csrfToken: res.locals.csrfToken,          // <-- add token
     });
   }
 });
