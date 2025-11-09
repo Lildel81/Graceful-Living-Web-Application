@@ -21,10 +21,24 @@ import os
 # ===================== Create Flask app =================================
 app = Flask(__name__)
 
-# Enable CORS
-# The web app runs on 1 port, this API runs on another (5001)
-# CORS tells Flask to allow requests from any origin (browser block cross-origin requests)
-CORS(app)
+# ===================== Configure CORS for Security =======================
+# CORS (Cross-Origin Resource Sharing) controls which domains can access this API
+# In development: Allow all origins for easy testing
+# In production: Only allow requests from our deployed web app for security
+
+if os.environ.get('NODE_ENV') == 'development':
+    # Development mode - allow all origins
+    CORS(app)
+    print("CORS: Allowing all origins (development mode)")
+else:
+    # Production mode - only allow your specific web app URLs
+    allowed_origins = [
+        "https://graceful-living-web-application.onrender.com",  # Render URL
+        "https://coachshante.com",  # Custom domain
+        "https://www.coachshante.com"  # Custom domain with www
+    ]
+    CORS(app, origins=allowed_origins)
+    print(f"CORS: Restricted to {len(allowed_origins)} allowed origins (production mode)")
 
 try:
     predictor = ConversionPredictorService()
@@ -138,6 +152,9 @@ def model_info():
 
 # =================== Start the API server =============================
 if __name__ == '__main__':
+    # Get port from environment variable (Render sets this) or default to 5001
+    port = int(os.environ.get('PORT', 5001))
+    
     # Print info about endpoints
     print("\n" + "="*60)
     print("CONVERSION PREDICTION API")
@@ -147,12 +164,12 @@ if __name__ == '__main__':
     print("  POST /predict         - Single prediction")
     print("  POST /predict/batch   - Batch predictions")
     print("  GET  /model/info      - Model information")
-    print("\nStarting server on http://localhost:5001")
+    print(f"\nStarting server on http://0.0.0.0:{port}")
     print("="*60 + "\n")
 
     app.run(
         host='0.0.0.0',     # Listen to all network interfaces
-        port=5001,          # Run on port 5001
+        port=port,          # Use environment PORT or default 5001
         debug=False         # IMPORTANT: set to True during dev, set to False in Prod
     )
 
