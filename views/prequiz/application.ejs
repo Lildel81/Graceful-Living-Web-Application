@@ -28,7 +28,7 @@
 
           
             <!--CONTACT NUMBER-->
-            <label for="contactNumber">Please provide your contact number:<span class="note"> (Only used for appointment-related communications.)</span></label><br>
+            <label for="contactNumber">Please provide your contact number:<span class="required"> (Only used for appointment-related communications.) *</span></label><br>
             <input type="text" id="contactNumber" name="contactNumber" placeholder="(###) ###-####" required><br><br>
             
             <!--AGE-->
@@ -62,7 +62,7 @@
 
             <!--CURRENT HEALER QUESTION-->
           <fieldset>
-              <legend>Have you worked with an energy healer, life coach, or holistic practitioner before?</legend>
+              <legend>Have you worked with an energy healer, life coach, or holistic practitioner before?<span class="required"> *</span></legend>
               <label><input type="radio" name="workedWithPractitioner" value="Currently working with one"> Yes, currently working with one</label>
               <label><input type="radio" name="workedWithPractitioner" value="In the past"> Yes, in the past</label>
               <label><input type="radio" name="workedWithPractitioner" value="First time"> No, this is my first time</label>
@@ -74,7 +74,7 @@
             
             <!--FAMILIAR QUESITON-->
             <fieldset>
-              <legend>Which of the following are you familiar with? <span class="note">(Check all that apply)</span></legend>
+              <legend>Which of the following are you familiar with? <span class="required"> *</span></legend>
               <label><input type="checkbox" name="familiarWith" value="Kundalini Yoga"> Kundalini Yoga</label>
               <label><input type="checkbox" name="familiarWith" value="Sound Baths"> Sound Baths</label>
               <label><input type="checkbox" name="familiarWith" value="Life Coaching"> Life Coaching</label>
@@ -84,7 +84,7 @@
 
             
             <!--PAST EXPERIENCE-->
-            <label for="experience">If you selected any practices above, please share a little about your experience.What did you notice or gain from them?:</label><br>
+            <label for="experience">If you selected any practices above, please share a little about your experience.What did you notice or gain from them? If you answered "None" enter "N/A" in the field below:<span class="required"> *</span></label><br>
             <textarea id="experience" name="experience" rows="4" placeholder="What did you notice or gain from them, if anything?"></textarea><br><br>
 
             <!--GOALS-->
@@ -104,6 +104,7 @@
 
             <button type="submit" class="submit-btn">Submit</button>
       </form>
+      <p><span class="required"> *</span> indicates required fields</p>
    </div>
   </main>
 

@@ -32,7 +32,7 @@ const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
 
 const app = express();
-
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -102,7 +102,7 @@ app.use(
 
 const isProd = process.env.NODE_ENV === "production";
 
-app.set("trust proxy", 1);
+
 app.use(
   session({
     name: "sid",
@@ -200,14 +200,24 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(['/application'], csrfProtection, (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken(); // This allows CSRF tokens  to access all redners in the application route
+  next();
+});
+
 // Only here: pass the token to the view that has the form
 app.get("/application", csrfProtection, (req, res) => {
   req.session.appFlow = true; // touching the session triggers Set-Cookie: sid=...
-  res.render("prequiz/application", { csrfToken: req.csrfToken() });
+  res.render("prequiz/application",);
+});
+
+app.use(['/assessment'], csrfProtection, (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken(); // available to every render()
+  next();
 });
 
 app.get("/assessment", csrfProtection, (req, res) => {
-  res.render("quiz/assessment", { csrfToken: req.csrfToken() });
+  res.render("quiz/assessment");
 });
 
 const rateLimit = require("express-rate-limit");

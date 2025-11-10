@@ -38,7 +38,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "start:ml-api-dev": "cd ml_model && source venv/bin/activate && python ml_api.py",
+    "start:ml-api-prod": "cd ml_model && source venv/bin/activate && gunicorn -c gunicorn_config.py ml_api:app",
+    "start:ml-api": "./ml_model/start_production.sh"
   },
   "keywords": [],
   "author": "",
