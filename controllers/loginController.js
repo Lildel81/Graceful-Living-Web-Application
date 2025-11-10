@@ -15,7 +15,7 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 const DUMMY_BCRYPT_HASH = '$2b$12$C0M7X0I1k2aUPq2m4i2WfOo5sM0m2kG1VhSWas6yOqB0W3zJ5r0H6';
-app.set("trust proxy", 1);
+
 
 /* ---------- model ---------- */
 const passwdSchema = new mongoose.Schema({
