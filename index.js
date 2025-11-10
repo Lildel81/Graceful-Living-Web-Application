@@ -35,7 +35,7 @@ const homeQuoteRoutes = require('./routes/home-quote-routes');
 
 
 const app = express();
-
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -107,7 +107,7 @@ app.use(
 
 const isProd = process.env.NODE_ENV === "production";
 
-app.set("trust proxy", 1);
+
 app.use(
   session({
     name: "sid",
@@ -260,10 +260,15 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(['/application'], csrfProtection, (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken(); // available to every render()
+  next();
+});
+
 // Only here: pass the token to the view that has the form
 app.get("/application", csrfProtection, (req, res) => {
   req.session.appFlow = true; // touching the session triggers Set-Cookie: sid=...
-  res.render("prequiz/application", { csrfToken: req.csrfToken() });
+  res.render("prequiz/application");
 });
 
 app.get("/assessment", csrfProtection, (req, res) => {

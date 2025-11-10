@@ -124,7 +124,7 @@ router.post("/user-login", csrfProtection, async (req, res) => {
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).render("user-login", csrfProtection,{ 
+      return res.status(401).render("user-login",{ 
         csrfToken: req.csrfToken(),
         error: "Invalid email or password", 
         email 
