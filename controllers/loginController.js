@@ -8,11 +8,6 @@ const csrfProtection = require('../middleware/csrf');
 
 const router = express.Router();
 
-router.use(csrfProtection, (req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
-
 const createDOMPurify = require('dompurify')
 const { JSDOM } = require('jsdom')
 
@@ -20,6 +15,7 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
 const DUMMY_BCRYPT_HASH = '$2b$12$C0M7X0I1k2aUPq2m4i2WfOo5sM0m2kG1VhSWas6yOqB0W3zJ5r0H6';
+app.set("trust proxy", 1);
 
 
 /* ---------- model ---------- */
@@ -53,14 +49,14 @@ const loginLimiter = rateLimit({
   skipSuccessfulRequests: true,
   keyGenerator: (req) => {
     const cleanUsername = DOMPurify.sanitize(req.body.username || '');
-    return `${req.ip}:${cleanUsername.toLowerCase()}`
+    return '${req.ip}:${cleanUsername.toLowerCase()}'
   },
   handler: (req, res) => {
     return res.status(429).render('login', {
       ok: false,
       error: 'Too many failed login attempts. Try again in 15 minutes.',
       username: req.body.username || '',
-      //csrfToken: res.locals.csrfToken,          // <-- add token
+      //csrfToken: req.csrfToken(),          // <-- add token
     });
   },
 });
@@ -73,7 +69,7 @@ router.get('/', csrfProtection, (req, res) => {
     ok: req.query.ok || false,
     error: null,
     username: '',
-    csrfToken: res.locals.csrfToken,            // <-- optional but safe
+    csrfToken: req.csrfToken(),            // <-- optional but safe
   });
 });
 
@@ -90,7 +86,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
       ok: false,
       error: 'Please fill in both fields.',
       username: req.body.username || '',
-      csrfToken: res.locals.csrfToken,          // <-- add token
+      csrfToken: req.csrfToken(),          // <-- add token
     });
   }
 
@@ -103,7 +99,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
         ok: false,
         error: 'Invalid username or password.',
         username: value.username,
-        csrfToken: res.locals.csrfToken,        // <-- add token
+        csrfToken: req.csrfToken(),        // <-- add token
       });
     }
 
@@ -113,7 +109,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
         ok: false,
         error: `Too many failed attempts. Try again in ${minutes} minute(s).`,
         username: value.username,
-        csrfToken: res.locals.csrfToken,        // <-- add token
+        csrfToken: req.csrfToken(),        // <-- add token
       });
     }
 
@@ -139,7 +135,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           ok: false,
           error: 'Too many failed attempts. Try again in 15 minutes.',
           username: value.username,
-          csrfToken: res.locals.csrfToken,      // <-- add token
+          csrfToken: req.csrfToken(),      // <-- add token
         });
       } else {
         await Passwd.updateOne(
@@ -150,7 +146,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           ok: false,
           error: 'Invalid username or password.',
           username: value.username,
-          csrfToken: res.locals.csrfToken,      // <-- add token
+          csrfToken: req.csrfToken(),      // <-- add token
         });
       }
     }
@@ -166,7 +162,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
           ok: false,
           error: 'Session error. Please try again.',
           username: value.username,
-          csrfToken: res.locals.csrfToken,      // <-- add token
+          csrfToken: req.csrfToken(),      // <-- add token
         });
       }
 
@@ -182,7 +178,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
             ok: false,
             error: 'Session save error. Please try again.',
             username: value.username,
-            csrfToken: res.locals.csrfToken,    // <-- add token
+            csrfToken: req.csrfToken(),    // <-- add token
           });
         }
         return res.redirect(redirectTo);
@@ -194,7 +190,7 @@ const cleanPassword = DOMPurify.sanitize(req.body.password || '');
       ok: false,
       error: 'Unexpected error. Please try again.',
       username: req.body.username || '',
-      csrfToken: res.locals.csrfToken,          // <-- add token
+      csrfToken: req.csrfToken(),          // <-- add token
     });
   }
 });
