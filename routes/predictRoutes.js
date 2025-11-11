@@ -1,73 +1,46 @@
 const express = require("express");
 const router = express.Router();
-const { spawn } = require("child_process");
-const path = require("path");
-const fs = require("fs");
+const axios = require("axios");
 
-// --- detect correct Python binary (macOS/Linux/Windows compatible) ---
-const venvPython = path.join(__dirname, "../python/venv/bin/python");
-const winPython = path.join(__dirname, "../python/venv/Scripts/python.exe");
-
-// prefer venv Python, else fallback to global python3
-const pythonCmd = fs.existsSync(venvPython)
-  ? venvPython
-  : fs.existsSync(winPython)
-  ? winPython
-  : "python3";
+// point to your Flask service (env var OR default)
+const ML_API_URL =
+  process.env.ML_API_URL || "http://127.0.0.1:5000/api/predict_trend";
+const ML_HEALTH_URL =
+  process.env.ML_HEALTH_URL || "http://127.0.0.1:5000/health";
 
 router.get("/adminportal/predict-chakra", async (req, res) => {
-  const scriptPath = path.join(__dirname, "../python/predict_trend.py");
+  try {
+    // optional: quick health check so we can surface a nice error
+    try {
+      const health = await axios.get(ML_HEALTH_URL, { timeout: 2000 });
+      if (health.data?.status !== "ok") {
+        throw new Error("Flask ML API not ready");
+      }
+    } catch (e) {
+      return res.render("chakra-forecast", {
+        errorMessage: "ML service unavailable (health check failed).",
+        predicted: null,
+        counts: null,
+        layout: false,
+      });
+    }
 
-  if (!fs.existsSync(scriptPath)) {
+    // fetch forecast JSON from Flask
+    const { data } = await axios.get(ML_API_URL, {
+      timeout: 10000,
+      headers: { Accept: "application/json" },
+    });
+
     return res.render("chakra-forecast", {
-      errorMessage: "Prediction script not found.",
-      predicted: null,
-      counts: null,
+      errorMessage: null,
+      predicted: data?.predicted_next_month || null,
+      counts: data?.forecast_counts || null,
       layout: false,
     });
-  }
-
-  try {
-    const py = spawn(pythonCmd, [scriptPath]);
-    let out = "";
-    let err = "";
-
-    py.stdout.on("data", (data) => (out += data.toString()));
-    py.stderr.on("data", (data) => (err += data.toString()));
-
-    py.on("close", (code) => {
-      if (code !== 0) {
-        console.error("Python error:", err || `Exit code ${code}`);
-        return res.render("chakra-forecast", {
-          errorMessage: "Prediction failed.",
-          predicted: null,
-          counts: null,
-          layout: false,
-        });
-      }
-
-      try {
-        const json = JSON.parse(out);
-        res.render("chakra-forecast", {
-          errorMessage: null,
-          predicted: json.predicted_next_month,
-          counts: json.forecast_counts,
-          layout: false,
-        });
-      } catch (e) {
-        console.error("Invalid JSON:", out);
-        res.render("chakra-forecast", {
-          errorMessage: "Invalid JSON from Python.",
-          predicted: null,
-          counts: null,
-          layout: false,
-        });
-      }
-    });
-  } catch (e) {
-    console.error("Error launching prediction:", e);
-    res.render("chakra-forecast", {
-      errorMessage: "Error launching prediction.",
+  } catch (err) {
+    console.error("Error fetching ML forecast:", err.message);
+    return res.render("chakra-forecast", {
+      errorMessage: "Prediction failed.",
       predicted: null,
       counts: null,
       layout: false,
