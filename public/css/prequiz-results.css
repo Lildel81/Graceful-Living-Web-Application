@@ -116,6 +116,33 @@ h1 {
 .btn.ghost { background: transparent; color: #1d8888; }
 
 
+/* Bulk delete column & actions */
+th.select{
+    text-align: left;
+}
+
+.select-all{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.actions.right {
+    justify-content: flex-end;
+}
+
+.btn.delete {
+    background: #b00020;
+    border-color: #b00020;
+    color: #fff;
+}
+.btn.delete:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
 /* Table Display  */
 .table-wrap { overflow: auto; }
 table { width: 100%; border-collapse: collapse; background: #fff; }

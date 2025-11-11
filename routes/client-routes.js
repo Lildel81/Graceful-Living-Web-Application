@@ -26,7 +26,8 @@ const {
   postDeleteClient,
   getChakraQuizResults, 
   getPreQuizResults,
-  postBulkDeleteChakraResults
+  postBulkDeleteChakraResults,
+  postBulkDeletePreQuizResults,
 } = require('../controllers/clientController');
 
 const {
@@ -80,6 +81,7 @@ router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagem
 router.get('/clientmanagement', requireAdmin, getClientManagementView);
 router.get('/clientmanagement/prequiz-results', requireAdmin, getPreQuizResults);
 router.get('/clientmanagement/chakraquiz-results', requireAdmin, getChakraQuizResults);
+
 //router.get('/clientmanagement/prequiz-results', requireAdmin, getPreQuizResults);
 //router.get('/clientmanagement/chakraquiz-results', requireAdmin, getChakraQuizResults);
 
@@ -147,6 +149,28 @@ router.post('/clientmanagement/clients/:id/delete', requireAdmin, async (req, re
     return res.redirect('/clientmanagement?error=delete');
   }
 });
+
+
+/* -------------------- Pre Quiz Results (delete) -------------------- */
+router.post(
+  '/clientmanagement/prequiz-results/bulk-delete',
+  requireAdmin,
+  postBulkDeletePreQuizResults
+);
+router.post('/clientmanagement/clients/:id/delete', requireAdmin, postDeleteClient);
+
+router.post('/clientmanagement/clients/:id/delete', requireAdmin, async (req, res) => {
+  console.log('[CLIENT DELETE] id:', req.params.id);
+  try {
+    await Client.findByIdAndDelete(req.params.id);
+    return res.redirect('/clientmanagement?deleted=1');
+  } catch (e) {
+    console.error('[CLIENT DELETE] ERROR:', e);
+    return res.redirect('/clientmanagement?error=delete');
+  }
+});
+
+
 
 module.exports = {
   routes: router,
