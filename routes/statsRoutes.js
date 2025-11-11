@@ -435,10 +435,21 @@ function prepareChartData(assessments) {
       datasets:[{
         label:"Focus Chakra Distribution",
         data: Object.values(stats.focusChakraDistribution),
-        backgroundColor:[
-          "rgba(195,20,50,0.7)","rgba(243,115,53,0.7)","rgba(253,203,110,0.7)",
-          "rgba(0,184,148,0.7)","rgba(9,132,227,0.7)","rgba(108,92,231,0.7)","rgba(253,121,168,0.7)"
-        ]
+        backgroundColor: Object.keys(stats.focusChakraDistribution).map(key => {
+          // Map each chakra key to its specific color
+          const colorMap = {
+            rootChakra: "rgba(195,20,50,0.7)",           // Red
+            sacralChakra: "rgba(243,115,53,0.7)",        // Orange
+            solarPlexusChakra: "rgba(253,203,110,0.7)",  // Yellow
+            heartChakra: "rgba(0,184,148,0.7)",          // Green
+            throatChakra: "rgba(9,132,227,0.7)",         // Blue
+            thirdEyeChakra: "rgba(108,92,231,0.7)",      // Indigo
+            crownChakra: "rgba(253,121,168,0.7)"         // Violet
+          };
+          return colorMap[key] || "rgba(128,128,128,0.7)"; // Gray fallback
+        }),
+        borderColor: '#fff',
+        borderWidth: 2
       }]
     },
     archetypeData:{

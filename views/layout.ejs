@@ -29,6 +29,9 @@
             <% if (user) { %>
                 <li><a href="/user-dashboard" class="btn">Dashboard</a></li>
                 <li><a href="/logout" class="btn">Logout</a></li>
+            <% } else if (admin) { %>
+                <li><a href="/adminportal" class="btn">Admin Portal</a></li>
+                <li><a href="/logout" class="btn">Logout</a></li>
             <% } else { %>
                 <li><a href="/user-login" class="btn">Login</a></li>
             <% } %>

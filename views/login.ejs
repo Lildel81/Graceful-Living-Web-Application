@@ -5,43 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Login</title>
     <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/user-login.css">
 </head>
-<body>
-  <h1> Admin Portal Login</h1>
-    <form id="login-form" action="/login" method = "POST">
+<body class="login-body">
+  <main class="login-page-wrapper">
+  <div class="login-page">
+    <h1> Admin Portal Login</h1>
+      <form id="login-form" action="/login" method = "POST" novalidate>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-     
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label>Username 
+          <input 
+            type="text" 
+            id="username" 
+            class="username-box" 
+            name="username" 
+            autocomplete="username" 
+            autocapitalize="none"
+            spellcheck="false"
+            required 
+            maxlength="31"
+            />
+          </label>
 
-      <label>Username 
-        <input 
-          type="text" 
-          id="username" 
-          class="username-box" 
-          name="username" 
-          autocomplete="username" 
-          autocapitalize="none"
-          spellcheck="false"
-          required 
-          maxlength="31"
-          />
-        </label>
+        <label>Password 
+          <input 
+            type="password" 
+            id="password" 
+            class="password-box" 
+            name="password" 
+            autocomplete="current-password" 
+            required
+            maxlength="72"
+            />
+          </label>
 
-      <label>Password 
-        <input 
-          type="password" 
-          id="password" 
-          class="password-box" 
-          name="password" 
-          autocomplete="current-password" 
-          required
-          maxlength="72"
-          />
-        </label>
-
-      <button class="login_button" type="submit">Log in</button>
-    </form>
+        <button class="login_button" type="submit">Log in</button>
+      </form>
     <div id="msg" role="status" aria-live="polite">
     <% if (typeof ok !== 'undefined' && ok) { %>
     <p class="success"> Saved! You can now proceed.</p>
@@ -56,9 +56,11 @@
     <% } %>
      </div>
     </div>
-    <a id="forgot-password" href="#" style="font-size:0.9rem;">Forgot password?</a>
+    <div class="signup-link">
+      <a id="forgot-password" href="#" style="font-size:0.9rem;">Forgot password?</a>
+    </div>
     <div id="reset-status" style="margin-top:8px;"></div>
-
+  </div>
     
         <script src="/js/mail.js" defer></script>
 

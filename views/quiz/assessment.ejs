@@ -30,9 +30,15 @@
         action="/assessment/save"
         method="POST"
         novalidate
-        
       >
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <% if (session && session.isAdmin) { %>
+          <div class="admin-tools">
+            <button id="autoFillChakraBtn" type="button" class="chakra-autofill-btn">Auto-Fill Answers</button>
+            <button type="submit" class="submit-btn">Submit</button>
+          </div>
+        <% } %>
 
         <!-- getting to know you questions -->
         <div
@@ -124,7 +130,7 @@
           </fieldset>
 
           <label for="jobTitle"
-            >What is your job title: <span class="required">*</span></label
+            >What is your job title? <span class="required">*</span></label
           >
           <input type="text" id="jobTitle" name="jobTitle" required />
 
@@ -248,21 +254,17 @@
               Spiritual (disconnection, lack of clarity, seeking purpose)</label
             >
             <label>
-              <input
-                type="checkbox"
-                name="challenges"
-                value="other"
-                id="challengesOther"
-              />
+              <input type="checkbox" id="challengesOther" name="challenges" value="other"
+                  data-other-input="#challengeOtherText">
               Other:
-              <input
-                type="text"
-                name="challengeOtherText"
-                id="challengeOtherText"
-                placeholder="Please specify"
-                disabled
-              />
             </label>
+            <input
+              type="text"
+              name="challengeOtherText"
+              id="challengeOtherText"
+              placeholder="Please specify"
+              disabled
+            />
           </fieldset>
 
           <button type="button" class="next-btn">Continue to Assessment</button>
@@ -1170,6 +1172,29 @@
               Excellent</label
             >
           </fieldset>
+
+          <fieldset>
+            <legend>
+              What is the alignment between how you feel, what you say and how you live?
+            </legend>
+            <label
+              ><input type="radio" name="throat_alignment" value="Poor" required />
+              Poor</label
+            >
+            <label
+              ><input type="radio" name="throat_alignment" value="Fair" />
+              Fair</label
+            >
+            <label
+              ><input type="radio" name="throat_alignment" value="Good" />
+              Good</label
+            >
+            <label
+              ><input type="radio" name="throat_alignment" value="Excellent" />
+              Excellent</label
+            >
+          </fieldset>
+
 
           <button type="button" class="prev-btn">Previous</button>
           <button type="button" class="next-btn">Next</button>
@@ -2262,5 +2287,21 @@
         </div>
       </form>
     </main>
+    <!-- Validation Modal -->
+    <div id="validationModal" class="validation-modal" style="display: none;">
+      <div class="validation-modal-content">
+        <div class="validation-modal-header">
+          <h2>Please Complete Required Fields</h2>
+          <button class="validation-modal-close" type="button">&times;</button>
+        </div>
+        <div class="validation-modal-body">
+          <p>The following fields need to be completed:</p>
+          <ul id="validationErrorList"></ul>
+        </div>
+        <div class="validation-modal-footer">
+          <button class="validation-modal-btn" type="button">Ok</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

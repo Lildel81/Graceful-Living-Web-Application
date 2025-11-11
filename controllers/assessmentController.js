@@ -82,6 +82,7 @@ function groupAnswers(body) {
     throat_listen: body.throat_listen,
     throat_no: body.throat_no,
     throat_trust: body.throat_trust,
+    throat_alignment: body.threat_alignment,
   };
 
   const thirdEye = {
@@ -161,6 +162,7 @@ function groupAnswers(body) {
 
 exports.saveAssessment = async (req, res) => {
   try {
+    console.log("BODY RECEIVED:", req.body);
     console.log("[ASSESSMENT] POST /assessment/save reached");
     const payload = groupAnswers(req.body);
     console.log(

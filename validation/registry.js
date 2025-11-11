@@ -100,7 +100,7 @@ module.exports = {
       // heart
       'heart_express','heart_joy','heart_receive','heart_forgive','heart_selflove',
       // throat
-      'throat_listen','throat_no','throat_trust',
+      'throat_listen','throat_no','throat_trust','throat_alignment',
       // third eye
       'thirdEye_reflection','thirdEye_synchronicities','thirdEye_dreams','thirdEye_intuition',
       // crown

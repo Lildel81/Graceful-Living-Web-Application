@@ -116,13 +116,16 @@ function determineArchetype(lifeQuadrantScores) {
   return selected;
 }
 
-// determine weakest chakra
+// determine weakest chakra (as percentage of max possible)
 function findFocusChakra(results) {
-  let minTotal = Infinity,
+  let minPercentage = Infinity,
     focusChakra = "";
   Object.entries(results).forEach(([chakra, data]) => {
-    if (data.total < minTotal) {
-      minTotal = data.total;
+    const questionCount = Object.keys(data.questions).length;
+    const maxPossible = questionCount * 3;
+    const percentage = (data.total / maxPossible) * 100;
+    if (percentage < minPercentage) {
+      minPercentage = percentage;
       focusChakra = chakra;
     }
   });
@@ -184,6 +187,7 @@ router.post("/save", async (req, res) => {
         throat_listen: req.body.throat_listen,
         throat_no: req.body.throat_no,
         throat_trust: req.body.throat_trust,
+        throat_alignment: req.body.throat_alignment,
       }),
       thirdEyeChakra: scoreAnswers({
         thirdEye_reflection: req.body.thirdEye_reflection,
@@ -216,7 +220,11 @@ router.post("/save", async (req, res) => {
         0
       );
       const avg = total / Object.keys(questions).length;
-      results[section] = { total, average: avg.toFixed(2) };
+      results[section] = { 
+        questions: questions,
+        total, 
+        average: avg.toFixed(2) 
+      };
     });
 
     // score life quadrants

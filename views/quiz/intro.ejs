@@ -27,8 +27,8 @@
       <p><u>The Energy Leak Assessment</u> is made up of 2 parts: <em>Chakras</em> and the <em>Four Major Life Quadrants</em> <br>
       Each Part has Sections:</p>
 
-      <p><em>Seven Chakras</em> = Sections 3-9 <br>
-      <em>Four Major Life Quadrants</em> = Sections 10-14</p>
+      <p><em>Seven Chakras</em> = Sections 2-8 <br>
+      <em>Four Major Life Quadrants</em> = Sections 10-13</p>
 
       <p>Completion should take between 10-15 minutes as all Assessment questions are multiple choice.</p>
 
@@ -73,7 +73,10 @@
           <input type="checkbox" id="terms-checkbox" disabled>
           <label for="terms-checkbox">I have read and agree to the Terms &amp; Conditions</label>
         </div>
-        <button id="continue-btn" type="button" class="btn-next" style="width:100%;" disabled>Continue</button>
+        <form action="/intro/accept-terms" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button id="continue-btn" type="submit" class="btn-next" disabled>I Accept</button>
+        </form>
         <button id="close-modal-btn" type="button" style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.2em;cursor:pointer;" aria-label="Close">&times;</button>
       </div>
     </div>

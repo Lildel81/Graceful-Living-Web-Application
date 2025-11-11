@@ -160,7 +160,7 @@ function createCharts(chartData) {
         responsive: true,
         maintainAspectRatio: true,
         scales: {
-          y: { beginAtZero: true, max: 21 }
+          y: { beginAtZero: true, max: 15 }
         },
         plugins: { legend: { display: false } }
       }
@@ -296,26 +296,16 @@ function createCharts(chartData) {
 
   // Healthcare Worker Pie Chart
   const hcCtx = document.getElementById('healthcareChart');
-  if (hcCtx && chartData.healthcareData?.labels?.length) {
+  if (hcCtx && chartData.healthcareData && chartData.healthcareData?.labels?.length) {
     currentCharts.healthcare = new Chart(hcCtx, {
-      type: 'doughnut',
+      type: 'bar',
       data: chartData.healthcareData,
       options: {
+        indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: true,
-        plugins: {
-          legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 15 } },
-          tooltip: {
-            callbacks: {
-              label: (ctx) => {
-                const arr = Array.isArray(ctx.dataset?.data) ? ctx.dataset.data : [];
-                const total = arr.reduce((a,b)=>a+b,0) || 0;
-                const pct = total ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
-                return `${ctx.label}: ${ctx.parsed} (${pct}%)`;
-              }
-            }
-          }
-        }
+        scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } },
+        plugins: { legend: { display: false } }
       }
     });
   }
