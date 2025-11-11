@@ -30,13 +30,18 @@ const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
+const footerRoutes = require('./routes/footer-routes');
+const homeQuoteRoutes = require('./routes/home-quote-routes');
+
 
 const app = express();
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.set('query parser', 'extended');
 app.use(expressLayouts);
+
 
 app.use(
   helmet({
@@ -125,9 +130,26 @@ app.use(
 //   next();
 // });
 
-app.use(hpp());
+//app.use(hpp());
 app.use(mongoSanitize());
-app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+//app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+
+// for delete 
+app.use(hpp({
+  whitelist: [
+    // bulk delete
+    'ids', 'ids[]',
+
+    // your filters that can be arrays
+    'familiarWith', 'familiarWith[]',
+    'challenges', 'challenges[]',     
+    'focusChakra', 'focusChakra[]',
+    'archetype', 'archetype[]',
+
+    // csrf
+    '_csrf'
+  ]
+}));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // ✅ Allow same-origin iframing ONLY for the testimonials manager pages
@@ -182,6 +204,41 @@ app.use(async (req, res, next) => {
   next();
 });
 
+
+// load contact content on the footer 
+const Footer = require('./models/footer');
+
+app.use(async (req, res, next) => {
+  try {
+    const s = await Footer.findOne().lean();
+    res.locals.footerContact = s ? {
+      phone: s.phone || '',
+      facebookUrl: s.facebookUrl || '',
+      facebookLabel: s.facebookLabel || 'Facebook',
+      instagramUrl: s.instagramUrl || '',
+      instagramLabel: s.instagramLabel || 'Instagram',
+    } : {};
+  } catch (err) {
+    console.error('Error loading footer contact:', err);
+    res.locals.footerContact = {};
+  }
+  next();
+});
+
+
+// load the quote on the homepage
+const HomeQuote = require('./models/homeQuote');
+
+app.use(async (req, res, next) => {
+  try {
+    const quote = await HomeQuote.findOne().lean();
+    res.locals.homeQuote = quote || { quoteText: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”' };
+  } catch {
+    res.locals.homeQuote = { quoteText: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”' };
+  }
+  next();
+});
+
 app.use(cookieParser(process.env.SESSION_SECRET || "dev-secret"));
 
 const csrfProtection = csurf({
@@ -193,6 +250,9 @@ const csrfProtection = csurf({
     path: "/",
   },
 });
+
+// for delete 
+app.use(express.urlencoded({ extended: true }));
 
 // middleware to make user available in all views (for nav bar)
 app.use((req, res, next) => {
@@ -330,6 +390,8 @@ const predictRoutes = require("./routes/predictRoutes");
 app.use("/", predictRoutes);
 
 app.use("/", zoomIntegrations);
+app.use(footerRoutes);
+app.use(homeQuoteRoutes);
 
 app.listen(config.port, () =>
   winston.info("App is listening on http://localhost:" + config.port)

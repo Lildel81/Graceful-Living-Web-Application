@@ -76,7 +76,7 @@
                 <% const fam = familiarWith || []; %>
                 <% ['Kundalini Yoga','Sound Baths','Life Coaching','Emotional Freedom Technique','None of the above'].forEach(opt => { %>
                     <label class="cb">
-                    <input type="checkbox" name="familiarWith" value="<%= opt %>" <%= fam.includes(opt)?'checked':'' %> />
+                    <input type="checkbox" name="familiarWith[]" value="<%= opt %>" <%= fam.includes(opt)?'checked':'' %> />
                     <span><%= opt %></span>
                     </label>
                 <% }) %>
@@ -91,7 +91,7 @@
                 <% const ch = challenges || []; %>
                 <% ['Physical','Emotional','Mental','Spiritual','Other'].forEach(opt => { %>
                     <label class="cb">
-                    <input type="checkbox" name="challenges" value="<%= opt %>" <%= ch.includes(opt)?'checked':'' %> />
+                    <input type="checkbox" name="challenges[]" value="<%= opt %>" <%= ch.includes(opt)?'checked':'' %> />
                     <span><%= opt %></span>
                     </label>
                 <% }) %>
@@ -149,7 +149,7 @@
             <!-- Table -->
         <section class="card">
             <form id="bulkDeleteForm" method="post" action="/clientmanagement/chakraquiz-results/bulk-delete">
-            <div class="action right">
+            <div class="actions right">
                 <button id="deleteBtn" class="btn delete" type="submit" disabled>Delete Selected</button>
             </div>
             
@@ -158,7 +158,10 @@
                     <thead>
                         <tr>
                         <th class="select">
-                            <input type="checkbox" id="selectAll" aria-label="Select all rows">
+                            <label for="selectAll" class="sellect-all">
+                                Select All<br>
+                                <input type="checkbox" id="selectAll"> 
+                            </label>
                         </th>
                         <th>Date</th>
                         <th>Full Name</th>
@@ -185,7 +188,7 @@
                         <% rows.forEach(r => { %>
                         <tr>
                             <td class="select">
-                                <input type="checkbox" name="ids" value="<%= r._id %>" aria-label="Select row for <%= r.fullName %>">
+                                <input type="checkbox" name="ids[]" value="<%= r._id %>" aria-label="Select row for <%= r.fullName %>">
                             </td>
                             <td><%= new Date(r.createdAt).toLocaleDateString() %></td>
                             <td><%= r.fullName %></td>
@@ -201,6 +204,7 @@
                             <td><%= (r.challenges||[]).join(', ') %></td>
                             <td class="wrap"><%= r.goals %></td>
                             <td class="wrap"><%= r.experience || '—' %></td>
+
 
                             <!-- Focus Chakra & Archetype Results -->
                              <td> 

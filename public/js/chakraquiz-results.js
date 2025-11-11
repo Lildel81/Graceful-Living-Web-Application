@@ -17,12 +17,12 @@
     document.addEventListener('DOMContentLoaded', fn);
   }
   ready(function () {
-    const bulkForm = document.getElementById('bulkDeleteForm');   // <-- id matches EJS
+    const bulkForm = document.getElementById('bulkDeleteForm');  
     const selectAll = document.getElementById('selectAll');
     const deleteBtn = document.getElementById('deleteBtn');
     if (!bulkForm) return;
 
-    const rowChecks = () => Array.from(bulkForm.querySelectorAll('input[name="ids"]'));
+    const rowChecks = () => Array.from(bulkForm.querySelectorAll('input[name="ids[]"]'));
 
     function updateBtn() {
       deleteBtn.disabled = !rowChecks().some(cb => cb.checked);
@@ -32,7 +32,7 @@
       updateBtn();
     });
     bulkForm.addEventListener('change', (e) => {
-      if (e.target && e.target.name === 'ids') {
+      if (e.target && e.target.name === 'ids[]') {
         if (!e.target.checked && selectAll) selectAll.checked = false;
         updateBtn();
       }

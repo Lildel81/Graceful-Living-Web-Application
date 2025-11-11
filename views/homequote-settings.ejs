@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Homepage Quote Settings</title>
+  <link rel="stylesheet" href="/css/homequote-settings.css">
+</head>
+<body class="admin-solo">
+
+    <main class="wrap">
+        <header class="page-head">
+            <h1>Homepage Quote</h1>
+            <a class="btn secondary" href="/content-management">Back</a>
+        </header>
+
+        <% if (saved) { %>
+            <p class="flash success">Saved!</p>
+        <% } %>
+
+        <form class="card" method="POST" action="/adminportal/homequote-settings">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <fieldset>
+            <legend>Quote Text</legend>
+            <label for="quoteText">Homepage Quote</label>
+            <textarea id="quoteText" name="quoteText" rows="3" placeholder="Enter the homepage quote"><%= settings.quoteText %></textarea>
+        </fieldset>
+
+        <div class="actions">
+            <button class="btn" type="submit">Save</button>
+        </div>
+        </form>
+    </main>
+</body>
+</html>
