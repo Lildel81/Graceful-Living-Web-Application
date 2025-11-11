@@ -15,6 +15,12 @@ const ChakraAssessment = require('../models/chakraAssessment')
 const Appointment = require('../models/appointment')
 const axios = require('axios')
 
+// =================== ML API Configuration ========================
+// Use environment variable for ML API URL to support both development and production
+// Development: http://localhost:5001
+// Production: https://gracefulliving-ml-api.onrender.com (or our Render URL)
+const ML_API_URL = process.env.ML_API_URL || 'http://localhost:5001'
+
 // =================== Transform assessment data for ML API =================================
 // Ensures data structure matches what predict_new.py expects
 function transformAssessmentForML(assessment) {
@@ -48,7 +54,8 @@ async function getMLConversionStats(options = {}) {
         
         // Step 1: Check ML API health
         log('🔍 Step 1: Checking ML API health...');
-        const healthCheck = await axios.get('http://localhost:5001/health', {timeout: 2000});
+        log(`   Connecting to: ${ML_API_URL}`);
+        const healthCheck = await axios.get(`${ML_API_URL}/health`, {timeout: 2000});
         log('✅ ML API Response:', healthCheck.data);
         
         if(healthCheck.data.status !== 'ok'){
@@ -57,7 +64,7 @@ async function getMLConversionStats(options = {}) {
 
         // Step 2: Get model information
         log('🔍 Step 2: Getting model info...');
-        const modelInfo = await axios.get('http://localhost:5001/model/info', {timeout: 2000});
+        const modelInfo = await axios.get(`${ML_API_URL}/model/info`, {timeout: 2000});
         log('✅ Model Info:', {
             type: modelInfo.data.model_type,
             features: modelInfo.data.num_features,
@@ -151,7 +158,7 @@ async function getMLConversionStats(options = {}) {
                 log(`   🧪 Testing with single assessment first...`);
                 try {
                     const singleTestResponse = await axios.post(
-                        'http://localhost:5001/predict',
+                        `${ML_API_URL}/predict`,
                         transformedAssessments[0],
                         {
                             timeout: 10000,
@@ -175,7 +182,7 @@ async function getMLConversionStats(options = {}) {
                 log(`   🌐 Sending batch of ${transformedAssessments.length} assessments to ML API...`);
                 
                 const predictionsResponse = await axios.post(
-                    'http://localhost:5001/predict/batch',
+                    `${ML_API_URL}/predict/batch`,
                     transformedAssessments,
                     {
                         timeout: 30000,  // 30 seconds

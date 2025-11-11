@@ -7,7 +7,14 @@
 </head>
 <body>
     <main class="wrap">
-        <h1>Pre-Application Results</h1>
+        
+        <div class="page-topbar">
+            <h1>Application Results</h1>
+
+            <!--Back Button-->
+            <a class="btn back-page-action" href="/clientmanagement">Back to Client Management</a>
+        </div>
+     
 
         <!--Total Sumbissions-->
         <section class="stats">
@@ -112,10 +119,21 @@
 
             <!-- Table -->
         <section class="card">
+            <form id="bulkDeleteForm" method="post" action="/clientmanagement/prequiz-results/bulk-delete">
+            <div class="actions right">
+                <button id="deleteBtn" class="btn delete" type="submit" disabled>Delete Selected</button>
+            </div>
+
             <div class="table-wrap">
                 <table id="results">
                     <thead>
                         <tr>
+                        <th class="select">
+                            <label for="selectAll" class="sellect-all">
+                                Select All<br>
+                                <input type="checkbox" id="selectAll"> 
+                            </label>
+                        </th>
                         <th>Date</th>
                         <th>Full Name</th>
                         <th>Email</th>
@@ -138,6 +156,9 @@
                         <% } %>
                         <% rows.forEach(r => { %>
                         <tr>
+                            <td class="select">
+                                <input type="checkbox" name="ids[]" value="<%= r._id %>" aria-label="Select row for <%= r.fullName %>">
+                            </td>
                             <td><%= new Date(r.submittedAt).toLocaleDateString() %></td>
                             <td><%= r.fullName %></td>
                             <td><%= r.email %></td>
@@ -157,6 +178,7 @@
                     </tbody>
                 </table>
             </div>
+          </form>
         </section>
     </main>
 

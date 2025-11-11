@@ -68,7 +68,7 @@ router.post("/user-signup", csrfProtection, async (req, res) => {
   try {
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(409).render("user-signup", csrfProtection,{
+      return res.status(409).render("user-signup", {
         csrfToken: req.csrfToken(),
         error: "Email is already registered.",
         fullName,
@@ -91,7 +91,7 @@ router.post("/user-signup", csrfProtection, async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).render("user-signup", csrfProtection,{
+    res.status(500).render("user-signup", {
       csrfToken: req.csrfToken(),
       error: "Unexpected error. Please try again.",
       fullName,
@@ -124,7 +124,7 @@ router.post("/user-login", csrfProtection, async (req, res) => {
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).render("user-login",{ 
+      return res.status(401).render("user-login", { 
         csrfToken: req.csrfToken(),
         error: "Invalid email or password", 
         email 
@@ -141,7 +141,7 @@ router.post("/user-login", csrfProtection, async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).render("user-login", csrfProtection,{ 
+    res.status(500).render("user-login", { 
       csrfToken: req.csrfToken(),
       error: "Unexpected error. Please try again.", 
       email 

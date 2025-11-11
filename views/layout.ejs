@@ -16,8 +16,8 @@
     <div class="navbar-container">
       
       <a href="/" class="logo">
-        <img src="/images/logo1-removebg.png" alt="GracefuLiving Logo">
-    </a>
+        <img src="/images/gracefuliving_big.svg" alt="GracefuLiving Logo" class="logo-img">
+      </a>
     
         <ul class="nav-links">
             <li><a href="/about">About Us</a></li>
@@ -28,6 +28,9 @@
             <li><a href="/shop">Shop</a></li>
             <% if (user) { %>
                 <li><a href="/user-dashboard" class="btn">Dashboard</a></li>
+                <li><a href="/logout" class="btn">Logout</a></li>
+            <% } else if (admin) { %>
+                <li><a href="/adminportal" class="btn">Admin Portal</a></li>
                 <li><a href="/logout" class="btn">Logout</a></li>
             <% } else { %>
                 <li><a href="/user-login" class="btn">Login</a></li>
@@ -46,21 +49,34 @@
               <img src="/images/logo.png" alt="Graceful Living Logo" class="footer-logo">
           </div>
 
-          <div class="footer-map">
-            <img src="/images/forest_image_converted.png" alt="Map Placeholder" class="map-image">
-        </div>
+            <div class="footer-map">
+                <img src="/images/forest_image_converted.png" alt="Map Placeholder" class="map-image">
+            </div>
 
           <!-- Middle Section: Services & Resources -->
-          <div class="footer-sections">
-              <!-- Services Section (Left) -->
-              <div class="footer-column">
-                  <h3>Services</h3>
-                  <ul>
-                      <li><a href="#">Service 1</a></li>
-                      <li><a href="#">Service 2</a></li>
-                      <li><a href="#">Service 3</a></li>
-                  </ul>
-              </div>
+            <div class="footer-column">
+            <h3>Services</h3>
+            <ul>
+                <% if (footerServices && footerServices.length > 0) { %>
+                <% footerServices.forEach(service => { %>
+                    <% if (service.serviceName) { %> <!-- only check for name -->
+                    <li>
+                        <% if (service.buttonUrl) { %>
+                        <a href="<%= service.buttonUrl %>" target="_blank">
+                            <%= service.serviceName %>
+                        </a>
+                        <% } else { %>
+                        <span><%= service.serviceName %></span>
+                        <% } %>
+                    </li>
+                    <% } %>
+                <% }) %>
+                <% } else { %>
+                <li>No Services Available</li>
+                <% } %>
+            </ul>
+            </div>
+
 
               <!-- Resources Section (Middle) -->
               <div class="footer-column">
@@ -70,19 +86,18 @@
                     <% footerResources.forEach(resource => { %>
                         <% if (resource.overlayText && resource.buttonUrl) { %>
                         <li>
-                            <span class="resource-name"><%= resource.overlayText || "Resource" %></span>:
                             <a href="<%= resource.buttonUrl %>" target="_blank">
-                            <%= resource.buttonText || "Download" %>
+                            <%= resource.overlayText || "Resource"  %>
                             </a>
                         </li>
                         <% } %>
                     <% }) %>
                     <% } else { %>
-                    <li>No resources available</li>
+                        <li>No Resources Available</li>
                     <% } %>
                   </ul>
               </div>
-
+              <!--Old Hard codded Footer 
               <div class="footer-column">
                   <h3>Connect</h3>
                   <ul>
@@ -90,14 +105,55 @@
                     <li><a href="https://www.facebook.com/gracefulivingcoaching"><img src="/images/facebook-new.png" class="icon"> GracefuLiving</a></li>
                     <li><a href="https://www.instagram.com/the_relationship_sage?igsh=NTc4MTIwNjQ2YQ=="><img src="/images/instagram-logo-black-transparent.png" class="icon"> GracefuLiving</a></li>
                   </ul>
-              </div>
-          </div>
-      </div>
+              </div>-->
 
-      <p class="footer-bottom-text">&copy; Copyright 2025 GracefuLiving Coaching Service - All rights reserved</p>
-  </footer>
+              <!--EDITABLE footer-->
+              
+                <div class="footer-column">
+                    <h3>Connect</h3>
+                    <ul>
+                        <% var fc = (typeof footerContact !== 'undefined' && footerContact) ? footerContact : {}; %>
+
+                        <% if (fc.phone) { %>
+                        <% var phoneHref = (fc.phone || '').replace(/[^0-9+]/g, ''); %>
+                        <li>
+                            <a href="tel:<%= phoneHref %>">
+                            <img src="/images/phone3.png" class="icon" alt="">
+                            <%= fc.phone %>
+                            </a>
+                        </li>
+                        <% } %>
+
+                        <% if (fc.facebookUrl) { %>
+                        <li>
+                            <a href="<%= fc.facebookUrl %>" target="_blank" rel="noopener">
+                            <img src="/images/facebook-new.png" class="icon" alt="">
+                            <%= fc.facebookLabel || 'Facebook' %>
+                            </a>
+                        </li>
+                        <% } %>
+
+                        <% if (fc.instagramUrl) { %>
+                        <li>
+                            <a href="<%= fc.instagramUrl %>" target="_blank" rel="noopener">
+                            <img src="/images/instagram-logo-black-transparent.png" class="icon" alt="">
+                            <%= fc.instagramLabel || 'Instagram' %>
+                            </a>
+                        </li>
+                        <% } %>
+
+                        <% if (!fc.phone && !fc.facebookUrl && !fc.instagramUrl) { %>
+                        <li>No contact info yet — add it in Admin &raquo; Footer Settings.</li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <p class="footer-bottom-text">&copy; Copyright 2025 GracefuLiving Coaching Service - All rights reserved</p>
+    </footer>
+        
     
-  
 
       <script src="/js/script.js"></script>
       <script src="/js/carousel.js"></script>

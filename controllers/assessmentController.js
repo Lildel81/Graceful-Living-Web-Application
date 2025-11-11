@@ -1,12 +1,11 @@
 // controllers/assessmentController.js
 const { notifyAdmins } = require("../services/adminNotifications");
 
-const createDOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
+const createDOMPurify = require("dompurify");
+const { JSDOM } = require("jsdom");
 
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const DOMpurify = createDOMPurify(window);
-
 
 function groupAnswers(body) {
   const identity = {
@@ -82,6 +81,7 @@ function groupAnswers(body) {
     throat_listen: body.throat_listen,
     throat_no: body.throat_no,
     throat_trust: body.throat_trust,
+    throat_alignment: body.threat_alignment,
   };
 
   const thirdEye = {
@@ -161,6 +161,7 @@ function groupAnswers(body) {
 
 exports.saveAssessment = async (req, res) => {
   try {
+    console.log("BODY RECEIVED:", req.body);
     console.log("[ASSESSMENT] POST /assessment/save reached");
     const payload = groupAnswers(req.body);
     console.log(

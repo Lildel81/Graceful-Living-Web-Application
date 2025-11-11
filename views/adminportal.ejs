@@ -118,46 +118,31 @@
   </div>
 
   <!-- Statistics Dashboard -->
-  <main class="dashboard">
 
-    <!-- Stats Cards -->
-    <section class="stats-cards">
-      <div class="card">
+  <section class="overview">
+
+    <div class="chakra-overview">
+      <h1>Chakra Imbalance Overview</h1>
+
+      <div class="total-submissions-card">
         Total Submissions:
-        <%= typeof totalSubmissions !== 'undefined' ? totalSubmissions : 0 %>
+        <span class="total-number">
+          <%= typeof totalSubmissions !== 'undefined' ? totalSubmissions : 0 %>
+        </span>
       </div>
-      <div class="card">
-        Avg. Chakra Balance:
-        <%= typeof avgChakraBalance !== 'undefined' ? avgChakraBalance : 0 %>
-      </div>
-      <div class="card">
-        Avg. Quadrant Balance:
-        <%= typeof avgQuadrantBalance !== 'undefined' ? avgQuadrantBalance : 0 %>
-      </div>
-      <div class="card">
-        Most Imbalanced:
-        <%= typeof mostImbalanced !== 'undefined' ? mostImbalanced : 'N/A' %>
-      </div>
-    </section>
+    </div>
 
-
-    <!-- Chakra Imbalance Overview -->
     <section class="chakra-container-grid">
       <% chakras.forEach(chakra => { %>
         <div class="chakra-card <%= chakra.key.toLowerCase() %>">
           <h3><%= chakra.label %> Chakra</h3>
-          <p><span class="chakra-count"><%= chakra.count %></span> </p>
+          <p><span class="chakra-count"><%= chakra.count %></span></p>
         </div>
       <% }) %>
     </section>
 
-
-    <!-- Charts -->
-    <section class="charts">
-      <div class="chart">Average Chakra Scores</div>
-      <div class="chart">Score Distribution</div>
-    </section>
-
+  </section>
+  
   </main>
 
   <!-- ML Conversion Analysis Section - Separate, Beautiful UI -->
@@ -218,13 +203,13 @@
       <div class="stats-charts-grid">
         <!-- Chakra Radar Chart -->
         <div class="stats-chart-container large">
-          <h3>Chakra Balance Overview</h3>
+          <h3>Chakra Balance Overview (Out of 21)</h3>
           <canvas id="chakraRadarChart"></canvas>
         </div>
 
         <!-- Life Quadrants Bar Chart -->
         <div class="stats-chart-container large">
-          <h3>Life Quadrants Analysis</h3>
+          <h3>Life Quadrants Analysis (Out of 15)</h3>
           <canvas id="lifeQuadrantsChart"></canvas>
         </div>
 
@@ -254,7 +239,7 @@
 
         <!-- Experience with practitioners -->
         <div class="stats-chart-container medium">
-          <h3>Worked with Practitioner Before?</h3>
+          <h3>Worked with a Holistic Health Practitioner Before?</h3>
           <canvas id="experienceChart"></canvas>
         </div>
 
@@ -274,7 +259,7 @@
       <!-- Data Tables -->
       <div class="stats-tables">
         <div class="stats-table-wrapper">
-          <h3>Chakra Averages</h3>
+          <h3>Chakra Averages (Out of 21)</h3>
           <table class="stats-data-table">
             <thead>
               <tr>
@@ -290,7 +275,7 @@
         </div>
 
         <div class="stats-table-wrapper">
-          <h3>Life Quadrant Averages</h3>
+          <h3>Life Quadrant Averages (Out of 15)</h3>
           <table class="stats-data-table">
             <thead>
               <tr>

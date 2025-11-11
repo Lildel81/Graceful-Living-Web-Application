@@ -100,12 +100,24 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 <!--/*------------------------Carousel Section End------------------------------------*/-->
 <div class="home-container">
 
-  <div class="quote-container">
+ <!-- OLD HOME QUOTE  <div class="quote-container">
     <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
+    <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
+  </div>-->
+
+  <!--Editable Home Quote-->
+  <%
+  var q = (homeQuote && homeQuote.quoteText && homeQuote.quoteText.trim())
+    ? homeQuote.quoteText.trim()
+    : '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”';
+  %>
+
+  <div class="quote-container">
+    <h1><%= q %></h1>
     <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
   </div>
 
-  <div>
+  <!-- <div>
     <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Hi!</h2>
     <p style="font-size: 18px; margin-bottom: 20px; color: #003366;">Let me introduce myself to you.</p>
   </div>
@@ -121,6 +133,28 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
       allowfullscreen>
     </iframe>
 
+  </div> -->
+  
+  <link rel="stylesheet" href="/css/home-intro.css">
+
+  </div>
+  <section class="intro-section">
+  <div class="intro-content">
+    <div class="intro-text">
+      <h2>Hi, I’m Shante — founder of GracefuLiving Coaching.</h2>
+      <p>Let me introduce myself and share how I help transform compassion fatigue into renewed energy and purpose.</p>
+    </div>
+
+    <div class="intro-video">
+      <iframe
+        src="https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7"
+        title="GracefulLiving Introduction Video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+    </div>
   </div>
 
   <!-- Added Services Section Here 

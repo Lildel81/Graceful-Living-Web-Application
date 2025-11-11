@@ -30,13 +30,19 @@ const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
+const footerRoutes = require('./routes/footer-routes');
+const homeQuoteRoutes = require('./routes/home-quote-routes');
+
 
 const app = express();
+app.set("trust proxy", 1);
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.set('query parser', 'extended');
 app.use(expressLayouts);
+
 
 app.use(
   helmet({
@@ -65,7 +71,7 @@ app.use(
         ],
 
         // forms can POST back to this origin
-        "form-action": ["'self'"],
+        "form-action": ["'self'", "https://checkout.stripe.com"],
 
         // images/fonts/styles you already had
         "img-src": ["'self'", "data:", "https://i.ytimg.com"],
@@ -77,7 +83,7 @@ app.use(
         "font-src": ["'self'", "https://fonts.gstatic.com"],
 
         // iframes should only be embedded by our own pages
-        "frame-ancestors": ["'self'"],
+        "frame-ancestors": ["'self'", "https://checkout.stripe.com"],
       },
     },
     // optional: some browsers need this relaxed in dev
@@ -103,6 +109,7 @@ app.use(
 const isProd = process.env.NODE_ENV === "production";
 
 
+
 app.use(
   session({
     name: "sid",
@@ -125,9 +132,26 @@ app.use(
 //   next();
 // });
 
-app.use(hpp());
+//app.use(hpp());
 app.use(mongoSanitize());
-app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+//app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+
+// for delete 
+app.use(hpp({
+  whitelist: [
+    // bulk delete
+    'ids', 'ids[]',
+
+    // your filters that can be arrays
+    'familiarWith', 'familiarWith[]',
+    'challenges', 'challenges[]',     
+    'focusChakra', 'focusChakra[]',
+    'archetype', 'archetype[]',
+
+    // csrf
+    '_csrf'
+  ]
+}));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // ✅ Allow same-origin iframing ONLY for the testimonials manager pages
@@ -169,6 +193,7 @@ mongoose.connection.once("open", async () => {
   googleCalendarService.initialize();
 });
 
+// renders resources on footer 
 const ResourcesImage = require("./models/resourcesImage");
 app.use(async (req, res, next) => {
   try {
@@ -178,6 +203,55 @@ app.use(async (req, res, next) => {
   } catch (err) {
     console.error("Error loading footer resources:", err);
     res.locals.footerResources = [];
+  }
+  next();
+});
+
+// renders services on footer 
+const Services = require("./models/servicesSchema");
+app.use(async(req, res, next) => {
+  try {
+    res.locals.footerServices = await Services.find()
+      .sort({ createdAt: -1 })
+      .limit(3);
+  } catch (err) {
+    console.error("Error loading footer Services:", err);
+    res.locals.footerServices = [];
+  }
+  next();
+});
+
+
+// load contact content on the footer 
+const Footer = require('./models/footer');
+
+app.use(async (req, res, next) => {
+  try {
+    const s = await Footer.findOne().lean();
+    res.locals.footerContact = s ? {
+      phone: s.phone || '',
+      facebookUrl: s.facebookUrl || '',
+      facebookLabel: s.facebookLabel || 'Facebook',
+      instagramUrl: s.instagramUrl || '',
+      instagramLabel: s.instagramLabel || 'Instagram',
+    } : {};
+  } catch (err) {
+    console.error('Error loading footer contact:', err);
+    res.locals.footerContact = {};
+  }
+  next();
+});
+
+
+// load the quote on the homepage
+const HomeQuote = require('./models/homeQuote');
+
+app.use(async (req, res, next) => {
+  try {
+    const quote = await HomeQuote.findOne().lean();
+    res.locals.homeQuote = quote || { quoteText: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”' };
+  } catch {
+    res.locals.homeQuote = { quoteText: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”' };
   }
   next();
 });
@@ -194,11 +268,29 @@ const csrfProtection = csurf({
   },
 });
 
+// for delete 
+app.use(express.urlencoded({ extended: true }));
+
 // middleware to make user available in all views (for nav bar)
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
+  res.locals.admin = req.session.isAdmin || null;
   next();
 });
+
+// catches TOS post
+app.post("/intro/accept-terms", csrfProtection, (req, res) => {
+  req.session.acceptedTOS = true;
+  res.redirect("/assessment");
+});
+
+// middleware to require TOS to be accepted before accessing Chakra Assessment
+function requireTOS(req, res, next) {
+  if (!req.session.acceptedTOS) {
+    return res.redirect("/intro");
+  }
+  next();
+}
 
 app.use(['/application'], csrfProtection, (req, res, next) => {
   res.locals.csrfToken = req.csrfToken(); // This allows CSRF tokens  to access all redners in the application route
@@ -216,8 +308,12 @@ app.use(['/assessment'], csrfProtection, (req, res, next) => {
   next();
 });
 
-app.get("/assessment", csrfProtection, (req, res) => {
-  res.render("quiz/assessment");
+app.get("/assessment", requireTOS, csrfProtection, (req, res) => {
+  res.render("quiz/assessment", { csrfToken: req.csrfToken(), session: req.session });
+});
+
+app.get("/intro", csrfProtection, (req, res) => {
+  res.render("quiz/intro", {csrfToken: req.csrfToken()});
 });
 
 const rateLimit = require("express-rate-limit");
@@ -245,10 +341,28 @@ app.get("/about", (req, res) => {
 
 app.use("/stats", statsRoutes);
 
-// Routs for the shop
-app.use("/shop", require("./routes/shop"));
-app.use("/cart", require("./routes/cart"));
-app.use("/checkout", require("./routes/checkout"));
+// Routes for the shop
+const csrf = require('./middleware/csrf');
+
+// helper: expose a CSRF token to EJS views rendered by these routes
+const exposeCsrf = (req, res, next) => {
+  if (typeof req.csrfToken === 'function') {
+    res.locals.csrfToken = req.csrfToken();
+  }
+  next();
+};
+
+app.use('/shop', require('./routes/shop'));
+app.use('/cart', require('./routes/cart'));
+
+// Ensure /checkout pages/forms have a CSRF token available
+app.use('/checkout', csrf, exposeCsrf, require('./routes/checkout'));
+
+// Stripe redirect landing pages
+app.get('/success', (req, res) => res.render('success'));
+app.get('/cancel',  (req, res) => res.render('cancel'));
+
+
 
 // Appointment booking routes
 app.get("/booking", csrfProtection, (req, res) => {
@@ -258,14 +372,48 @@ app.get("/booking", csrfProtection, (req, res) => {
 // Admin appointment management
 app.get("/adminportal/appointments", csrfProtection, (req, res) => {
   if (req.session && req.session.isAdmin) {
+    const zoomEnabled =
+      process.env.ZOOM_ENABLED === "false"
+        ? false
+        : typeof req.session.zoomEnabled !== "undefined"
+        ? !!req.session.zoomEnabled
+        : typeof req.app?.locals?.zoomEnabled !== "undefined"
+        ? !!req.app.locals.zoomEnabled
+        : true;
+
     res.render("appointment-management", {
       csrfToken: req.csrfToken(),
       zoomConnected: !!req.session.zoomConnected,
       zoomEmail: req.session.zoomEmail || null,
+      zoomEnabled,
     });
   } else {
     res.redirect("/login");
   }
+});
+
+// Toggle Zoom for new bookings (admin only)
+app.post("/zoom/toggle", csrfProtection, (req, res) => {
+  try {
+    const enabled = String(req.body.enabled) === "true";
+
+    // persist to session and app scope so controllers can read it
+    if (req.session) req.session.zoomEnabled = enabled;
+    if (req.app && req.app.locals) req.app.locals.zoomEnabled = enabled;
+
+    console.log(
+      `[ZOOM][TOGGLE] Zoom for new bookings is now ${enabled ? "ON" : "OFF"}`
+    );
+    if (req.flash)
+      req.flash(
+        "success",
+        `Zoom for new bookings is now ${enabled ? "ON" : "OFF"}.`
+      );
+  } catch (err) {
+    console.error("[ZOOM][TOGGLE] Failed to toggle Zoom setting", err);
+    if (req.flash) req.flash("error", "Failed to toggle Zoom setting.");
+  }
+  return res.redirect("/adminportal/appointments");
 });
 
 app.use("/appointments", appointmentRoutes);
@@ -325,11 +473,18 @@ app.use("/", simpleFormRoutes);
 const servicesRoutes = require("./routes/servicesRoutes");
 app.use("/", servicesRoutes);
 
+exports.getHomePage = async (req, res) => {
+  const homeQuote = await HomeQuote.findOne();
+  res.render("home", { homeQuote });
+};
+
 // for next month's chakra predictions
 const predictRoutes = require("./routes/predictRoutes");
 app.use("/", predictRoutes);
 
 app.use("/", zoomIntegrations);
+app.use(footerRoutes);
+app.use(homeQuoteRoutes);
 
 app.listen(config.port, () =>
   winston.info("App is listening on http://localhost:" + config.port)
