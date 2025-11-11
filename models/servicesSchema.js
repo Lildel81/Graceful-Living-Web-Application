@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const servicesSchema = new Schema({
-    imageUrl:       {type: String, required: true},
+    imageUrl:       {type: String, required: false},
     serviceName: { type: String, required: true},
     serviceDescription: { type: String, required: false },
     buttonText:  { type: String, required: false }, 

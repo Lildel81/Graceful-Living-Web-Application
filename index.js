@@ -169,6 +169,7 @@ mongoose.connection.once("open", async () => {
   googleCalendarService.initialize();
 });
 
+// renders resources on footer 
 const ResourcesImage = require("./models/resourcesImage");
 app.use(async (req, res, next) => {
   try {
@@ -178,6 +179,20 @@ app.use(async (req, res, next) => {
   } catch (err) {
     console.error("Error loading footer resources:", err);
     res.locals.footerResources = [];
+  }
+  next();
+});
+
+// renders services on footer 
+const Services = require("./models/servicesSchema");
+app.use(async(req, res, next) => {
+  try {
+    res.locals.footerServices = await Services.find()
+      .sort({ createdAt: -1 })
+      .limit(3);
+  } catch (err) {
+    console.error("Error loading footer Services:", err);
+    res.locals.footerServices = [];
   }
   next();
 });
