@@ -436,6 +436,17 @@ app.use("/", simpleFormRoutes);
 const servicesRoutes = require("./routes/servicesRoutes");
 app.use("/", servicesRoutes);
 
+// for homeQuote management in content management 
+const homeQuoteRoutes = require("./routes/homeQuoteRoutes");
+app.use(homeQuoteRoutes);
+
+const HomeQuote = require("./models/homeQuoteSchema");
+
+exports.getHomePage = async (req, res) => {
+  const homeQuote = await HomeQuote.findOne();
+  res.render("home", { homeQuote });
+};
+
 // for next month's chakra predictions
 const predictRoutes = require("./routes/predictRoutes");
 app.use("/", predictRoutes);

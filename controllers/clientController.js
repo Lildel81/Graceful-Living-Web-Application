@@ -13,6 +13,7 @@ const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require('../models/resourcesText');
 const Services = require("../models/servicesSchema");
+const HomeQuote = require("../models/homeQuoteSchema");
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
 
@@ -320,12 +321,15 @@ const getHomeView = async (req, res, next) => {
     const selectedReviews = getRandomReviews(allReviews, 3);
 
     const services = await Services.find().sort({ createdAt: -1 }).limit(3);
+    const homeQuote = await HomeQuote.findOne();
 
     res.render("home", { 
       slides, 
       selectedReviews,
       //to view services 
-      services
+      services,
+      // to view quote 
+      homeQuote
     });
   } catch (error) {
     console.error("Error fetching slides:", error.message);
