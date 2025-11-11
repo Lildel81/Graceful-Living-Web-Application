@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quote Management</title>
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/carousel-mangement.css">
+</head>
+<body>
+
+  <!-- quote management section -->
+  <h2>Edit Homepage Quote</h2>
+  <form action="/adminportal/quotemanagement" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="form-section">
+      <label for="quoteText">Quote Text:</label>
+      <textarea 
+        id="quoteText" 
+        name="quoteText" 
+        rows="3" 
+        placeholder='"Your motivational quote here..."' 
+        required
+      ><%= quote ? quote.quoteText : '' %></textarea>
+
+      <p style="margin-top:10px; font-size: 0.9rem; color: gray;">
+        This text will appear inside the quote section on the homepage.
+      </p>
+    </div>
+
+    <button type="submit">Save Quote</button>
+  </form>
+
+  <!-- display current quote -->
+  <h2>Current Quote Preview</h2>
+  <% if (quote && quote.quoteText) { %>
+    <div class="form-section" style="background:#f9f9f9; border-left:4px solid #008080;">
+      <blockquote style="font-style:italic; margin:0;">
+        <%= quote.quoteText %>
+      </blockquote>
+      <p style="font-size:0.8rem; color:gray; margin-top:8px;">
+        Last updated: <%= new Date(quote.updatedAt).toLocaleString() %>
+      </p>
+    </div>
+  <% } else { %>
+    <p>No quote has been set yet.</p>
+  <% } %>
+
+</body>
+</html>
