@@ -320,14 +320,48 @@ app.get("/booking", csrfProtection, (req, res) => {
 // Admin appointment management
 app.get("/adminportal/appointments", csrfProtection, (req, res) => {
   if (req.session && req.session.isAdmin) {
+    const zoomEnabled =
+      process.env.ZOOM_ENABLED === "false"
+        ? false
+        : typeof req.session.zoomEnabled !== "undefined"
+        ? !!req.session.zoomEnabled
+        : typeof req.app?.locals?.zoomEnabled !== "undefined"
+        ? !!req.app.locals.zoomEnabled
+        : true;
+
     res.render("appointment-management", {
       csrfToken: req.csrfToken(),
       zoomConnected: !!req.session.zoomConnected,
       zoomEmail: req.session.zoomEmail || null,
+      zoomEnabled,
     });
   } else {
     res.redirect("/login");
   }
+});
+
+// Toggle Zoom for new bookings (admin only)
+app.post("/zoom/toggle", csrfProtection, (req, res) => {
+  try {
+    const enabled = String(req.body.enabled) === "true";
+
+    // persist to session and app scope so controllers can read it
+    if (req.session) req.session.zoomEnabled = enabled;
+    if (req.app && req.app.locals) req.app.locals.zoomEnabled = enabled;
+
+    console.log(
+      `[ZOOM][TOGGLE] Zoom for new bookings is now ${enabled ? "ON" : "OFF"}`
+    );
+    if (req.flash)
+      req.flash(
+        "success",
+        `Zoom for new bookings is now ${enabled ? "ON" : "OFF"}.`
+      );
+  } catch (err) {
+    console.error("[ZOOM][TOGGLE] Failed to toggle Zoom setting", err);
+    if (req.flash) req.flash("error", "Failed to toggle Zoom setting.");
+  }
+  return res.redirect("/adminportal/appointments");
 });
 
 app.use("/appointments", appointmentRoutes);

@@ -41,6 +41,127 @@ const {
   createZoomMeeting,
   createZoomMeetingWithToken,
 } = require("../services/zoomService");
+
+// for sending out confirmation emails
+const { sendMail } = require("../services/mailer");
+const ejs = require("ejs");
+const path = require("path");
+
+const axios = require("axios");
+
+// Global/per-session Zoom toggle helper
+function isZoomEnabled(req) {
+  // env hard kill switch
+  if (process.env.ZOOM_ENABLED === "false") return false;
+  // session-scoped toggle (set by /zoom/toggle route)
+  if (req && req.session && typeof req.session.zoomEnabled !== "undefined") {
+    return !!req.session.zoomEnabled;
+  }
+  // app-scoped toggle (optional, if you store it in app.locals)
+  if (req && req.app && typeof req.app.locals.zoomEnabled !== "undefined") {
+    return !!req.app.locals.zoomEnabled;
+  }
+  // default: ON
+  return true;
+}
+
+// --- Zoom-style invite helpers ---------------------------------------------
+function formatPacificDateTime(dateObj) {
+  if (!dateObj) return "";
+  // Example: Oct 27, 2025 03:00 PM Pacific Time (US and Canada)
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const m = months[dateObj.getMonth()];
+  const d = dateObj.getDate();
+  const y = dateObj.getFullYear();
+  let hh = dateObj.getHours();
+  const mm = String(dateObj.getMinutes()).padStart(2, "0");
+  const ampm = hh >= 12 ? "PM" : "AM";
+  hh = hh % 12;
+  if (hh === 0) hh = 12;
+  return `${m} ${d}, ${y} ${String(hh).padStart(
+    2,
+    "0"
+  )}:${mm} ${ampm} Pacific Time (US and Canada)`;
+}
+
+function extractMeetingId(appointment) {
+  if (appointment.zoomMeetingId)
+    return String(appointment.zoomMeetingId).replace(/\s+/g, "");
+  const url = appointment.zoomJoinUrl || "";
+  // Try to grab the 11-digit id from typical join URLs
+  const m = url.match(/\/j\/(\d{9,12})/);
+  if (m) return m[1];
+  return "";
+}
+
+function buildZoomInviteText(appointment) {
+  const topic = appointment.serviceName || appointment.topic || "Session";
+  const startAt = createDateTime(
+    new Date(appointment.appointmentDate),
+    appointment.appointmentTime
+  );
+  const timeLabel = formatPacificDateTime(startAt);
+  const joinUrl = appointment.zoomJoinUrl || "";
+  const meetingId = extractMeetingId(appointment);
+  const meetingIdPretty = meetingId
+    ? meetingId.replace(/(\d{3})(\d{4})(\d{4})/, "$1 $2 $3")
+    : "";
+  const oneTap1 = meetingId ? `+16699006833,,${meetingId}# US (San Jose)` : "";
+  const oneTap2 = meetingId ? `+16694449171,,${meetingId}# US` : "";
+  const sipLine = meetingId ? `${meetingId}@zoomcrc.com` : "";
+  const joinInstr = appointment.zoomInviteUrl || ""; // optional
+
+  return [
+    `Topic: ${topic}`,
+    `Time: ${timeLabel}`,
+    `Join Zoom Meeting`,
+    joinUrl,
+    "",
+    meetingIdPretty ? `Meeting ID: ${meetingIdPretty}` : "",
+    "",
+    "---",
+    "",
+    "One tap mobile",
+    oneTap1,
+    oneTap2,
+    "",
+    "---",
+    "",
+    "Join by SIP",
+    sipLine ? `• ${sipLine}` : "",
+    "",
+    joinInstr ? "Join instructions" : "",
+    joinInstr,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+function buildZoomInviteHTML(appointment) {
+  const text = buildZoomInviteText(appointment)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\n/g, "<br>");
+  // Make links clickable
+  return text
+    .replace(/(https?:\/\/\S+)/g, '<a href="$1">$1</a>')
+    .replace(/(\b[\w.-]+@zoomcrc\.com\b)/g, '<a href="sip:$1">$1</a>');
+}
+
 /**
  * GET AVAILABLE TIME SLOTS (PUBLIC)
  *
@@ -236,10 +357,12 @@ const createAppointment = async (req, res) => {
     const appointment = new Appointment(appointmentData);
     await appointment.save();
 
-    // STEP 5: Create Zoom meeting for this appointment
+    // STEP 5: Create Zoom meeting for this appointment (honor toggle)
+    const ZOOM_ENABLED = isZoomEnabled(req);
     let zoomInfo = null;
     try {
       if (
+        ZOOM_ENABLED &&
         req.session.zoomConnected &&
         req.session.zoomAccessToken &&
         req.session.zoomUserId
@@ -281,6 +404,63 @@ const createAppointment = async (req, res) => {
     if (eventId) {
       appointment.googleCalendarEventId = eventId;
       await appointment.save();
+    }
+
+    // STEP 8: Send confirmation email to the client (non-blocking)
+    try {
+      const to = appointment.clientEmail;
+      if (!to) {
+        console.warn(
+          "[APPT][MAIL] Missing clientEmail, skipping send for appointment",
+          appointment._id
+        );
+      } else {
+        const includeZoom = !!(isZoomEnabled(req) && appointment.zoomJoinUrl);
+        const startLabel = `${formatDate(
+          new Date(appointment.appointmentDate)
+        )} ${appointment.appointmentTime}`;
+        const textBody =
+          `Hi ${appointment.clientName}, your appointment is confirmed for ${startLabel}.` +
+          (includeZoom ? `\n\n${buildZoomInviteText(appointment)}` : "");
+        // Prefer EJS template if present; fall back to inline HTML helper
+        let html;
+        try {
+          html = await ejs.renderFile(
+            path.join(__dirname, "../views/emails/appointment-confirm.ejs"),
+            {
+              appointment,
+              formatDate,
+              buildZoomInviteHTML,
+              buildZoomInviteText,
+              includeZoom,
+            },
+            { async: true }
+          );
+          console.log("[APPT][MAIL] appointment-confirm.ejs rendered");
+        } catch (tplErr) {
+          console.warn(
+            "[APPT][MAIL] template missing or failed, using inline HTML:",
+            tplErr.message
+          );
+          html = renderAppointmentEmailHTML(appointment, { includeZoom });
+        }
+
+        const info = await sendMail({
+          to,
+          subject: `Appointment confirmed — ${startLabel}`,
+          text: textBody,
+          html,
+        });
+        console.log("[APPT][MAIL] sent", {
+          messageId: info && info.messageId,
+          to,
+        });
+      }
+    } catch (mailErr) {
+      console.error(
+        "[APPT][MAIL] failed",
+        mailErr && (mailErr.stack || mailErr.message || mailErr)
+      );
     }
 
     // Return success response
@@ -388,35 +568,24 @@ const createAppointmentByAdmin = async (req, res) => {
       status: "confirmed",
     });
 
-    // Try to create Zoom meeting using the admin's connected Zoom session
+    const ZOOM_ENABLED = isZoomEnabled(req);
     let zoomInfo = null;
     try {
       if (
+        ZOOM_ENABLED &&
         req.session.zoomConnected &&
         req.session.zoomAccessToken &&
         req.session.zoomUserId
       ) {
-        // We assume you have createZoomMeetingWithToken in zoomService.
-        // If not, fall back to createZoomMeeting (server-level app).
         if (typeof createZoomMeetingWithToken === "function") {
           zoomInfo = await createZoomMeetingWithToken({
             accessToken: req.session.zoomAccessToken,
-            hostUserId: req.session.zoomUserId, // or req.session.zoomEmail
+            hostUserId: req.session.zoomUserId,
             topic: `Session with ${clientName}`,
             startTime: slotDateTime,
             durationMin: 30,
           });
-        } else {
-          // fallback: server-to-server Zoom app (your old flow)
-          zoomInfo = await createZoomMeeting({
-            topic: `Session with ${clientName}`,
-            startTime: slotDateTime,
-            durationMin: 30,
-          });
-        }
-      } else {
-        // No per-admin Zoom session? Try shared app-level createZoomMeeting if available
-        if (typeof createZoomMeeting === "function") {
+        } else if (typeof createZoomMeeting === "function") {
           zoomInfo = await createZoomMeeting({
             topic: `Session with ${clientName}`,
             startTime: slotDateTime,
@@ -464,6 +633,63 @@ const createAppointmentByAdmin = async (req, res) => {
         calErr.message || calErr
       );
       // don't block the response for calendar failure either
+    }
+
+    // ADMIN: Send confirmation email to the client (non-blocking)
+    try {
+      const to = appointment.clientEmail;
+      if (!to) {
+        console.warn(
+          "[APPT-ADMIN][MAIL] Missing clientEmail, skipping send for appointment",
+          appointment._id
+        );
+      } else {
+        const includeZoom = !!(isZoomEnabled(req) && appointment.zoomJoinUrl);
+        const startLabel = `${formatDate(
+          new Date(appointment.appointmentDate)
+        )} ${appointment.appointmentTime}`;
+        const textBody =
+          `Hi ${appointment.clientName}, your appointment is confirmed for ${startLabel}.` +
+          (includeZoom ? `\n\n${buildZoomInviteText(appointment)}` : "");
+
+        let html;
+        try {
+          html = await ejs.renderFile(
+            path.join(__dirname, "../views/emails/appointment-confirm.ejs"),
+            {
+              appointment,
+              formatDate,
+              buildZoomInviteHTML,
+              buildZoomInviteText,
+              includeZoom,
+            },
+            { async: true }
+          );
+          console.log("[APPT-ADMIN][MAIL] appointment-confirm.ejs rendered");
+        } catch (tplErr) {
+          console.warn(
+            "[APPT-ADMIN][MAIL] template missing or failed, using inline HTML:",
+            tplErr.message
+          );
+          html = renderAppointmentEmailHTML(appointment, { includeZoom });
+        }
+
+        const info = await sendMail({
+          to,
+          subject: `Appointment confirmed — ${startLabel}`,
+          text: textBody,
+          html,
+        });
+        console.log("[APPT-ADMIN][MAIL] sent", {
+          messageId: info && info.messageId,
+          to,
+        });
+      }
+    } catch (mailErr) {
+      console.error(
+        "[APPT-ADMIN][MAIL] failed",
+        mailErr && (mailErr.stack || mailErr.message || mailErr)
+      );
     }
 
     return res.redirect("/adminportal/appointments");
@@ -1045,3 +1271,65 @@ module.exports = {
   removeBlockedDate, // DELETE /api/appointments/adminportal/blocked-dates/:id - Unblock a date
   getBlockedDates, // GET /api/appointments/adminportal/blocked-dates - List blocked dates
 };
+
+// ===========================
+// APPOINTMENT EMAIL HTML HELPER
+// ===========================
+/**
+ * Renders the HTML email for appointment confirmation, including Zoom invite block.
+ * @param {Object} appointment
+ * @param {Object} opts - { includeZoom: boolean }
+ * @returns {string} HTML string
+ */
+function renderAppointmentEmailHTML(appointment, opts = {}) {
+  const includeZoom = !!opts.includeZoom;
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff;font-family:sans-serif;">
+      <tr>
+        <td style="padding:32px 24px 24px 24px; font-size:16px;">
+          <div style="font-size:20px;font-weight:700;margin-bottom:18px;">
+            Appointment Confirmation
+          </div>
+          <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
+            <tr>
+              <td><strong>Name:</strong></td>
+              <td>${appointment.clientName || ""}</td>
+            </tr>
+            <tr>
+              <td><strong>Email:</strong></td>
+              <td>${appointment.clientEmail || ""}</td>
+            </tr>
+            <tr>
+              <td><strong>Date:</strong></td>
+              <td>${
+                appointment.appointmentDate
+                  ? formatDate(new Date(appointment.appointmentDate))
+                  : ""
+              }</td>
+            </tr>
+            <tr>
+              <td><strong>Time:</strong></td>
+              <td>${appointment.appointmentTime || ""}</td>
+            </tr>
+            ${
+              appointment.notes
+                ? `<tr><td><strong>Notes:</strong></td><td>${appointment.notes}</td></tr>`
+                : ""
+            }
+          </table>
+          ${
+            includeZoom
+              ? `
+          <div style="margin-top:16px;padding-top:12px;border-top:1px solid #eee;">
+            <div style="font-weight:700;margin-bottom:6px;">Zoom Invite</div>
+            <div style="font-size:13px;line-height:1.55;">${buildZoomInviteHTML(
+              appointment
+            )}</div>
+          </div>`
+              : ""
+          }
+        </td>
+      </tr>
+    </table>
+  `;
+}

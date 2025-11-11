@@ -274,6 +274,33 @@ router.post(
   appointmentController.createAppointmentByAdmin
 );
 
+router.post("/toggle", isAdmin, async (req, res) => {
+  try {
+    // enabled comes as "true" or "false"
+    const enabled = req.body.enabled === "true";
+
+    // persist this flag somewhere your controllers can read:
+    // Option 1: DB-backed settings (recommended)
+    await Settings.updateOne(
+      { key: "zoomEnabled" },
+      { $set: { key: "zoomEnabled", value: enabled } },
+      { upsert: true }
+    );
+
+    // Option 2: session-scoped (temp for demo)
+    // req.session.zoomEnabled = enabled;
+
+    req.flash(
+      "success",
+      `Zoom for new bookings is now ${enabled ? "ON" : "OFF"}.`
+    );
+  } catch (e) {
+    console.error("[ZOOM][TOGGLE] failed", e);
+    req.flash("error", "Failed to toggle Zoom setting.");
+  }
+  res.redirect("/adminportal/appointments");
+});
+
 /**
  * ==========================================
  * MODULE EXPORTS
