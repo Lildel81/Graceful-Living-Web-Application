@@ -1,9 +1,13 @@
+# def get_prediction():
 import os, json, warnings 
 from pymongo import MongoClient
 import pandas as pd
 from dotenv import load_dotenv
 from sklearn.linear_model import LinearRegression
 import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
+from sklearn.metrics import mean_squared_error
 
 warnings.filterwarnings("ignore")
 
@@ -71,8 +75,8 @@ df = df.dropna(subset=["closedChakra"])
 df["month"] = df["createdAt"].dt.to_period("M")
 trend = (
     df.groupby(["month", "closedChakra"])
-      .size()
-      .reset_index(name="count")
+    .size()
+    .reset_index(name="count")
 )
 
 if trend.empty:
@@ -85,16 +89,45 @@ pivot.index = pivot.index.to_timestamp()  # PeriodIndex -> TimestampIndex
 
 # 6) tiny forecast: linear trend per chakra -> next month index = len(series)
 forecast = {}
+mse_results = {}
+
 for chakra in pivot.columns:
     y = pivot[chakra].values
     if len(y) < 2:
         # not enough history; predict the last value
         forecast[chakra] = float(y[-1]) if len(y) == 1 else 0.0
+        mse_results[chakra] = None
         continue
+
     X = np.arange(len(y)).reshape(-1, 1)
-    model = LinearRegression().fit(X, y)
-    next_val = model.predict([[len(y)]])[0]
-    forecast[chakra] = round(float(max(next_val, 0.0)), 2)  # no negatives
+
+    # --- a) Train/Test Split ---
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+    base_model = LinearRegression().fit(X_train, y_train)
+    y_pred = base_model.predict(X_test)
+    base_mse = mean_squared_error(y_test, y_pred)
+
+    # --- b) KFold Cross Validation ---
+    avg_mse = None
+    
+    if len(y) >= 5:
+        kf = KFold(n_splits=5)
+        scores = []
+        for train_idx, test_idx in kf.split(X):
+            model = LinearRegression().fit(X[train_idx], y[train_idx])
+            y_pred = model.predict(X[test_idx])
+            mse = mean_squared_error(y[test_idx], y_pred)
+            scores.append(mse)
+        avg_mse = np.mean(scores)
+        mse_results[chakra] = round(avg_mse, 4)
+    else:
+        mse_results[chakra] = None
+
+
+    # --- c) Final model trained on all data ---
+    final_model = LinearRegression().fit(X, y)
+    next_val = final_model.predict([[len(y)]])[0]
+    forecast[chakra] = round(float(max(next_val, 0.0)), 2)
 
 # 7) pick the predicted dominant (highest forecast count)
 predicted = max(forecast, key=forecast.get) if forecast else None
@@ -115,3 +148,5 @@ out = {
     )
 }
 print(json.dumps(out, default=str))
+
+    # return out
