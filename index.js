@@ -71,7 +71,7 @@ app.use(
         ],
 
         // forms can POST back to this origin
-        "form-action": ["'self'"],
+        "form-action": ["'self'", "https://checkout.stripe.com"],
 
         // images/fonts/styles you already had
         "img-src": ["'self'", "data:", "https://i.ytimg.com"],
@@ -83,7 +83,7 @@ app.use(
         "font-src": ["'self'", "https://fonts.gstatic.com"],
 
         // iframes should only be embedded by our own pages
-        "frame-ancestors": ["'self'"],
+        "frame-ancestors": ["'self'", "https://checkout.stripe.com"],
       },
     },
     // optional: some browsers need this relaxed in dev
@@ -341,10 +341,28 @@ app.get("/about", (req, res) => {
 
 app.use("/stats", statsRoutes);
 
-// Routs for the shop
-app.use("/shop", require("./routes/shop"));
-app.use("/cart", require("./routes/cart"));
-app.use("/checkout", require("./routes/checkout"));
+// Routes for the shop
+const csrf = require('./middleware/csrf');
+
+// helper: expose a CSRF token to EJS views rendered by these routes
+const exposeCsrf = (req, res, next) => {
+  if (typeof req.csrfToken === 'function') {
+    res.locals.csrfToken = req.csrfToken();
+  }
+  next();
+};
+
+app.use('/shop', require('./routes/shop'));
+app.use('/cart', require('./routes/cart'));
+
+// Ensure /checkout pages/forms have a CSRF token available
+app.use('/checkout', csrf, exposeCsrf, require('./routes/checkout'));
+
+// Stripe redirect landing pages
+app.get('/success', (req, res) => res.render('success'));
+app.get('/cancel',  (req, res) => res.render('cancel'));
+
+
 
 // Appointment booking routes
 app.get("/booking", csrfProtection, (req, res) => {
