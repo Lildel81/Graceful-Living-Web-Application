@@ -120,7 +120,7 @@ function buildEmail(payload = {}) {
     subject: `Chakra Quiz Completed — ${who}`,
     text,
     html,
-    replyTo: identity.email || undefined, // 👈 let admins reply to user
+    replyTo: identity.email || undefined, // let admins reply to user
   };
 }
 

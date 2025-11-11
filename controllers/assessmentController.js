@@ -1,12 +1,11 @@
 // controllers/assessmentController.js
 const { notifyAdmins } = require("../services/adminNotifications");
 
-const createDOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
+const createDOMPurify = require("dompurify");
+const { JSDOM } = require("jsdom");
 
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const DOMpurify = createDOMPurify(window);
-
 
 function groupAnswers(body) {
   const identity = {
