@@ -52,15 +52,12 @@
             </div>
         </section>
 
+
         <section id="panel-quote" class="panel">
             <h2>Homepage Quote</h2>
-            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save homepage quote.');">
-                <label for="homepageQuote">Quote text</label>
-                <textarea id="homepageQuote" name="homepageQuote" placeholder="Enter the featured quote shown on the homepage..."></textarea>
-                <div class="actions">
-                    <button class="btn" type="submit">Save Quote</button>
-                </div>
-            </form>
+            <div class="iframe-container">
+                <iframe src="/adminportal/homequote-settings" title="Home Quote"></iframe>
+            </div>
         </section>
 
         <section id="panel-video" class="panel">
@@ -117,21 +114,10 @@
         </section>
 
         <section id="panel-contact" class="panel">
-            <h2>Contact</h2>
-            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save Contact info.');">
-                <label for="contactEmail">Email</label>
-                <input type="text" id="contactEmail" name="contactEmail" placeholder="hello@example.com">
-
-                <label for="contactPhone">Phone</label>
-                <input type="text" id="contactPhone" name="contactPhone" placeholder="(555) 555-5555">
-
-                <label for="contactAddress">Address</label>
-                <textarea id="contactAddress" name="contactAddress" placeholder="Street, City, State, ZIP"></textarea>
-
-                <div class="actions">
-                    <button class="btn" type="submit">Save Contact</button>
-                </div>
-            </form>
+            <h2>Footer Contact</h2>
+            <div class="iframe-container">
+                <iframe src="/adminportal/footer-settings" title="Footer Settings"></iframe>
+            </div>
         </section>
 
         <script src="/js/content-management.js" defer></script>

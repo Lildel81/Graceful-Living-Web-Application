@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Footer Settings</title>
+    <link rel="stylesheet" href="/css/footer-settings.css">
+</head>
+<body class="admin-solo">
+    <main class="wrap">
+        <h1></h1>
+        <header class="page-head">
+            <h1>Footer Settings</h1>
+            <a class="btn secondary" href="/content-management">Back</a>
+        </header>
+
+        <% if (saved) { %>
+            <p class="flash success">Saved!</p>
+        <% } %>
+
+        <form class="card" method="POST" action="/adminportal/footer-settings" id="footerSettingsForm">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <fieldset>
+                <legend>Phone</legend>
+                <label for="phone">Phone number</label>
+                <input id="phone" name="phone" type="text" value="<%= settings.phone %>" placeholder="123-456-7890">
+            </fieldset>
+
+            <fieldset>
+                <legend>Facebook</legend>
+                <label for="facebookUrl">URL</label>
+                <input id="facebookUrl" name="facebookUrl" type="url" value="<%= settings.facebookUrl %>" placeholder="https://facebook.com/...">
+                <label for="facebookLabel">Label</label>
+                <input id="facebookLabel" name="facebookLabel" type="text" value="<%= settings.facebookLabel %>" placeholder="Facebook">
+            </fieldset>
+
+            <fieldset>
+                <legend>Instagram</legend>
+                <label for="instagramUrl">URL</label>
+                <input id="instagramUrl" name="instagramUrl" type="url" value="<%= settings.instagramUrl %>" placeholder="https://instagram.com/...">
+                <label for="instagramLabel">Label</label>
+                <input id="instagramLabel" name="instagramLabel" type="text" value="<%= settings.instagramLabel %>" placeholder="Instagram">
+            </fieldset>
+
+            <div class="actions">
+                <button class="btn" type="submit">Save</button>
+            </div>
+        </form>
+    </main>
+</body>

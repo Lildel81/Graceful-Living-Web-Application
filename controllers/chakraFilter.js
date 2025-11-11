@@ -1,4 +1,6 @@
 const toArr = (v) => (Array.isArray(v) ? v : v ? [v] : []);
+const esc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 
 function buildChakraFilter(qs = {}) {
     const{
@@ -16,8 +18,8 @@ function buildChakraFilter(qs = {}) {
 
     const filter = {}; 
 
-    if(q) {
-        const rx = new RegExp(q, 'i'); 
+    if(q && q.trim()) {
+        const rx = new RegExp(q.trim(), 'i'); 
         filter.$or = [
             { fullName: rx },
             { email: rx },
@@ -31,10 +33,15 @@ function buildChakraFilter(qs = {}) {
     if (healthcareWorker) filter.healthcareWorker = healthcareWorker;
 
     const fam = toArr(familiarWith);
-    if (fam.length) filter.familiarWith = { $all: fam };
+    if (fam.length) {
+        filter.familiarWith = { $all: fam };
+    }
 
     const ch = toArr(challenges);
-    if (ch.length) filter.challenges = { $all: ch };
+    if (ch.length) {
+        const chRx = ch.map(v => new RegExp(`^\\s*${esc(v)}\\s*$`, 'i'));
+        filter.challenges = { $in: chRx };    
+    }
 
     const fc = toArr(focusChakra);
     if (fc.length) filter.focusChakra = { $in: fc };
@@ -56,3 +63,4 @@ function buildChakraFilter(qs = {}) {
 }
 
 module.exports = { buildChakraFilter, toArr}; 
+

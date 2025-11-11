@@ -15,6 +15,7 @@ const ResourcesText = require('../models/resourcesText');
 const Services = require("../models/servicesSchema");
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
+
 const mongoose = require("mongoose"); 
 // ML conversion prediction - uses centralized controller
 const {getMLConversionStats} = require('./conversionStatsController');
@@ -778,90 +779,12 @@ async function getPreQuizResults(req, res, next ){
 
 
 // Chakra Quiz Results 
-/*async function getChakraQuizResults(req, res, next){
-  try {
-    const {
-      q,
-      ageBracket,
-      healthcareWorker,
-      workedWithPractitioner,
-      familiarWith,
-      challenges,
-      from,
-      to,
-      focusChakra, 
-      archetype
-    } = req.query;
-
-    
-    const filter = {};
-    if (q) {
-      const rx = new RegExp(q, 'i');
-      filter.$or = [
-        { fullName: rx },
-        { email: rx },
-        { contactNumber: rx },
-        { jobTitle: rx }
-      ];
-    }
-    if (ageBracket) filter.ageBracket = ageBracket;
-    if (healthcareWorker) filter.healthcareWorker = healthcareWorker;
-
-    const toArr = v => (Array.isArray(v) ? v : v ? [v] : []);
-    const fam = toArr(familiarWith);
-    if (fam.length) filter.familiarWith = { $all: fam };
-
-    const ch = toArr(challenges);
-    if (ch.length) filter.challenges = { $all: ch };
-
-    const fc = toArr(focusChakra);
-    if (fc.length) filter.focusChakra = { $in: fc };
-
-    const arch = toArr(archetype);
-    if (arch.length) filter.archetype = { $in: arch };
-
-    if (from || to) {
-      filter.createdAt = {};
-      if (from) filter.createdAt.$gte = new Date(from);
-      if (to) {
-        const d = new Date(to);
-        d.setHours(23, 59, 59, 999);
-        filter.createdAt.$lte = d;
-      }
-    }
-
-    const [totalSubmissions, rows] = await Promise.all([
-      ChakraAssessment.countDocuments(filter),
-      ChakraAssessment.find(filter).sort({ createdAt: -1 }).lean()
-    ]);
-
-    res.render('chakraquiz-results', {
-      title: 'Energy Leak Results',
-      stats: { total: totalSubmissions },
-      rows,
-     
-      q: q || '',
-      ageBracket: ageBracket || '',
-      healthcareWorker: healthcareWorker || '',
-      workedWithPractitioner: workedWithPractitioner || '',
-      familiarWith: toArr(familiarWith),
-      challenges: toArr(challenges),
-      from: from || '',
-      to: to || '',
-      focusChakra: req.query.focusChakra || '',
-      archetype: req.query.archetype || ''
-    });
-  } catch (err) {
-    next(err);
-  }
-}*/
-
 const { buildChakraFilter, toArr } = require('./chakraFilter');
 
 async function getChakraQuizResults(req, res, next){
   try {
     const filter = buildChakraFilter(req.query);
-    
+    console.log({ query: req.query, filter });
     const [totalSubmissions, rows] = await Promise.all([
       ChakraAssessment.countDocuments(filter),
       ChakraAssessment.find(filter).sort({ createdAt: -1 }).lean()
@@ -876,8 +799,8 @@ async function getChakraQuizResults(req, res, next){
       ageBracket: req.query.ageBracket || '',
       healthcareWorker: req.query.healthcareWorker || '',
       workedWithPractitioner: req.query.workedWithPractitioner || '',
-      familiarWith: toArr(req.query.familiarWith),
-      challenges: toArr(req.query.challenges),
+      familiarWith: toArr(req.query.familiarWith ?? req.query['familiarWith[]']),
+      challenges:   toArr(req.query.challenges   ?? req.query['challenges[]']),
       from: req.query.from || '',
       to: req.query.to || '',
       focusChakra: toArr(req.query.focusChakra) || '',
@@ -887,6 +810,58 @@ async function getChakraQuizResults(req, res, next){
     next(err);
   }
 }
+
+//delete from Chakra Quiz results
+const postBulkDeleteChakraResults = async (req, res, next) => {
+    try {
+      console.log('[BULK DELETE] raw body:', req.body);
+  
+      let ids = req.body.ids ?? req.body['ids[]'];
+
+      if (!ids || (Array.isArray(ids) && ids.length === 0)) {
+        console.log('[BULK DELETE] No ids provided.');
+        return res.redirect('/clientmanagement/chakraquiz-results');
+      }
+      
+      if (!Array.isArray(ids)) ids = [ids];
+
+      const result = await ChakraAssessment.deleteMany({ _id: { $in: ids } });
+      console.log('[BULK DELETE] deleteMany result:', result);
+
+      return res.redirect('/clientmanagement/chakraquiz-results');
+    } catch (err) {
+      console.error('[BULK DELETE] ERROR:', err);
+      return next(err);
+    }
+};
+
+
+
+
+// Delete for Pre-Quiz results 
+const postBulkDeletePreQuizResults = async (req, res, next) => {
+    try {
+      console.log('[BULK DELETE] raw body:', req.body);
+  
+      let ids = req.body.ids ?? req.body['ids[]'];
+
+      if (!ids || (Array.isArray(ids) && ids.length === 0)) {
+        console.log('[BULK DELETE] No ids provided.');
+        return res.redirect('/clientmanagement/prequiz-results');
+      }
+      
+      if (!Array.isArray(ids)) ids = [ids];
+
+      const result = await Application.deleteMany({ _id: { $in: ids } });
+      console.log('[BULK DELETE] deleteMany result:', result);
+
+      return res.redirect('/clientmanagement/prequiz-results');
+    } catch (err) {
+      console.error('[BULK DELETE] ERROR:', err);
+      return next(err);
+    }
+};
+
 
 
 
@@ -1046,5 +1021,7 @@ module.exports = {
   postDeleteClient,
   getPreQuizResults,
   getChakraQuizResults,
+  postBulkDeleteChakraResults,
+  postBulkDeletePreQuizResults,
   router,
 };

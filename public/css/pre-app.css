@@ -63,7 +63,7 @@ body.pre-app { padding-top: var(--nav-height); }
     width: fit-content;
     margin: 1.5rem auto 0 auto;
     padding: 0.8rem 1.2rem;
-    background: #2ba82f;
+    background: #008080;
     color: white;
     border-radius: 8px;
     font-weight: 600;
@@ -74,7 +74,7 @@ body.pre-app { padding-top: var(--nav-height); }
 }
 
 .btn-next:hover {
-    background: #008106;
+    background: rgba(0, 128, 128, 0.5);
     transform: translateY(-2px);
 }
 

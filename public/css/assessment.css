@@ -222,7 +222,7 @@ textarea:focus {
   display: inline-block;
   margin-top: 1.5rem;
   padding: 0.8rem 1.2rem;
-  background: #2ba82f;
+  background: #008080;
   color: white;
   border: none;
   border-radius: 8px;
@@ -234,7 +234,7 @@ textarea:focus {
 .submit-btn:hover,
 .next-btn:hover,
 .prev-btn:hover {
-  background: #008106;
+  background: rgba(0, 128, 128, 0.5);
   transform: translateY(-2px);
 }
 

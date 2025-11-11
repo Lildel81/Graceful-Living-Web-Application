@@ -1,3 +1,26 @@
+/* Add spacing to header*/
+:root { --nav-height: 72px; }  
+
+main.wrap {
+    padding-top: var(--nav-height);
+}
+
+
+/* Back button styling*/
+.page-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 12px;         
+}
+
+.btn {
+    font-weight: 600;          
+    font-size: .9rem;           
+}
+
+
 /* Body Styling */
 * { box-sizing: border-box; }
 body {
@@ -74,6 +97,34 @@ h1 {
     border: 1px solid #b8e0e6;
     background: #fff;
     color: #1f2a2e;
+}
+
+/* Bulk delete column & actions */
+th.select{
+    text-align: left;
+}
+
+.select-all{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+
+.actions.right {
+    justify-content: flex-end;
+}
+
+.btn.delete {
+    background: #b00020;
+    border-color: #b00020;
+    color: #fff;
+}
+.btn.delete:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
 }
 
 /* Buttons */
