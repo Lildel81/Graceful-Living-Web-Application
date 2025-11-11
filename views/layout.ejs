@@ -51,16 +51,29 @@
             </div>
 
           <!-- Middle Section: Services & Resources -->
-          <div class="footer-sections">
-              <!-- Services Section (Left) -->
-              <div class="footer-column">
-                  <h3>Services</h3>
-                  <ul>
-                      <li><a href="#">Service 1</a></li>
-                      <li><a href="#">Service 2</a></li>
-                      <li><a href="#">Service 3</a></li>
-                  </ul>
-              </div>
+            <div class="footer-column">
+            <h3>Services</h3>
+            <ul>
+                <% if (footerServices && footerServices.length > 0) { %>
+                <% footerServices.forEach(service => { %>
+                    <% if (service.serviceName) { %> <!-- only check for name -->
+                    <li>
+                        <% if (service.buttonUrl) { %>
+                        <a href="<%= service.buttonUrl %>" target="_blank">
+                            <%= service.serviceName %>
+                        </a>
+                        <% } else { %>
+                        <span><%= service.serviceName %></span>
+                        <% } %>
+                    </li>
+                    <% } %>
+                <% }) %>
+                <% } else { %>
+                <li>No Services Available</li>
+                <% } %>
+            </ul>
+            </div>
+
 
               <!-- Resources Section (Middle) -->
               <div class="footer-column">
@@ -70,15 +83,14 @@
                     <% footerResources.forEach(resource => { %>
                         <% if (resource.overlayText && resource.buttonUrl) { %>
                         <li>
-                            <span class="resource-name"><%= resource.overlayText || "Resource" %></span>:
                             <a href="<%= resource.buttonUrl %>" target="_blank">
-                            <%= resource.buttonText || "Download" %>
+                            <%= resource.overlayText || "Resource"  %>
                             </a>
                         </li>
                         <% } %>
                     <% }) %>
                     <% } else { %>
-                    <li>No resources available</li>
+                        <li>No Resources Available</li>
                     <% } %>
                   </ul>
               </div>
