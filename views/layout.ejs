@@ -16,8 +16,8 @@
     <div class="navbar-container">
       
       <a href="/" class="logo">
-        <img src="/images/logo1-removebg.png" alt="GracefuLiving Logo">
-    </a>
+        <img src="/images/gracefuliving_big.svg" alt="GracefuLiving Logo" class="logo-img">
+      </a>
     
         <ul class="nav-links">
             <li><a href="/about">About Us</a></li>
@@ -28,6 +28,9 @@
             <li><a href="/shop">Shop</a></li>
             <% if (user) { %>
                 <li><a href="/user-dashboard" class="btn">Dashboard</a></li>
+                <li><a href="/logout" class="btn">Logout</a></li>
+            <% } else if (admin) { %>
+                <li><a href="/adminportal" class="btn">Admin Portal</a></li>
                 <li><a href="/logout" class="btn">Logout</a></li>
             <% } else { %>
                 <li><a href="/user-login" class="btn">Login</a></li>

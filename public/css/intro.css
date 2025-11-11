@@ -59,12 +59,17 @@ body.intro-page { padding-top: var(--nav-height); }
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
+li {
+  margin-left: 5px;
+}
+
 .btn-next {
   display: block;
   width: fit-content;
   margin: 1.5rem auto 0 auto;
   padding: 0.8rem 1.2rem;
   background: #008080;
+  border: none;
   color: white;
   border-radius: 8px;
   font-weight: 600;
@@ -74,10 +79,36 @@ body.intro-page { padding-top: var(--nav-height); }
 }
 
 .btn-next:hover {
-  background: rgba(0, 128, 128, 0.5);
+  background: #005050;
   transform: translateY(-2px);
 }
 
 .btn-next:active {
   transform: translateY(0);
+}
+
+.btn-next:disabled {
+    background: #cccccc;
+    color: #888888;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-next:disabled:hover {
+    background: #cccccc;
+    transform: none;
+}
+
+.btn-next:disabled:active {
+    transform: none;
+}
+
+.btn-next:not(:disabled):hover {
+    background: #005050;
+    transform: translateY(-2px);
+}
+
+.btn-next:not(:disabled):active {
+    transform: translateY(0);
 }

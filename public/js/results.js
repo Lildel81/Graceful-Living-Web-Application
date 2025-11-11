@@ -381,6 +381,33 @@ module.exports = {
                 "Channel energy into meaningful disruption and creation.",
                 "Affirm: “I embrace freedom with purpose and integrity.”"
             ]
+        },
+        martyr: {
+            title: "🌿 The Martyr Archetype",
+            description: "The Martyr archetype embodies the energy of sacrifice and devotion. Deeply compassionate and morally driven, the Martyr is willing to endure discomfort or loss to support others or a greater cause. They act from love and conviction, often seeing what needs to be done and stepping up when others will not.",
+            coreCharacteristics: [
+                "Strong sense of duty and moral clarity",
+                "Natural ability to spot what’s needed and take action for the good of all",
+                "Deep empathy and compassion; driven to alleviate others’ suffering",
+                "Values integrity, service, and collective wellbeing",
+                "Acts without expectation of reward or recognition",
+                "Courageous in the face of challenge and adversity"
+            ],
+            persona: `The Martyr is altruistic and purpose-driven, guided by compassion and higher values. They act with courage and conviction, inspiring others through example and moral integrity. Grounded in service, they balance compassion with discernment and strive to uphold truth and collective wellbeing.`,
+            shadow: [
+                "Over-sacrificing or suppressing personal needs.",
+                "Burnout and emotional depletion.",
+                "Seeking worth or validation through suffering.",
+                "Feeling unappreciated or victimized.",
+                "Difficulty receiving or setting healthy boundaries."
+            ],
+            growthInvitations: [
+                "Create a “Non-Negotiables” List: Identify 3 daily self-care actions that are just for you (quiet time, movement, no work texts after 6 p.m.).",
+                "Practice Compassionate Boundaries: Say “no” once per day—start small and honor your limits.",
+                "Ask for Support: Allow yourself to receive help at least once this week, even if it feels uncomfortable.",
+                "Schedule Pleasure Time: Commit to one joyful, non-productive activity weekly (a bath, nature walk, or creative hobby).",
+                "Reverse Gratitude Journal: Reflect on times when over-giving led to resentment, and consciously choose a new, balanced pattern."
+            ]
         }
     }
 }

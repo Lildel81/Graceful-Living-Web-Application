@@ -274,8 +274,23 @@ app.use(express.urlencoded({ extended: true }));
 // middleware to make user available in all views (for nav bar)
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
+  res.locals.admin = req.session.isAdmin || null;
   next();
 });
+
+// catches TOS post
+app.post("/intro/accept-terms", csrfProtection, (req, res) => {
+  req.session.acceptedTOS = true;
+  res.redirect("/assessment");
+});
+
+// middleware to require TOS to be accepted before accessing Chakra Assessment
+function requireTOS(req, res, next) {
+  if (!req.session.acceptedTOS) {
+    return res.redirect("/intro");
+  }
+  next();
+}
 
 app.use(['/application'], csrfProtection, (req, res, next) => {
   res.locals.csrfToken = req.csrfToken(); // This allows CSRF tokens  to access all redners in the application route
@@ -293,8 +308,12 @@ app.use(['/assessment'], csrfProtection, (req, res, next) => {
   next();
 });
 
-app.get("/assessment", csrfProtection, (req, res) => {
-  res.render("quiz/assessment");
+app.get("/assessment", requireTOS, csrfProtection, (req, res) => {
+  res.render("quiz/assessment", { csrfToken: req.csrfToken(), session: req.session });
+});
+
+app.get("/intro", csrfProtection, (req, res) => {
+  res.render("quiz/intro", {csrfToken: req.csrfToken()});
 });
 
 const rateLimit = require("express-rate-limit");

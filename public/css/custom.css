@@ -48,11 +48,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Logo */
 .logo img {
-    width: 250px;
-    height: auto;
-    display: block;
-    object-fit: contain;
-    max-height: 100px; /* Limit height to match navbar height */
+  margin-top: 10px; 
+  width: 150px;
+  height: auto;
+  transform: scale(1.8);
+  transform-origin: center;
 }
 
 /* Nav Links */

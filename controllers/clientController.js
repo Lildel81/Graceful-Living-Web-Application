@@ -337,10 +337,6 @@ const getIntroductionView = async (req, res, next) => {
   res.render("quiz/intro");
 };
 
-const getGettingToKnowYouView = async (req, res, next) => {
-  res.render("quiz/getting-to-know-you");
-};
-
 const getAssessmentView = async (req, res, next) => {
   res.render("quiz/assessment");
 };
@@ -992,7 +988,6 @@ module.exports = {
   getHomeView,
   getAssessmentView,
   getIntroductionView,
-  getGettingToKnowYouView,
   getGalleryView,
   handleUpload,
   deleteImage,
