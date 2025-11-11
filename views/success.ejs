@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Payment success</title>
+    <style>
+      :root { --fg:#0f172a; --muted:#475569; --ok:#10b981; --bg:#f8fafc; }
+      *{box-sizing:border-box}
+      body{
+        margin:0; padding:40px 16px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        color:var(--fg); background:var(--bg);
+      }
+      .wrap{max-width:900px; margin:0 auto;}
+      .card{
+        max-width:560px; margin:48px auto; background:#fff; border-radius:16px;
+        box-shadow:0 10px 30px rgba(2,6,23,.08);
+        padding:28px 28px 32px;
+      }
+      .icon{
+        width:56px; height:56px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center;
+        background:rgba(16,185,129,.12); color:var(--ok); margin-bottom:16px;
+      }
+      h1{margin:8px 0 8px; font-size:28px; line-height:1.2}
+      p.lead{margin:0 0 18px; color:var(--muted)}
+      .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:8px}
+      .btn{
+        appearance:none; border:0; border-radius:12px; padding:12px 16px; cursor:pointer; font-weight:600; text-decoration:none;
+        background:#111827; color:#fff; display:inline-flex; align-items:center; justify-content:center
+      }
+      .btn.secondary{background:#e5e7eb; color:#111827}
+      .grid{
+        display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:18px
+      }
+      small{color:var(--muted)}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="icon" aria-hidden="true">
+          <!-- check -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </div>
+        <h1>Payment successful</h1>
+        <p class="lead">Your payment went through. You can return to the shop whenever you’re ready.</p>
+
+        <div class="actions">
+          <a class="btn" href="/shop">Back to shop</a>
+          <a class="btn secondary" href="/">Home</a>
+        </div>
+
+        <div class="grid">
+          <div>
+            <small>Tip: keep this tab open if you want to see your confirmation email arrive.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
