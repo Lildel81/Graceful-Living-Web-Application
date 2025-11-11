@@ -150,8 +150,8 @@ main {
 }
 
 .stats-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  justify-content: flex-end; /* aligns children to the right */
   gap: 1rem;
   margin-bottom: 2rem;
 }
@@ -575,3 +575,35 @@ button:hover {
 .throat { background: #0277bd; }
 .third-eye { background: #4527a0; }
 .crown { background: #6a1b9a; }
+
+/* Centered Chakra Overview Title + Total Submissions */
+.chakra-overview {
+  text-align: center;
+  margin: 0 auto 2rem;
+}
+
+.chakra-overview h1 {
+  font-family: 'Source Serif Pro', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #0f6b67; /* teal tone like your conversions section */
+}
+
+/* Total submissions card styling */
+.total-submissions-card {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: #1d8888; /* turquoise */
+  color: #fff;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 8px 20px rgba(29,136,136,0.25);
+}
+
+.total-submissions-card .total-number {
+  font-weight: 800;
+  margin-left: 6px;
+}
+
