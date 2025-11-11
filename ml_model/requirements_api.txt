@@ -1,4 +1,21 @@
 # Additional requirements for Flask API deployment
-flask==3.0.0
-flask-cors==4.0.0
-gunicorn==21.2.0  # For production deployment
+flask==3.0.0        # Flask Web Framework
+flask-cors==4.0.0   # CORS support for cross-origin request
+gunicorn==21.2.0    # For production deployment
+
+# Python ML Requirements for Chakra Assessment Conversion Prediction
+
+# Data Processing & MongoDB
+pymongo==4.6.0
+pandas==2.1.4
+numpy==1.26.2
+
+# Machine Learning
+scikit-learn==1.3.2
+
+# Data Visualization
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Environment Management
+python-dotenv==1.0.0
