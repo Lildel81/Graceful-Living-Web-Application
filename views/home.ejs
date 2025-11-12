@@ -134,14 +134,33 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
     </div>
 
     <div class="intro-video">
+      <!-- DYNAMIC -->
+      <% 
+        // If an intro video exists, use it. Otherwise use a default/fallback.
+        const videoSrc = introVideo && introVideo.videoUrl
+          ? introVideo.videoUrl
+          : "https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7";
+      %>
+
       <iframe
-        src="https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7"
+        src="<%= videoSrc %>"
         title="GracefulLiving Introduction Video"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen>
       </iframe>
+
+      <!-- STATIC IMPLEMENTATION -->
+      <!-- <iframe
+        src="https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7"
+        title="GracefulLiving Introduction Video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe> -->
+
     </div>
   </div>
 

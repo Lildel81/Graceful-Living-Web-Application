@@ -30,6 +30,9 @@ const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
+const footerRoutes = require('./routes/footer-routes');
+const homeQuoteRoutes = require('./routes/home-quote-routes');
+const adminVideoRoutes = require('./routes/adminVideoRoutes');
 
 const app = express();
 
@@ -310,6 +313,8 @@ app.use("/", chakraApplications);
 // DANI TESTING PURPOSES ONLY
 const simpleFormRoutes = require("./routes/simpleFormRoutes");
 app.use("/", simpleFormRoutes);
+
+app.use('/adminportal', adminVideoRoutes);
 
 // for services in content management & home page
 const servicesRoutes = require("./routes/servicesRoutes");

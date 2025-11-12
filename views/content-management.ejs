@@ -63,7 +63,7 @@
             </form>
         </section>
 
-        <section id="panel-video" class="panel">
+        <!-- <section id="panel-video" class="panel">
             <h2>Introduction Video</h2>
             <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save intro video URL.');">
                 <label for="introVideoUrl">Video URL (YouTube, Vimeo, or MP4)</label>
@@ -72,6 +72,68 @@
                     <button class="btn" type="submit">Save Video</button>
                 </div>
             </form>
+        </section> -->
+        <section id="panel-video" class="panel">
+            <h2>Introduction Video</h2>
+            <p>Paste a YouTube embed link or any valid video URL to update the intro video shown on the homepage.</p>
+
+            <form
+                id="introVideoForm" 
+                action="/adminportal/update-intro-video" 
+                method="POST"
+                class="admin-form"
+            >
+                <!-- CSRF Protection -->
+
+                <!-- Video URL Input -->
+                <div class="form-group">
+                    <label for="videoUrl">Video URL (YouTube, Vimeo, or MP4)</label>
+                    <input 
+                        type="url" 
+                        id="videoUrl" 
+                        name="videoUrl" 
+                        class="form-control"
+                        placeholder="https://www.youtube.com/embed/YourVideoID"
+                        value="<%= introVideo && introVideo.videoUrl ? introVideo.videoUrl : '' %>"
+                        required
+                    >
+                </div>
+
+                <!-- Preview (optional, dynamic JS update) -->
+                <div id="videoPreview" class="video-preview" style="margin-top: 1rem;">
+                    <% if (introVideo && introVideo.videoUrl) { %>
+                        <iframe 
+                        src="<%= introVideo.videoUrl %>" 
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        width="480" 
+                        height="270">
+                        </iframe>
+                    <% } else { %>
+                        <p>No video set yet.</p>
+                    <% } %>
+                </div>
+
+                <!-- Save Button -->
+                <div class="actions">
+                    <button class="btn" type="submit">Save Video</button>
+                </div>
+            </form>
+
+            <!-- Optional JS for live preview -->
+            <script>
+                const videoUrlInput = document.getElementById('videoUrl');
+                const preview = document.getElementById('videoPreview');
+                videoUrlInput?.addEventListener('input', e => {
+                    const url = e.target.value.trim();
+                    if (url) {
+                        preview.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen width="480" height="270"></iframe>`;
+                    } else {
+                        preview.innerHTML = '<p>No video set yet.</p>';
+                    }
+                });
+            </script>
         </section>
 
         <section id="panel-services" class="panel">
