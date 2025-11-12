@@ -18,6 +18,8 @@ const ChakraAssessment = require('../models/chakraAssessment');
 const AboutUsIntro = require("../models/aboutUsIntroSchema");
 const AboutUsContent = require("../models/aboutUsContentSchema");
 
+const IntroVideo = require('../models/introVideo');
+
 const mongoose = require("mongoose"); 
 // ML conversion prediction - uses centralized controller
 const {getMLConversionStats} = require('./conversionStatsController');
@@ -94,7 +96,7 @@ const getHubView = async (req, res, next) => {
 const getHomeView = async (req, res, next) => {
   try {
     const slides = await CarouselSlide.find().sort({ order: 1 });
-    /*
+    const IntroVideo = await IntroVideo.findOne().sort({ createdAt: -1 });    /*
     const allReviews = [
       {
         name: "Vicki Carroll",
@@ -333,12 +335,11 @@ const getHomeView = async (req, res, next) => {
       selectedReviews,
       //to view services 
       services,
-      introVideo
-
+      IntroVideo
     });
   } catch (error) {
     console.error("Error fetching slides:", error.message);
-    res.render("home", { slides: [], selectedReviews: [] });
+    res.render("home", { slides: [], selectedReviews: [], introVideo: null });
   }
 };
 
@@ -922,10 +923,18 @@ const getUserDashboardView = async (req, res, next) => {
   res.render("user-dashboard");
 };
 
-const getContentManagementView = (req, res) => {
-  // loosen CSP only for this admin page (it hosts the testimonials iframe)
-  allowAdminEmbeds(res);
-  res.render("content-management");
+const getContentManagementView = async (req, res) => {
+  try {
+    allowAdminEmbeds(res);
+
+    // Fetch intro video if it exists
+    const introVideo = await IntroVideo.findOne();
+
+    res.render("content-management", { introVideo });
+  } catch (error) {
+    console.error("Error loading content management page:", error);
+    res.status(500).send("Error loading content management page.");
+  }
 };
 
 
