@@ -125,16 +125,8 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   // nuke old cookie-mode artifacts so they can't confuse things
-//   res.clearCookie('_csrf');
-//   res.clearCookie('csrfSecret');
-//   next();
-// });
-
-//app.use(hpp());
 app.use(mongoSanitize());
-//app.use(hpp({ whitelist: ["familiarWith", "challanges", "_csrf"] }));
+
 
 // for delete 
 app.use(hpp({
@@ -301,6 +293,16 @@ app.use(['/application'], csrfProtection, (req, res, next) => {
 app.get("/application", csrfProtection, (req, res) => {
   req.session.appFlow = true; // touching the session triggers Set-Cookie: sid=...
   res.render("prequiz/application",);
+});
+
+
+
+app.use((err, req, res, next) => {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  res.status(403).render('prequiz/application', {
+    error: 'Your form expired or was submitted twice. Please try again.'
+    // csrfToken already in res.locals
+  });
 });
 
 app.use(['/assessment'], csrfProtection, (req, res, next) => {

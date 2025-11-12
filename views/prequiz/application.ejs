@@ -15,7 +15,8 @@
         </section>
 
         <form id="assessment-form" action="/application" method="POST" novalidate>
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="_csrf" value="<%= csrfToken || (locals && locals.csrfToken) %>">
+
       
 
             <!--FULL NAME-->
