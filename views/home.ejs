@@ -328,7 +328,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 </section>
 
 
-
+  <link rel="stylesheet" href="/css/home-testimonial.css">
   <div class="review-section">
     <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Voices of the Healed</h2>
   
@@ -336,18 +336,16 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
       <div class="review" style="background: url('/images/review-background<%= (i % 3) + 1 %>.png') no-repeat center center / cover;">
         <% if (i % 2 === 0) { %>
           <div class="left-section">
-            <img src="<%= review.image %>" alt="<%= review.name %>" class="review-img" />
             <p class="review-name"><%= review.name %></p>
           </div>
           <div class="right-section">
-            <p class="review-quote">❝ <%= review.quote %> ❞</p>
+            <p class="review-quote"><%= review.quote %></p>
           </div>
         <% } else { %>
           <div class="left-section">
-            <p class="review-quote">❝ <%= review.quote %> ❞</p>
+            <p class="review-quote"><%= review.quote %></p>
           </div>
           <div class="right-section">
-            <img src="<%= review.image %>" alt="<%= review.name %>" class="review-img" />
             <p class="review-name"><%= review.name %></p>
           </div>
         <% } %>
@@ -356,5 +354,3 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
   
     <a href="/reviews" class="btn btn-testimonial"> Read more testimonials </a>
   </div>
-  
-  

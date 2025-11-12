@@ -92,7 +92,7 @@ const getHubView = async (req, res, next) => {
 const getHomeView = async (req, res, next) => {
   try {
     const slides = await CarouselSlide.find().sort({ order: 1 });
-
+    /*
     const allReviews = [
       {
         name: "Vicki Carroll",
@@ -312,12 +312,16 @@ const getHomeView = async (req, res, next) => {
           "Thank you for providing a safe and healing experience. You made a comfortable space for me to just be Me!",
         image: "/images/review-face2.png",
       },
-    ];
+    ];*/ 
+
     const getRandomReviews = (list, count) => {
       const shuffled = [...list].sort(() => 0.5 - Math.random());
       return shuffled.slice(0, count);
     };
-    const selectedReviews = getRandomReviews(allReviews, 3);
+    // const selectedReviews = getRandomReviews(allReviews, 3);
+
+    // randomly select 3 testimonials
+    const selectedReviews = await testimonials.aggregate([{ $sample: { size: 3 } }]);
 
     const services = await Services.find().sort({ createdAt: -1 }).limit(3);
 
