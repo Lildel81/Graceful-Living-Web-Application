@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="/css/shop.css">
+
+<div class="gl-shop" style="max-width: 960px; margin: 2rem auto;">
+  <h1 class="gl-shop-title">Manage Products</h1>
+  <p><a class="btn" href="/shop/admin/new">+ New Product</a></p>
+
+  <% if (!products || !products.length) { %>
+    <p class="gl-muted">No products yet.</p>
+  <% } else { %>
+    <table style="width:100%; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:8px;">Image</th>
+          <th style="text-align:left; padding:8px;">Title</th>
+          <th style="text-align:left; padding:8px;">Price</th>
+          <th style="text-align:left; padding:8px;">Stock</th>
+          <th style="text-align:left; padding:8px;">Active</th>
+          <th style="text-align:left; padding:8px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(p => { %>
+          <tr style="border-top:1px solid #eee;">
+            <td style="padding:8px;">
+              <% if (p.imagePath) { %>
+                <img src="<%= p.imagePath %>" alt="" style="height:48px; width:auto; border-radius:8px;">
+              <% } %>
+            </td>
+            <td style="padding:8px;">
+              <strong><%= p.title %></strong><br>
+              <small class="gl-muted">/<%= p.slug %></small>
+            </td>
+            <td style="padding:8px;">$<%= (p.priceCents/100).toFixed(2) %></td>
+            <td style="padding:8px;"><%= p.stock %></td>
+            <td style="padding:8px;"><%= p.active ? 'Yes' : 'No' %></td>
+            <td style="padding:8px; white-space:nowrap;">
+              <a class="btn" href="/shop/admin/<%= p._id %>/edit">Edit</a>
+              <form method="POST" action="/shop/admin/<%= p._id %>/delete" style="display:inline;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="btn" style="background:#fce4e4; color:#a00;" onclick="return confirm('Delete this product? This also removes the image file.');">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>

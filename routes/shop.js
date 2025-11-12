@@ -17,7 +17,7 @@ const withCsrf = (req, res, next) => {
   next();
 };
 
-router.get('/admin/new', csrf, withCsrf, shop.adminForm);
+router.get('/admin/new', csrf, withCsrf, requireAdmin, shop.adminForm);
 router.post(
   '/admin',
   upload.single('image'),
@@ -73,5 +73,19 @@ router.post('/create-checkout-session', async (req, res) => {
     return res.status(500).send('Failed to create checkout session');
   }
 });
+
+function requireAdmin(req, res, next) {
+  if (req.session && req.session.isAdmin) return next();
+  return res.status(403).redirect('/login');
+}
+
+router.get('/admin/list', csrf, withCsrf, requireAdmin, shop.adminList);
+router.get('/admin/:id/edit', csrf, withCsrf, requireAdmin, shop.adminEditForm);
+
+// Update (no photo change). Regular urlencoded form, so csrf can run before controller.
+router.post('/admin/:id', csrf, requireAdmin, shop.adminUpdate);
+
+// Delete product + image
+router.post('/admin/:id/delete', csrf, requireAdmin, shop.adminDelete);
 
 module.exports = router;

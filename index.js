@@ -360,6 +360,8 @@ app.use('/cart', require('./routes/cart'));
 // Ensure /checkout pages/forms have a CSRF token available
 app.use('/checkout', csrf, exposeCsrf, require('./routes/checkout'));
 
+
+
 // Stripe redirect landing pages
 app.get('/success', (req, res) => res.render('success'));
 app.get('/cancel',  (req, res) => res.render('cancel'));

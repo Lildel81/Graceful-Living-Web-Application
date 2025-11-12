@@ -102,3 +102,102 @@ exports.adminCreate = async (req, res, next) => {
     });
   }
 };
+
+const path = require('path');
+const fs = require('fs');
+
+// List all products (including inactive) for admin
+exports.adminList = async (req, res, next) => {
+  try {
+    const products = await Product.find({}).sort({ createdAt: -1 }).lean();
+    res.render('shop-admin-list', { title: 'Manage Products', products });
+  } catch (e) { next(e); }
+};
+
+// Edit form
+exports.adminEditForm = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id).lean();
+    if (!product) return res.status(404).render('404', { title: 'Not Found' });
+    res.render('shop-edit', { title: `Edit: ${product.title}`, product });
+  } catch (e) { next(e); }
+};
+
+// Update (no photo change)
+exports.adminUpdate = async (req, res, next) => {
+  try {
+    const p = await Product.findById(req.params.id);
+    if (!p) return res.status(404).render('404', { title: 'Not Found' });
+
+    // Price: accept either cents or dollars (dollars wins if provided)
+    let { title, description, priceCents, priceDollars, stock, active, updateSlug } = req.body;
+
+    if (!priceCents && priceDollars) {
+      const d = parseFloat(priceDollars);
+      if (Number.isFinite(d) && d >= 0) priceCents = Math.round(d * 100);
+    }
+
+    const payload = {
+      title: title ?? p.title,
+      slug: p.slug, // default keep same
+      description,
+      priceCents: Number(priceCents ?? p.priceCents),
+      stock: (stock === '' || typeof stock === 'undefined') ? p.stock : Number(stock),
+      active: typeof active === 'string' ? active === 'on' : !!active,
+    };
+
+    // If user checked "Update URL from title", regenerate slug
+    if (updateSlug === 'on' && payload.title) {
+      payload.slug = await ensureUniqueSlug(toSlug(payload.title));
+    }
+
+    // Validate with Joi
+    const { value, error } = productSchema.validate(payload, { abortEarly: false });
+    if (error) {
+      const msg = error.details?.map(d => d.message).join('; ') || 'Validation error';
+      return res.status(400).render('shop-edit', {
+        title: `Edit: ${p.title}`,
+        product: { ...p.toObject?.() ?? p, ...payload },
+        error: msg
+      });
+    }
+
+    // Apply updates (do NOT change imagePath here)
+    p.title = value.title;
+    p.slug = value.slug;
+    p.description = sanitizeHtml(value.description || '');
+    p.priceCents = value.priceCents;
+    p.stock = value.stock;
+    p.active = value.active;
+
+    await p.save();
+    return res.redirect('/shop/admin/list');
+  } catch (e) {
+    console.error('[SHOP][UPDATE] Failed:', e);
+    return res.status(400).render('shop-edit', {
+      title: 'Edit Product',
+      product: { _id: req.params.id, ...req.body },
+      error: e?.message || 'Failed to update product'
+    });
+  }
+};
+
+// Delete product + image
+exports.adminDelete = async (req, res, next) => {
+  try {
+    const doc = await Product.findByIdAndDelete(req.params.id).lean();
+    if (doc && doc.imagePath) {
+      // Only delete if inside /public/images/uploads
+      const uploadRoot = path.join(__dirname, '..', 'public', 'images', 'uploads');
+      const abs = path.join(__dirname, '..', 'public', doc.imagePath.replace(/^\//, ''));
+      if (abs.startsWith(uploadRoot)) {
+        fs.unlink(abs, (err) => {
+          if (err && err.code !== 'ENOENT') {
+            console.warn('[SHOP][DELETE] Could not remove image:', abs, err.message);
+          }
+        });
+      }
+    }
+    return res.redirect('/shop/admin/list');
+  } catch (e) { next(e); }
+};
