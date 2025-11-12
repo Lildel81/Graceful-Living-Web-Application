@@ -1,12 +1,83 @@
-<h1>New Product</h1>
-<form method="POST" action="/shop/admin" enctype="multipart/form-data">
-  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<link rel="stylesheet" href="/css/shop.css">
 
-  <label>Title <input name="title" required></label><br/>
-  <label>Slug <input name="slug" required></label><br/>
-  <label>Price (cents) <input name="priceCents" type="number" min="0" required></label><br/>
-  <label>Stock <input name="stock" type="number" min="0" value="0"></label><br/>
-  <label>Image <input type="file" name="image" accept="image/*"></label><br/>
-  <label>Description<br/><textarea name="description" rows="6"></textarea></label><br/>
-  <button type="submit">Create</button>
-</form>
+<div class="gl-shop" style="max-width: 720px; margin: 2rem auto;">
+  <h1 class="gl-shop-title"><%= title || 'New Product' %></h1>
+
+  <% if (typeof error === 'string' && error) { %>
+    <div class="gl-error" style="background:#fee; border:1px solid #f99; padding:0.75rem; border-radius:8px; margin-bottom:1rem;">
+      <strong>There was a problem:</strong> <%= error %>
+    </div>
+  <% } %>
+
+  <form method="POST"
+        action="/shop/admin?_csrf=<%= csrfToken %>"
+        enctype="multipart/form-data"
+        class="gl-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="gl-field">
+      <label>Title</label>
+      <input name="title" id="title" required value="<%= (product && product.title) || '' %>" />
+      <small class="gl-muted">URL (slug) will be created automatically.</small>
+    </div>
+
+
+    <div class="gl-field">
+      <label>Price</label>
+      <div style="display:flex; gap:0.5rem; align-items:center;">
+        <span>$</span>
+        <input name="priceDollars" id="priceDollars" type="number" step="0.01" min="0" placeholder="0.00"
+               value="<%= product && product.priceCents ? (product.priceCents/100).toFixed(2) : '' %>">
+      </div>
+      <input type="hidden" name="priceCents" id="priceCents" value="<%= product && product.priceCents ? product.priceCents : '' %>">
+      <small class="gl-muted">Type dollars; we’ll convert to cents.</small>
+    </div>
+
+    <div class="gl-field">
+      <label>Stock</label>
+      <input name="stock" type="number" min="0" value="<%= (product && product.stock) || 0 %>" />
+    </div>
+
+    <div class="gl-field">
+      <label>Image</label>
+      <input type="file" name="image" id="image" accept="image/*">
+      <div id="previewWrap" style="margin-top:0.5rem; display:none;">
+        <img id="preview" alt="Preview" style="max-width: 240px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08);" />
+      </div>
+    </div>
+
+    <div class="gl-field">
+      <label>Description</label>
+      <textarea name="description" rows="6"><%= (product && product.description) || '' %></textarea>
+      <small class="gl-muted">Basic HTML allowed; it will be sanitized on save.</small>
+    </div>
+
+    <div class="gl-actions" style="display:flex; gap:0.5rem;">
+      <button type="submit" class="btn">Create</button>
+      <a class="btn" href="/shop" style="background:#f4f4f4; color:#333;">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  const dollarsEl = document.getElementById('priceDollars');
+  const centsEl = document.getElementById('priceCents');
+  const imgInput = document.getElementById('image');
+  const previewWrap = document.getElementById('previewWrap');
+  const previewImg = document.getElementById('preview');
+
+  function syncCents() {
+    const dollars = parseFloat(dollarsEl.value);
+    centsEl.value = (!isNaN(dollars) && dollars >= 0) ? Math.round(dollars * 100) : '';
+  }
+  dollarsEl.addEventListener('input', syncCents);
+  syncCents();
+
+  imgInput.addEventListener('change', () => {
+    const f = imgInput.files && imgInput.files[0];
+    if (!f) { previewWrap.style.display = 'none'; return; }
+    const url = URL.createObjectURL(f);
+    previewImg.src = url;
+    previewWrap.style.display = 'block';
+  });
+</script>
