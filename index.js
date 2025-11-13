@@ -30,8 +30,6 @@ const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
-const footerRoutes = require('./routes/footer-routes');
-const homeQuoteRoutes = require('./routes/home-quote-routes');
 const adminVideoRoutes = require('./routes/adminVideoRoutes');
 
 const app = express();
@@ -155,7 +153,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 // ✅ Allow same-origin iframing ONLY for the testimonials manager pages
 app.use(["/admin/testimonials", "/admin/testimonials/*"], (req, res, next) => {
   // Permit this site to embed these routes in an <iframe>
-  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("adminportal-Options");
 
   // Ensure CSP also allows same-origin framing for these routes
   const existing = res.getHeader("Content-Security-Policy");

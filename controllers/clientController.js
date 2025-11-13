@@ -40,7 +40,7 @@ function allowAdminEmbeds(res) {
     .trim();
 
   res.set('Content-Security-Policy', cleaned ? `${cleaned}; ${extra}` : extra);
-  res.set('X-Frame-Options', 'SAMEORIGIN');
+  res.set('adminportal-Options');
 }
 
 
@@ -930,8 +930,9 @@ const getContentManagementView = async (req, res) => {
     // Fetch intro video if it exists
     const introVideo = await IntroVideo.findOne();
 
-    res.render("content-management", { introVideo });
+    res.render("content-management", { introVideo, csrfToken: req.csrfToken() });
   } catch (error) {
+    csrfToken: req.csrfToken(),
     console.error("Error loading content management page:", error);
     res.status(500).send("Error loading content management page.");
   }

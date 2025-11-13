@@ -81,7 +81,7 @@
                 class="admin-form"
             >
                 <!-- CSRF Protection -->
-
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <!-- Video URL Input -->
                 <div class="form-group">
                     <label for="videoUrl">Video URL (YouTube, Vimeo, or MP4)</label>
