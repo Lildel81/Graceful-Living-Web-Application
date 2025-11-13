@@ -55,6 +55,13 @@ COPY --from=build /app /app
 # (Optional) If you need Python deps at runtime, and you didn't install them in build:
 # RUN if [ -f python/requirements.txt ]; then pip3 install -r python/requirements.txt; fi
 
+
+# Load the ML file for 
+RUN pip install -r ml_model/requirements_api.txt
+
+RUN gunicorn -c ml_model/gunicorn_config.py ml_api:app
+
+
 # Render provides $PORT; make sure your app uses it.
 ENV PORT=8080
 
