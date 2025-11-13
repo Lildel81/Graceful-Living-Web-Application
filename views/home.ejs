@@ -142,14 +142,19 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
           : "https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7";
       %>
 
-      <iframe
+     <!-- <iframe
         src="<%= videoSrc %>"
         title="GracefulLiving Introduction Video"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen>
-      </iframe>
+      </iframe>-->
+      <iframe
+       src="<%= videoSrc %>""
+       title="YouTube video player"
+       allowfullscreen
+></iframe>
 
       <!-- STATIC IMPLEMENTATION -->
       <!-- <iframe

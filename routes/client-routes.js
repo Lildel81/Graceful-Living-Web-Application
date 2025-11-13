@@ -71,7 +71,7 @@ const csrfProtection = require('csurf')({
 
 /* -------------------- Admin-only Views -------------------- */
 router.get('/adminportal', csrfProtection, requireAdmin, getAdminPortalView);
-router.get('/content-management', requireAdmin, getContentManagementView);
+router.get('/content-management', csrfProtection, requireAdmin, getContentManagementView);
 router.get('/user-login', getLoginView);     // reuse existing login view
 router.get('/user-signup', getLoginView);    // reuse existing login view
 router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagementView);
@@ -94,7 +94,7 @@ router.post('/clientmanagement/:id/delete', requireAdmin, postDeleteClient);
 /* ---------- Allow iframe only for testimonials manager (same-origin) ---------- */
 router.use('/admin/testimonials', (req, res, next) => {
   // XFO: allow same-origin embedding
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('adminportal-Options');
 
   // CSP: ensure frame-ancestors includes self (and remove any older FA if present)
   const existing = res.getHeader('Content-Security-Policy');
