@@ -49,8 +49,6 @@ RUN apt-get update -qq && \
 COPY --from=build /app /app
 
 # Install Python deps for the ML API
-# (this assumes ml_model/requirements_api.txt exists in your repo)
-RUN pip3 install -r ml_model/requirements_api.txt
 
 # Render provides $PORT; make sure your Node app uses it.
 ENV PORT=8080
