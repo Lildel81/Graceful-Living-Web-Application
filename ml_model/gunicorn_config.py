@@ -7,8 +7,8 @@ import multiprocessing
 
 # Server socket
 # Render sets PORT environment variable, default to 5001 for local testing
-port = os.environ.get('PORT', '5001')
-bind = f"0.0.0.0:{port}"
+ml_port = os.environ.get('ML_PORT', '5001')
+bind = f"0.0.0.0:{ml_port}"
 
 # Worker processes
 # Use 2-4 workers for ML API (balance between performance and memory)

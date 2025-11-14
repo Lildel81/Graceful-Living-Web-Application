@@ -28,21 +28,17 @@ RUN apt-get update -qq && \
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# Copy the rest of the app
+# Copy the rest of the app (includes ml_model/)
 COPY . .
 
-# (Optional) If you have Python deps, uncomment the two lines below
-# COPY python/requirements.txt ./python/requirements.txt
-# RUN pip3 install -r python/requirements.txt
-
 ###
-# Runtime stage: small image but includes Python 3 for your script
+# Runtime stage: small image but includes Python 3 for your ML API
 ###
 FROM node:${NODE_VERSION}-bookworm-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Install Python runtime for your spawned script
+# Install Python runtime for your ML API
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
       python3 \
@@ -52,15 +48,18 @@ RUN apt-get update -qq && \
 # Copy built app + node_modules from the build stage
 COPY --from=build /app /app
 
-# (Optional) If you need Python deps at runtime, and you didn't install them in build:
-# RUN if [ -f python/requirements.txt ]; then pip3 install -r python/requirements.txt; fi
+# Install Python deps for the ML API
+# (this assumes ml_model/requirements_api.txt exists in your repo)
+RUN pip3 install -r ml_model/requirements_api.txt
 
-# Render provides $PORT; make sure your app uses it.
+# Render provides $PORT; make sure your Node app uses it.
 ENV PORT=8080
 
 # Expose is informational; Render maps ports automatically.
 EXPOSE 8080
 
-# Start with node (not nodemon)
-# If your package.json has "start": "node index.js", you can use ["npm","start"] instead.
-CMD ["node", "index.js"]
+# Ensure start.sh is executable (in case chmod didn't carry)
+RUN chmod +x /app/start.sh
+
+# Start both: Gunicorn ML API + Node web app
+CMD ["./start.sh"]

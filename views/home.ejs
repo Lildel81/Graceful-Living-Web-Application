@@ -100,20 +100,8 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 <!--/*------------------------Carousel Section End------------------------------------*/-->
 <div class="home-container">
 
- <!-- OLD HOME QUOTE  <div class="quote-container">
-    <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
-    <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
-  </div>-->
-
-  <!--Editable Home Quote-->
-  <%
-  var q = (homeQuote && homeQuote.quoteText && homeQuote.quoteText.trim())
-    ? homeQuote.quoteText.trim()
-    : '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”';
-  %>
-
   <div class="quote-container">
-    <h1><%= q %></h1>
+    <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
     <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
   </div>
 
@@ -146,14 +134,34 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
     </div>
 
     <div class="intro-video">
-      <iframe
-        src="https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7"
+      <!-- DYNAMIC -->
+      <% 
+        // If an intro video exists, use it. Otherwise use a default/fallback.
+        const videoSrc = introVideo && introVideo.videoUrl
+          ? introVideo.videoUrl
+          : "https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7";
+      %>
+
+     <iframe
+        src="<%= videoSrc %>"
         title="GracefulLiving Introduction Video"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen>
       </iframe>
+
+
+      <!-- STATIC IMPLEMENTATION -->
+      <!-- <iframe
+        src="https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7"
+        title="GracefulLiving Introduction Video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe> -->
+
     </div>
   </div>
 
@@ -328,7 +336,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 </section>
 
 
-  <link rel="stylesheet" href="/css/home-testimonial.css">
+
   <div class="review-section">
     <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Voices of the Healed</h2>
   
@@ -336,16 +344,18 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
       <div class="review" style="background: url('/images/review-background<%= (i % 3) + 1 %>.png') no-repeat center center / cover;">
         <% if (i % 2 === 0) { %>
           <div class="left-section">
+            <img src="<%= review.image %>" alt="<%= review.name %>" class="review-img" />
             <p class="review-name"><%= review.name %></p>
           </div>
           <div class="right-section">
-            <p class="review-quote"><%= review.quote %></p>
+            <p class="review-quote">❝ <%= review.quote %> ❞</p>
           </div>
         <% } else { %>
           <div class="left-section">
-            <p class="review-quote"><%= review.quote %></p>
+            <p class="review-quote">❝ <%= review.quote %> ❞</p>
           </div>
           <div class="right-section">
+            <img src="<%= review.image %>" alt="<%= review.name %>" class="review-img" />
             <p class="review-name"><%= review.name %></p>
           </div>
         <% } %>
@@ -354,3 +364,5 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
   
     <a href="/reviews" class="btn btn-testimonial"> Read more testimonials </a>
   </div>
+  
+  
