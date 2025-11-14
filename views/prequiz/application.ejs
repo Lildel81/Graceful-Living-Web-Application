@@ -14,9 +14,10 @@
             <p>Interested in booking a session? Please complete the form below, and we’ll be in touch shortly.</p>  
         </section>
 
-        <form id="assessment-form" action="/application" method="POST" novalidate>
-        <input type="hidden" name="_csrf" value="<%= csrfToken || (locals && locals.csrfToken) %>">
+        <form id="assessment-form" action="/application" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
+        
       
 
             <!--FULL NAME-->
