@@ -44,7 +44,7 @@ const chakraAssessmentSchema = new mongoose.Schema({
   healthcareYears: { type: String },
   jobTitle: { type: String },
   experience: { type: String },
-  experienceOther: {type: string},
+  experienceOther: {type: String},
   familiarWith: { type: [String] }, // jocelyn updated , enum: FAMILIAR_WITH_ENUM, trim: true
   experienceDetails: { type: String },
   goals: { type: String },
