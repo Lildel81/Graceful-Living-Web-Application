@@ -43,6 +43,8 @@ app.set("views", path.join(__dirname, "views"));
 app.set('query parser', 'extended');
 app.use(expressLayouts);
 
+// For application PDF endings 
+app.use("/pdfs", express.static(path.join(__dirname, "public", "pdfs")));
 
 app.use(
   helmet({

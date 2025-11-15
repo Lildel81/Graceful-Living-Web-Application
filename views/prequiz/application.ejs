@@ -14,6 +14,32 @@
             <p>Interested in booking a session? Please complete the form below, and we’ll be in touch shortly.</p>  
         </section>
 
+        <!--Handle errors if missing answers -->
+        <% 
+          // Safely default form + error
+          form = typeof form !== 'undefined' && form ? form : {};
+          const fam = Array.isArray(form.familiarWith)
+            ? form.familiarWith
+            : form.familiarWith
+              ? [form.familiarWith]
+              : [];
+          const ch = Array.isArray(form.challenges)
+            ? form.challenges
+            : form.challenges
+              ? [form.challenges]
+              : [];
+        %>
+
+        <!-- Overall error message -->
+        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+          <div class="alert-error">
+            <p><%= errorMessage %></p>
+          </div>
+        <% } %>
+
+
+
+
         <form id="assessment-form" action="/application" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken || (locals && locals.csrfToken) %>">
 
@@ -21,86 +47,86 @@
 
             <!--FULL NAME-->
             <label for="fullName">Full Name:<span class="required"> *</span></label><br>
-            <input type="text" id="fullName" name="fullName" placeholder="First and Last Name" required><br><br>
+            <input type="text" id="fullName" name="fullName" placeholder="First and Last Name" value="<%= form.fullName || '' %>" required><br><br>
 
             <!--EMAIL ADRESSS-->
             <label for="email">Email Address:<span class="required"> *</span></label>
-            <input type="email" id="email" name="email" placeholder="your@email.com" required><br><br>
+            <input type="email" id="email" name="email" placeholder="your@email.com" value="<%= form.email || '' %>" required><br><br>
 
           
             <!--CONTACT NUMBER-->
             <label for="contactNumber">Please provide your contact number:<span class="required"> (Only used for appointment-related communications.) *</span></label><br>
-            <input type="text" id="contactNumber" name="contactNumber" placeholder="(###) ###-####" required><br><br>
+            <input type="text" id="contactNumber" name="contactNumber" placeholder="(###) ###-####" value="<%= form.contactNumber || '' %>" required><br><br>
             
             <!--AGE-->
             <fieldset>
               <legend>What age bracket best represents your age group?<span class="required"> *</span></legend>
-              <label><input type="radio" name="ageBracket" value="20-30" required> 20-30</label>
-              <label><input type="radio" name="ageBracket" value="30-40" required> 30-40</label>
-              <label><input type="radio" name="ageBracket" value="40-50" required> 40-50</label>
-              <label><input type="radio" name="ageBracket" value="50+" required> 50+</label>
+              <label><input type="radio" name="ageBracket" value="20-30" <%= form.ageBracket === '20-30' ? 'checked' : '' %> required> 20-30</label>
+              <label><input type="radio" name="ageBracket" value="30-40" <%= form.ageBracket === '30-40' ? 'checked' : '' %>required> 30-40</label>
+              <label><input type="radio" name="ageBracket" value="40-50" <%= form.ageBracket === '40-50' ? 'checked' : '' %> required> 40-50</label>
+              <label><input type="radio" name="ageBracket" value="50+" <%= form.ageBracket === '50+' ? 'checked' : '' %> required> 50+</label>
             </fieldset>
 
             <!--HEALTHCARE WORKER-->
             <fieldset>
               <legend>Do you work in healthcare?<span class="required"> *</span></legend>
-              <label><input type="radio" id="hc-yes" name="isHealthcareWorker" value="Yes" required> Yes</label>
-              <label><input type="radio" id="hc-no"  name="isHealthcareWorker" value="No"  required checked> No</label>
+              <label><input type="radio" id="hc-yes" name="isHealthcareWorker" value="Yes" <%= form.isHealthcareWorker === 'Yes' ? 'checked' : '' %> required> Yes</label>
+              <label><input type="radio" id="hc-no"  name="isHealthcareWorker" value="No" <%= form.isHealthcareWorker === 'No' || !form.isHealthcareWorker ? 'checked' : '' %>  required checked> No</label>
 
               <div id="healthcare-details" hidden>
                 <label for="healthcareRole">If yes, what kind?</label>
-                <input type="text" id="healthcareRole" name="healthcareRole">
+                <input type="text" id="healthcareRole" name="healthcareRole" value="<%= form.healthcareRole || '' %>">
 
                 <label for="healthcareYears">How many years in that role?</label>
-                <input type="number" id="healthcareYears" name="healthcareYears" min="0" step="1">
+                <input type="number" id="healthcareYears" name="healthcareYears" min="0" step="1" value="<%= typeof form.healthcareYears !== 'undefined' ? form.healthcareYears : '' %>">
               </div>
             </fieldset>
 
 
             <!--JOB TITLE-->
             <label for="jobTitle">Job Title: What is your current occupation or role?<span class="required"> *</span></label><br>
-            <input type="text" id="jobTitle" name="jobTitle" required><br><br>
+            <input type="text" id="jobTitle" name="jobTitle"  value="<%= form.jobTitle || '' %>" required><br><br>
 
             <!--CURRENT HEALER QUESTION-->
-          <fieldset>
+            <fieldset>
               <legend>Have you worked with an energy healer, life coach, or holistic practitioner before?<span class="required"> *</span></legend>
-              <label><input type="radio" name="workedWithPractitioner" value="Currently working with one"> Yes, currently working with one</label>
-              <label><input type="radio" name="workedWithPractitioner" value="In the past"> Yes, in the past</label>
-              <label><input type="radio" name="workedWithPractitioner" value="First time"> No, this is my first time</label>
-              <label><input type="radio" name="workedWithPractitioner" value="Not sure"> Not sure</label>
-              <label><input type="radio" name="workedWithPractitioner" value="Other"> Other</label>
-              <input type="text" name="workedWithPractitionerOther" placeholder="Please specify">
+              <label><input type="radio" name="workedWithPractitioner" value="Currently working with one"  <%= form.workedWithPractitioner === 'Currently working with one' ? 'checked' : '' %> >Yes, currently working with one</label>
+              <label><input type="radio" name="workedWithPractitioner" value="In the past"  <%= form.workedWithPractitioner === 'In the past' ? 'checked' : '' %> > Yes, in the past</label>
+              <label><input type="radio" name="workedWithPractitioner" value="First time" <%= form.workedWithPractitioner === 'First time' ? 'checked' : '' %> > No, this is my first time</label>
+              <label><input type="radio" name="workedWithPractitioner" value="Not sure" <%= form.workedWithPractitioner === 'Not sure' ? 'checked' : '' %> > Not sure</label>
+              <label><input type="radio" name="workedWithPractitioner" value="Other" <%= form.workedWithPractitioner === 'Other' ? 'checked' : '' %> > Other</label>
+              <input type="text" name="workedWithPractitionerOther" placeholder="Please specify" value="<%= form.workedWithPractitionerOther || '' %>">
             </fieldset>
 
             
             <!--FAMILIAR QUESITON-->
             <fieldset>
               <legend>Which of the following are you familiar with? <span class="required"> *</span></legend>
-              <label><input type="checkbox" name="familiarWith" value="Kundalini Yoga"> Kundalini Yoga</label>
-              <label><input type="checkbox" name="familiarWith" value="Sound Baths"> Sound Baths</label>
-              <label><input type="checkbox" name="familiarWith" value="Life Coaching"> Life Coaching</label>
-              <label><input type="checkbox" name="familiarWith" value="Emotional Freedom Technique"> Emotional Freedom Technique (EFT)</label>
-              <label><input type="checkbox" name="familiarWith" value="None of the above"> None of the above</label>
+              <label><input type="checkbox" name="familiarWith" value="Kundalini Yoga" <%= fam.includes('Kundalini Yoga') ? 'checked' : '' %>> Kundalini Yoga</label>
+              <label><input type="checkbox" name="familiarWith" value="Sound Baths" <%= fam.includes('Sound Baths') ? 'checked' : '' %> > Sound Baths</label>
+              <label><input type="checkbox" name="familiarWith" value="Life Coaching" <%= fam.includes('Life Coaching') ? 'checked' : '' %> > Life Coaching</label>
+              <label><input type="checkbox" name="familiarWith" value="Emotional Freedom Technique" <%= fam.includes('Emotional Freedom Technique') ? 'checked' : '' %>> Emotional Freedom Technique (EFT)</label>
+              <label><input type="checkbox" name="familiarWith" value="None of the above" <%= fam.includes('None of the above') ? 'checked' : '' %>> None of the above</label>
             </fieldset>
 
             
             <!--PAST EXPERIENCE-->
             <label for="experience">If you selected any practices above, please share a little about your experience.What did you notice or gain from them? If you answered "None" enter "N/A" in the field below:<span class="required"> *</span></label><br>
-            <textarea id="experience" name="experience" rows="4" placeholder="What did you notice or gain from them, if anything?"></textarea><br><br>
+            <textarea id="experience" name="experience" rows="4" placeholder="What did you notice or gain from them, if anything?"><%= form.experience || '' %></textarea><br><br>
 
             <!--GOALS-->
             <label for="goals">What are your top 1–2 goals or intentions for improving your energy health?<span class="required"> *</span></label><br>
-            <textarea id="goals" name="goals" rows="4" required placeholder='Ex: "I want to feel more energized and sleep better"'></textarea><br><br>
+            <textarea id="goals" name="goals" rows="4" required placeholder='Ex: "I want to feel more energized and sleep better"'><%= form.goals || '' %></textarea><br><br>
 
             <!--CURRENT CHALLENGES-->
             <fieldset>
               <legend>Are there specific challenges you’re currently facing that you’d like support with? <span class="note">(Select all that apply)</span> <span class="required">*</span></legend>
-              <label><input type="checkbox" name="challenges" value="Physical"> Physical (fatigue, pain, chronic issues)</label>
-              <label><input type="checkbox" name="challenges" value="Emotional"> Emotional (stress, anxiety, emotional overwhelm)</label>
-              <label><input type="checkbox" name="challenges" value="Mental"> Mental (overthinking, lack of focus, burnout)</label>
-              <label><input type="checkbox" name="challenges" value="Spiritual"> Spiritual (disconnection, lack of clarity, seeking purpose)</label>
-              <label><input type="checkbox" name="challenges" value="Other"> Other</label>
-              <input type="text" name="challengesOtherText" placeholder="Please specify">
+              <label><input type="checkbox" name="challenges" value="Physical" <%= ch.includes('Physical') ? 'checked' : '' %>> Physical (fatigue, pain, chronic issues)</label>
+              <label><input type="checkbox" name="challenges" value="Emotional" <%= ch.includes('Emotional') ? 'checked' : '' %>> Emotional (stress, anxiety, emotional overwhelm)</label>
+              <label><input type="checkbox" name="challenges" value="Mental" <%= ch.includes('Mental') ? 'checked' : '' %>> Mental (overthinking, lack of focus, burnout)</label>
+              <label><input type="checkbox" name="challenges" value="Spiritual" <%= ch.includes('Spiritual') ? 'checked' : '' %>> Spiritual (disconnection, lack of clarity, seeking purpose)</label>
+              <label><input type="checkbox" name="challenges" value="Other" <%= ch.includes('Other') ? 'checked' : '' %>> Other</label>
+              <input type="text" name="challengesOtherText" placeholder="Please specify" value="<%= form.challengesOtherText || '' %>">
           </fieldset>
 
             <button type="submit" class="submit-btn">Submit</button>

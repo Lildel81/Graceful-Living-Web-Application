@@ -100,6 +100,11 @@ const appSchema = new mongoose.Schema({
         required: true
     },
 
+    workedWithPractitionerOther: {
+        type: String,
+        maxlength: 200
+    }, 
+
     //Familur with Checkbox 
     familiarWith: {
         type: [String],
@@ -132,6 +137,11 @@ const appSchema = new mongoose.Schema({
         default: []
     },
 
+    challengesOtherText: {
+        type: String,
+        maxlength: 200
+    },
+
   
     submittedAt:{
         type: Date,
@@ -148,7 +158,7 @@ const validateApplication = (app) => {
     csrfToken: Joi.any().strip(),
     _csrf: Joi.any().strip(),
 
-    challengesOtherText: Joi.any().strip(),
+    //challengesOtherText: Joi.any().strip(),
 
      email: Joi.string().min(1).max(100).required(),
         fullName: Joi.string().min(1).max(50).required(),
@@ -175,22 +185,41 @@ const validateApplication = (app) => {
             .valid(...PRACTITIONER_ENUM)
             .required(),
 
+        workedWithPractitionerOther: Joi.alternatives().conditional('workedWithPractitioner', {
+            is: 'Other',
+            then: Joi.string().min(1).max(200).required(),
+            otherwise: Joi.any().strip()
+        }),
+
         familiarWith: Joi.array()
             .items(Joi.string().valid(...FAMILIAR_WITH_ENUM))
             .single(true)
-            .default([]),
+            .min(1)
+            .required()
+            .messages({
+                'array.min': 'Please select at least one option for "Which of the following are you familiar with?"'
+            }),
 
-        experience: Joi.string().allow('').max(2000),
+        experience: Joi.string().allow('').max(1000),
 
-        goals: Joi.string().max(2000).required(),
+        goals: Joi.string().min(1).max(2000).required(),
 
         challenges: Joi.array()
             .items(Joi.string().valid(...CHALLENGES_ENUM))
             .single(true)
-            .default([])
-        })
+            .min(1)
+            .required()
+            .messages({
+                'array.min': 'Please select at least one challenge you’d like support with.'
+            }),
+       
 
-  .prefs({ abortEarly: false, stripUnknown: true });
+        challengesOtherText: Joi.string()
+            .allow('')
+            .max(200)
+            .optional(),
+
+   }).prefs({ abortEarly: false, stripUnknown: true });
 
   return schema.validate(app);
 };
