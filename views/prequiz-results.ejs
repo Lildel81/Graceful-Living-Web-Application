@@ -168,9 +168,21 @@
                             <td><%= r.healthcareRole || '—' %></td>
                             <td><%= (r.healthcareYears ?? '') === '' ? '—' : r.healthcareYears %></td>
                             <td><%= r.jobTitle %></td>
-                            <td><%= r.workedWithPractitioner %></td>
+                            <td>
+                                <% if (r.workedWithPractitioner === 'Other' && r.workedWithPractitionerOther) { %>
+                                    Other – <%= r.workedWithPractitionerOther %>
+                                <% } else { %>
+                                    <%= r.workedWithPractitioner %>
+                                <% } %>
+                            </td>
                             <td><%= (r.familiarWith||[]).join(', ') %></td>
-                            <td><%= (r.challenges||[]).join(', ') %></td>
+                            <td class="wrap">
+                                <% const chList = (r.challenges || []).join(', '); %>
+                                <%= chList %>
+                                <% if (Array.isArray(r.challenges) && r.challenges.includes('Other') && r.challengesOtherText) { %>
+                                    <br><strong>Other:</strong> <%= r.challengesOtherText %>
+                                <% } %>
+                            </td>
                             <td class="wrap"><%= r.goals %></td>
                             <td class="wrap"><%= r.experience || '—' %></td>
                         </tr>

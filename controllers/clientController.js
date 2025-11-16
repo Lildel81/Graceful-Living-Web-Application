@@ -324,12 +324,15 @@ const getHomeView = async (req, res, next) => {
     const selectedReviews = await testimonials.aggregate([{ $sample: { size: 3 } }]);
 
     const services = await Services.find().sort({ createdAt: -1 }).limit(3);
+    const introVideo = null; // was not rendering home page added this for intro video 
 
     res.render("home", { 
       slides, 
       selectedReviews,
       //to view services 
-      services
+      services,
+      introVideo
+
     });
   } catch (error) {
     console.error("Error fetching slides:", error.message);
@@ -798,7 +801,7 @@ async function getChakraQuizResults(req, res, next){
       q: req.query.q || '',
       ageBracket: req.query.ageBracket || '',
       healthcareWorker: req.query.healthcareWorker || '',
-      workedWithPractitioner: req.query.workedWithPractitioner || '',
+      experience: req.query.experience || '',
       familiarWith: toArr(req.query.familiarWith ?? req.query['familiarWith[]']),
       challenges:   toArr(req.query.challenges   ?? req.query['challenges[]']),
       from: req.query.from || '',

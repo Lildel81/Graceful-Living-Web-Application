@@ -57,19 +57,19 @@
 
             <!--Worked with Practitionar Filter-->
             <div class="field">
-                <label for="workedWithPractitioner">Worked With Practitioner</label>
-                <select id="workedWithPractitioner" name="workedWithPractitioner">
+                <label for="experience">Worked With Practitioner</label>
+                <select id="experience" name="experience">
                     <option value="">Any</option>
-                    <option value="Currently working with one" <%= workedWithPractitioner==='Currently working with one'?'selected':'' %>>Currently working with one</option>
-                    <option value="In the past" <%= workedWithPractitioner==='In the past'?'selected':'' %>>In the past</option>
-                    <option value="First time" <%= workedWithPractitioner==='First time'?'selected':'' %>>First time</option>
-                    <option value="Not sure" <%= workedWithPractitioner==='Not sure'?'selected':'' %>>Not sure</option>
-                    <option value="Other" <%= workedWithPractitioner==='Other'?'selected':'' %>>Other</option>
+                    <option value="Currently working with one" <%= experience==='Currently working with one'?'selected':'' %>>Currently working with one</option>
+                    <option value="In the past" <%= experience==='In the past'?'selected':'' %>>In the past</option>
+                    <option value="First time" <%= experience==='First time'?'selected':'' %>>First time</option>
+                    <option value="Not sure" <%= experience==='Not sure'?'selected':'' %>>Not sure</option>
+                    <option value="Other" <%= experience==='Other'?'selected':'' %>>Other</option>
                 </select>
             </div>
 
 
-            <!--Experience Filter-->
+            <!--Familur with Filter-->
             <div class="field">
                 <label>Familiar With</label>
                 <div class="checkbx">
@@ -169,7 +169,6 @@
                         <th>Contact #</th>
                         <th>Age</th>
                         <th>HC Worker</th>
-                        <th>Role</th>
                         <th>Years</th>
                         <th>Job Title</th>
                         <th>Practitioner</th>
@@ -196,14 +195,21 @@
                             <td><%= r.contactNumber %></td>
                             <td><%= r.ageBracket %></td>
                             <td><%= r.healthcareWorker %></td>
-                            <td><%= r.healthcareRole || '—' %></td>
                             <td><%= (r.healthcareYears ?? '') === '' ? '—' : r.healthcareYears %></td>
                             <td><%= r.jobTitle %></td>
-                            <td><%= r.workedWithPractitioner %></td>
+                            
+                            <td>
+                                <% if (r.experience === 'Other' && r.experienceOther) { %>
+                                    Other – <%= r.experienceOther %>
+                                <% } else { %>
+                                    <%= r.experience %>
+                                <% } %>
+                            </td>
                             <td><%= (r.familiarWith||[]).join(', ') %></td>
                             <td><%= (r.challenges||[]).join(', ') %></td>
                             <td class="wrap"><%= r.goals %></td>
-                            <td class="wrap"><%= r.experience || '—' %></td>
+                            <td class="wrap"><%= r.experienceDetails %></td>
+
 
 
                             <!-- Focus Chakra & Archetype Results -->

@@ -12,7 +12,7 @@
   <header class="hero">
     <div class="container">
       <h1>Graceful Living Application</h1>
-        <p>
+        <p id="hero-description">
           This short application will help me learn more about you and your unique goals so I can determine<br>
           whether my services are the right fit to support your journey. Your responses will remain <em>confidential</em><br>
           and will help me understand how I can best <em>guide</em>, <em>support</em>, and <em>empower</em> you toward lasting balance and well-being.
@@ -24,57 +24,134 @@
     <p><em><strong>Thank you for your interest in working together!</strong></em></p>
 
     <p>
-      The pre-application takes about <strong>3–5 minutes</strong>. Your responses are kept confidential and used only to tailor your experience.
+      Based on your answers below, you’ll either be invited to complete the full application, <br>
+      or be guided toward a short set of practices that may be more supportive at this time.
     </p>
 
-    <p><u>What you can expect</u>:</p>
-    <ul>
-      <li>Share your top goals and what’s feeling heavy or stuck right now.</li>
-      <li>Tell me your preferred pace, support style, and availability.</li>
-      <li>Get matched with the right next step (resources, session type, or custom plan).</li>
-    </ul>
+    <!--Pre application Screening questions-->
+    <form id="pre-app-screening-form">
 
-    <p>Many blessings,</p>
-    <p>Shante “Coach Tay” Kumar</p>
+      <!--Question 1-->
+      <fieldset>
+        <legend> Are you currently experiencing burnout? <span class="required"> *</span></legend>
+        <label>
+          <input type="radio" name="burnout" value="yes">
+          Yes
+        </label>
+        <label>
+          <input type="radio" name="burnout" value="no">
+          No
+        </label>
+      </fieldset>
 
-    <p>
-      <em>
-        Take a deep breath in… hold… release. <br>
-        When you’re ready, let’s begin. <br>
-      </em>
-    </p>
-  </div>
+      <!--Question 2 (only if Q1 == yes)-->
+      <fieldset id="q2-fieldset" class="hidden">
+        <legend>
+          Are you currently experiencing any of the following?<span class="required"> *</span>
+        </legend>
 
-  <button id="start-preapp-btn" class="btn-next" type="button">Start Application</button>
+        <ul class="symptoms-list">
+          <li>
+            <label>
+              <input type="checkbox" name="symptoms" value="decreased_sleep">
+              Decreased sleep
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="symptoms" value="fatigue">
+              Body and mind fatigue, even after a day off
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="symptoms" value="no_time_for_self">
+              Difficulty making time for yourself (there’s always something else to do first)
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="symptoms" value="difficulty_saying_no">
+              Difficulty saying “no” without feeling guilty or getting pushback
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="symptoms" value="carrying_pain">
+              Feeling the weight of carrying everyone else’s (and your own) pain
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="symptoms" value="none" id="symptoms-none">
+              None of the above
+            </label>
+          </li>
+        </ul>
+      </fieldset>
 
-  <!-- Terms & Conditions Modal -->
-   <div id="terms-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
-      <div style="background:#fff; max-width:500px; width:90%; margin:auto; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.2); padding:24px; position:relative;">
-        <h2 style="margin-top:0;">Terms &amp; Conditions</h2>
-        <div id="terms-scroll" style="max-height:200px; overflow-y:auto; border:1px solid #ccc; padding:12px; margin-bottom:16px;">
-          <p>
-            By proceeding with this application, you acknowledge and agree to the following terms:
-          </p>
-          <ul>
-            <li>This application is intended to help determine whether Graceful Living’s services are the right fit for you. It is not a test, diagnosis, or medical evaluation.</li>
-            <li>Your responses are confidential and will be used solely to provide you with personalized guidance.</li>
-            <li>By submitting your information, you consent to Graceful Living contacting you if your responses indicate that you may be a good match for the services offered.</li>
-            <li>If you are experiencing any physical or mental health issues, please consult with a qualified healthcare provider.</li>
-            <li>By continuing, you consent to the collection and use of your responses as described above.</li>
-          </ul>
-          <p>
-            Please read these terms carefully before proceeding.
-          </p>
-        </div>
-        <div style="margin-bottom:16px;">
-          <input type="checkbox" id="terms-checkbox" disabled>
-          <label for="terms-checkbox">I have read and agree to the Terms &amp; Conditions</label>
-        </div>
-        <button id="continue-btn" type="button" class="btn-next" style="width:100%;" disabled>Continue</button>
-        <button id="close-modal-btn" type="button" style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.2em;cursor:pointer;" aria-label="Close">&times;</button>
-      </div>
+      <!--Question 3-->
+      <fieldset id="q3-fieldset" class="hidden">
+        <legend> Are you a healthcare worker?<span class="required"> *</span></legend>
+        <label>
+          <input type="radio" name="healthcare" value="yes">
+          Yes
+        </label>
+        <label>
+          <input type="radio" name="healthcare" value="no">
+          No
+        </label>
+      </fieldset>
+      
+      <button type="submit" class="btn-next">See My Next Step</button>
+    </form>
+
+    <!--Ending 1: Go to application-->
+    <div id="ending-1" class="ending" style="display:none;">
+      <p>
+        Thank you so much for your interest. Based on your responses, it looks like you may benefit from personalized
+        support right now.
+      </p>
+      <p>
+        Please complete the following brief questionnaire to schedule your appointment with Shante Kumar at your convenience.
+      </p>
+      <a href="/application" class="btn-next">Continue to Application</a>
     </div>
-    <script src="/js/pre-app.js"></script>
+
+    <!--Ending 2: Non Healthcare Worker PDF-->
+    <div id="ending-2" class="ending" style="display:none;">
+      <p>
+        Thank you so much for your interest. Due to the responses received, it seems the following practices would be
+        of most benefit to you at this time.
+      </p>
+      <p>
+        Many blessings on your journey. <br>
+        <strong>Ciao for now,</strong><br>
+        Shante Kumar
+      </p>
+      <a href="/pdfs/exercise1.pdf" class="btn-next" target="_blank" rel="noopener">
+        Download Your Energy Reset Practices
+      </a>
+    </div>
+
+    <!--Ending 3: Healthcare worker PDF-->
+    <div id="ending-3" class="ending" style="display:none;">
+      <p>
+        Thank you so much for your interest. Due to the responses received, it seems the following practices would be
+        of most benefit to you at this time.
+      </p>
+      <p>
+        Many blessings on your journey. <br>
+        <strong>Ciao for now,</strong><br>
+        Shante Kumar
+      </p>
+      <a href="/pdfs/exercise2.pdf" class="btn-next" target="_blank" rel="noopener">
+        Download Your Energy Reset Practices 
+      </a>
+    </div>
+
+  </div>
+  <script src="/js/pre-app.js"></script>
 
 </body>
 </html>
