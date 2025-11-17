@@ -1,4 +1,8 @@
+## for flask
 Flask==3.1.2
+gunicorn==23.0.0
+
+## for prediction model
 joblib==1.5.2
 numpy==2.0.2
 pandas==2.3.3
