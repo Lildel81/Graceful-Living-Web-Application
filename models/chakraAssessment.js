@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 // Jocelyn added to try and fix familiar with filter 
-const FAMILIAR_WITH_ENUM = [
-    'Kundalini Yoga',
-    'Sound Baths',
-    'Life Coaching',
-    'Emotional Freedom Technique',
-    'None of the above'
-];
+// const FAMILIAR_WITH_ENUM = [
+//     'Kundalini Yoga',
+//     'Sound Baths',
+//     'Life Coaching',
+//     'Emotional Freedom Technique',
+//     'None of the above'
+// ];
 
 const answerSchema = new mongoose.Schema({
   answer: { type: String },

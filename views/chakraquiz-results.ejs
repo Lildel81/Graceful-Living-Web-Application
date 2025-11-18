@@ -69,18 +69,29 @@
             </div>
 
 
-            <!--Familur with Filter-->
+            <!-- Familiar With Filter -->
             <div class="field">
-                <label>Familiar With</label>
-                <div class="checkbx">
-                <% const fam = familiarWith || []; %>
-                <% ['Kundalini Yoga','Sound Baths','Life Coaching','Emotional Freedom Technique','None of the above'].forEach(opt => { %>
-                    <label class="cb">
-                    <input type="checkbox" name="familiarWith[]" value="<%= opt %>" <%= fam.includes(opt)?'checked':'' %> />
-                    <span><%= opt %></span>
-                    </label>
+            <label>Familiar With</label>
+            <div class="checkbx">
+                <% 
+                // selected slugs from query
+                const famSel = familiarWith || []; 
+                // map of slug -> label
+                const FAM_MAP = {
+                    kundalini: 'Kundalini Yoga',
+                    soundBaths: 'Sound Baths',
+                    lifeCoaching: 'Life Coaching',
+                    eft: 'Emotional Freedom Technique',
+                    none: 'None of the above'
+                };
+                Object.entries(FAM_MAP).forEach(([slug,label]) => { 
+                %>
+                <label class="cb">
+                    <input type="checkbox" name="familiarWith[]" value="<%= slug %>" <%= famSel.includes(slug)?'checked':'' %> />
+                    <span><%= label %></span>
+                </label>
                 <% }) %>
-                </div>
+            </div>
             </div>
 
 
