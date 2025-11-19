@@ -1,16 +1,26 @@
 (function(){
   const form = document.getElementById('filters');
   const q = document.getElementById('q');
-  if (!form || !q) return;
+  if (!form) return;
 
-  let t = null;
-  q.addEventListener('input', () => {
-    clearTimeout(t);
-    t = setTimeout(() => form.submit(), 400);
+  // 1) Debounce search input
+  if (q) {
+    let t = null;
+    q.addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(() => form.submit(), 400);
+    });
+  }
+
+  // 2) Auto-submit on any other filter change (selects, checkboxes, date inputs)
+  form.addEventListener('change', (e) => {
+    // Ignore the search input here (it already debounces)
+    if (e.target === q) return;
+    form.submit();
   });
 })();
 
-/* Delete Clients*/
+/* Delete Clients */
 (function () {
   function ready(fn) {
     if (document.readyState !== 'loading') return fn();

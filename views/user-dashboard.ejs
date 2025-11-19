@@ -124,6 +124,30 @@
       </section>
 
       <section class="dashboard-section">
+        <%
+        // Human-friendly labels
+        const CHAKRA_LABELS = {
+          rootChakra: 'Root',
+          sacralChakra: 'Sacral',
+          solarPlexusChakra: 'Solar Plexus',
+          heartChakra: 'Heart',
+          throatChakra: 'Throat',
+          thirdEyeChakra: 'Third Eye',
+          crownChakra: 'Crown'
+        };
+
+        const ARCH_LABELS = {
+          workerBee: 'Worker Bee',
+          martyr: 'Martyr',
+          innerChild: 'Inner Child',
+          saboteur: 'Saboteur',
+          lover: 'Lover',
+          caretaker: 'Caretaker',
+          rebel: 'Rebel',
+          creatorVisionary: 'Creator / Visionary',
+          ruler: 'Ruler'
+        };
+        %>
         <h2 class="section-title">Energy Leak Quiz</h2>
 
         <% if (assessments.length === 0) { %>
@@ -136,9 +160,12 @@
           <% assessments.forEach(a => { %>
           <li class="assessment-card">
             <div class="assessment-info">
-              <h3><%= a.focusChakra %></h3>
+              <h3>
+                <%= (CHAKRA_LABELS[a.focusChakra] ? CHAKRA_LABELS[a.focusChakra] + ' Chakra' : '-') %>
+              </h3>
               <p class="archetype">
-                Archetype: <strong><%= a.archetype %></strong>
+                Archetype:
+                <strong><%= ARCH_LABELS[a.archetype] || '-' %></strong>
               </p>
               <p class="timestamp">
                 <%= new Date(a.createdAt).toLocaleString() %>

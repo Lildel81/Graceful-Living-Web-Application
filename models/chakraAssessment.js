@@ -1,14 +1,5 @@
 const mongoose = require("mongoose");
 
-// Jocelyn added to try and fix familiar with filter 
-// const FAMILIAR_WITH_ENUM = [
-//     'Kundalini Yoga',
-//     'Sound Baths',
-//     'Life Coaching',
-//     'Emotional Freedom Technique',
-//     'None of the above'
-// ];
-
 const answerSchema = new mongoose.Schema({
   answer: { type: String },
   score: { type: Number }
@@ -45,7 +36,7 @@ const chakraAssessmentSchema = new mongoose.Schema({
   jobTitle: { type: String },
   experience: { type: String },
   experienceOther: {type: String},
-  familiarWith: { type: [String] }, // jocelyn updated , enum: FAMILIAR_WITH_ENUM, trim: true
+  familiarWith: { type: [String] },
   experienceDetails: { type: String },
   goals: { type: String },
   challenges: { type: [String] },
