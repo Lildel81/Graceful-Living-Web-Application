@@ -36,7 +36,7 @@ router.post('/adminportal/resources/text/update', csrfProtection, resourcesContr
 router.post('/adminportal/resources/create', upload.single('imageUpload'), csrfProtection, resourcesController.createResourcesImage);
 
 // edit page
-router.get('/adminportal/resources/:id/edit', csrfProtection, resourcesController.getEditResourcesImageView);
+router.get('/adminportal/resources/:id/edit', csrfProtection, resourcesController.editResourcesImage);
 
 // update image
 router.post(
@@ -49,7 +49,7 @@ router.post(
     next();
   },*/
   csrfProtection,
-  resourcesController.editResourcesImage
+  resourcesController.updateResourcesImage
 );
 
 // delete image
