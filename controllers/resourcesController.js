@@ -58,8 +58,6 @@ function normalizeYouTubeUrl(url) {
 // update text 
 const updateResourcesText = async (req, res) => {
   try {
-    // console.log("REQ TEXT BODY:", req.body);
-
     const { title, paragraphs, videoUrl } = req.body;
     let text = await ResourcesText.findOne();
 
@@ -80,11 +78,7 @@ const updateResourcesText = async (req, res) => {
     }
 
     await text.save();
-    /*res.send(`
-      <script>
-        window.top.location.href = '/content-management';
-      </script>
-    `);*/
+
     res.redirect("/adminportal/resourcesmanagement");
   } catch (err) {
     console.error("Error updating resources text:", err);
@@ -117,13 +111,6 @@ const createResourcesImage = async (req, res) => {
     buttonUrl
   });
 
-  /*
-  res.send(`
-  <script>
-    window.top.location.href = '/content-management';
-  </script>
-  `);*/
-
   res.redirect("/adminportal/resourcesmanagement");
 };
 
@@ -132,12 +119,6 @@ const deleteResourcesImage = async (req, res) => {
   const id = req.params.id;
   await ResourcesImage.findByIdAndDelete(id);
 
-  /*
-  res.send(`
-  <script>
-    window.top.location.href = '/content-management';
-  </script>
-  `);*/
   res.redirect("/adminportal/resourcesmanagement");
 };
 
@@ -158,7 +139,6 @@ const editResourcesImage = async (req, res) => {
     // console.log("REQ BODY:", req.body);
     // console.log("REQ FILE:", req.file);
 
-    // const { overlayText, buttonText, buttonUrl } = req.body;
     const { overlayText, buttonText, buttonUrl } = req.body || {};
     let { imageOption, imageUrl } = req.body || {};
 

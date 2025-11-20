@@ -15,6 +15,8 @@ const ResourcesText = require('../models/resourcesText');
 const Services = require("../models/servicesSchema");
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
+const AboutUsIntro = require("../models/aboutUsIntroSchema");
+const AboutUsContent = require("../models/aboutUsContentSchema");
 
 const mongoose = require("mongoose"); 
 // ML conversion prediction - uses centralized controller
@@ -667,6 +669,32 @@ const getContactView = async (req, res, next) => {
   res.render("contact");
 };
 
+const getAboutUsView = async (req, res, next) => {
+  try {
+    // get most recent intro block (title, description, headshot)
+    const introData = await AboutUsIntro.findOne().sort({ createdAt: -1 });
+
+    // get all content blocks (Q&A items, alternating layout)
+    const contentBlocks = await AboutUsContent.find().sort({ createdAt: -1 });
+
+    // fallback if nothing exists yet
+    const fallbackIntro = {
+      title: "Meet Coach Tay",
+      description: "Our About page is being updated. Check back soon!",
+      headshotUrl: "/images/default-fallback.jpg"
+    };
+
+    res.render("aboutUs", {
+      introData: introData || fallbackIntro,
+      contentBlocks
+    });
+
+  } catch (err) {
+    console.error("Error loading About Us page:", err);
+    res.status(500).send("Error loading About Us page");
+  }
+};
+
 const getResourcesView = async (req, res, next) => {
   // res.render('resources');
 
@@ -1001,6 +1029,7 @@ module.exports = {
   getAdminPortalView,
   postCreateClient,
   getContactView,
+  getAboutUsView,
   getResourcesView,
   getNotFoundView,
   getServicesView,

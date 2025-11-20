@@ -339,9 +339,10 @@ app.get("/services", (req, res) => {
 app.get("/contact", (req, res) => {
   res.render("contact");
 });
+/*
 app.get("/about", (req, res) => {
   res.render("aboutUs");
-});
+});*/
 
 app.use("/stats", statsRoutes);
 
@@ -476,6 +477,10 @@ app.use("/", simpleFormRoutes);
 // for services in content management & home page
 const servicesRoutes = require("./routes/servicesRoutes");
 app.use("/", servicesRoutes);
+
+// for about us in content management 
+const aboutUsRoutes = require("./routes/aboutUsRoutes");
+app.use("/", aboutUsRoutes);
 
 exports.getHomePage = async (req, res) => {
   const homeQuote = await HomeQuote.findOne();

@@ -1,0 +1,120 @@
+<!--FORM FOR ADMINPORTAL/CONTENTMANAGEMENT/ABOUTUS-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Services Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/carousel-mangement.css">
+</head>
+
+<body>
+    <h2>Manage About Us</h2>
+
+    <!--INTRO SECTION-->
+    <h3 class="section-title">About Us Intro</h3>
+
+    <% const introItem = intro[0]; %>
+
+    <form action="<%= introItem ? `/adminportal/aboutusintro/${introItem._id}/update` : '/adminportal/aboutusintro/create' %>" 
+            method="POST" enctype="multipart/form-data">
+
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label>Title <span style="color:red">*</span></label>
+        <input type="text" name="title" value="<%= introItem?.title || '' %>" required>
+
+        <label>Description <span style="color:red">*</span></label>
+        <textarea name="description" required><%= introItem?.description || '' %></textarea>
+
+        <label>Headshot Image <span style="color:red">*</span></label>
+        <input type="file" name="headshot" accept="image/*">
+
+        <% if (introItem?.headshotUrl) { %>
+            <img src="<%= introItem.headshotUrl %>" class="preview">
+        <% } %>
+
+        <button type="submit">
+            <%= introItem ? "Update Intro" : "Create Intro" %>
+        </button>
+    </form>
+
+    <% if (introItem) { %>
+        <form action="/adminportal/aboutusintro/<%= introItem._id %>/delete" 
+            method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" style="background:#b00020;">Delete Intro</button>
+        </form>
+    <% } %>
+
+
+    <hr>
+
+    <!--CONTENT SECTION-->
+    <h3 class="section-title">Add New Content Section</h3>
+
+    <form action="/adminportal/aboutuscontent/create" 
+            method="POST" enctype="multipart/form-data">
+
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label>Title <span style="color:red">*</span></label>
+        <input type="text" name="title" required>
+
+        <label>Description <span style="color:red">*</span></label>
+        <textarea name="description" required></textarea>
+
+        <label>Image <span style="color:red">*</span></label>
+        <input type="file" name="image" accept="image/*" required>
+
+        <button type="submit">Add Content Block</button>
+    </form>
+
+
+    <hr>
+
+    <!--EXISTING CONTENT TABLE-->
+    <h3 class="section-title">Existing Content Blocks</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% content.forEach(item => { %>
+            <tr>
+            <td>
+                <img src="<%= item.imageUrl %>" class="slide-img">
+            </td>
+
+            <td><%= item.title %></td>
+
+            <td><%= item.description %></td>
+
+            <td>
+                <!-- Edit -->
+                <a href="/adminportal/aboutuscontent/<%= item._id %>/edit">🖊 Edit</a>
+            </td>
+
+            <td>
+                <!-- Delete -->
+                <form action="/adminportal/aboutuscontent/<%= item._id %>/delete" 
+                    method="POST" style="display:inline;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit">🗑 Delete</button>
+                </form>
+            </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+
+</body>

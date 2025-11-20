@@ -5,6 +5,7 @@ const {
   getHomeView,
   getAssessmentView,
   getIntroductionView,
+  getAboutUsView,
   getAdminPortalView,
   getContactView,
   getResourcesView,
@@ -47,6 +48,7 @@ const router = express.Router();
 router.get('/', getHomeView);
 router.get('/hub', getHubView);
 router.get('/intro', getIntroductionView)
+router.get('/about', getAboutUsView);
 router.get('/assessment', getAssessmentView);
 router.get('/contact', getContactView);
 router.get('/resources', getResourcesView);

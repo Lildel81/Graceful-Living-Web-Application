@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const path = require('path');
-// const multer = require('multer');
 
 // upload is the multer 
 const upload = require('../middleware/upload.js');
@@ -14,19 +12,6 @@ const resourcesController = require('../controllers/resourcesController');
   console.log("REQ BODY (pre-multer):", req.body);
   next();
 });*/
-
-// multer config
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'public/images/uploads');
-//   },
-//   filename: function (req, file, cb) {
-//     const ext = path.extname(file.originalname);
-//     const uniqueName = Date.now() + ext;
-//     cb(null, uniqueName);
-//   }
-// });
-// const upload = multer({ storage });
 
 // csrf 
 const csrf = require('csurf');
@@ -57,7 +42,7 @@ router.get('/adminportal/resources/:id/edit', csrfProtection, resourcesControlle
 router.post(
   '/adminportal/resources/:id/update',
   upload.single('imageUpload'),
-  /*
+  /*  FOR DEBUGGING
   (req, res, next) => {
     console.log("[DEBUG /update] BODY:", req.body);
     console.log("[DEBUG /update] FILE:", req.file);
