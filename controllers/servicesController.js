@@ -36,7 +36,6 @@ exports.createService = async (req, res) => {
 
     const { serviceName, serviceDescription, buttonText, buttonUrl } = req.body;
 
-    //const imageUrl = req.file ? `/public/images/uploads/${req.file.filename}` : null;
     const imageUrl = req.file ? `/images/uploads/${req.file.filename}` : null;
 
     const newService = new Services({
@@ -70,7 +69,7 @@ exports.deleteService = async(req, res) => {
 
     // delete the uploaded image file if it exists
     if (service.imageUrl) {
-      const imagePath = path.join(__dirname, "..", service.imageUrl);
+      const imagePath = path.join(__dirname, "..", "public", service.imageUrl.replace(/^\//, ""));
       fs.unlink(imagePath, (err) => {
         if (err) console.warn("Could not delete image:", err.message);
       });
@@ -120,7 +119,7 @@ exports.updateService = async (req, res) => {
     // if a new image was uploaded, delete the old one
     if (req.file) {
       if (service.imageUrl) {
-        const oldImagePath = path.join(__dirname, "..", service.imageUrl);
+        const oldImagePath = path.join(__dirname, "..", "public", service.imageUrl.replace(/^\//, ""));
         fs.unlink(oldImagePath, (err) => {
           if (err) console.warn("Could not delete old image:", err.message);
         });

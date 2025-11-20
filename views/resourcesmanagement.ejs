@@ -27,8 +27,6 @@
         <% } %>
       </div>
 
-      <button type="button" onclick="addParagraph()">Add Paragraph</button>
-
       <label for="videoUrl">YouTube Video URL:</label>
       <input 
         type="text" 
@@ -126,6 +124,9 @@
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button type="submit">🖊️ Edit</button>
             </form>
+          </td>
+
+          <td>
             <form action="/adminportal/resources/<%= resource._id %>/delete" method="POST" style="display:inline;">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button type="submit" onclick="return confirm('Delete this image?')">🗑️ Delete</button>

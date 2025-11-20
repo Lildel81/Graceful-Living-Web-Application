@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Service</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/carousel.css">
+  <link rel="stylesheet" href="/css/carousel-mangement.css">
+</head> 
+
+<body>
+    <h2>Edit About Us Intro</h2>
+
+    <form action="/adminportal/aboutusintro/<%= intro._id %>/update"
+            method="POST"
+            enctype="multipart/form-data">
+
+        <!-- CSRF -->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label>Title <span style="color:red">*</span></label>
+        <input type="text" name="title" value="<%= intro.title %>" required>
+
+        <label>Description <span style="color:red">*</span></label>
+        <textarea name="description" required><%= intro.description %></textarea>
+
+        <label>Current Headshot</label><br>
+        <% if (intro.headshotUrl) { %>
+        <img src="<%= intro.headshotUrl %>" width="140" style="border-radius:6px;"><br>
+        <% } else { %>
+        <p>No image uploaded</p>
+        <% } %>
+
+        <label>Upload New Headshot (optional)</label>
+        <input id="image" type="file" name="headshot" accept="image/*">
+
+        <!-- Preview Container -->
+        <div id="imagePreview" style="display:none; margin-top:8px;">
+        <img id="imageThumb" alt="Selected image preview"
+            style="max-width:180px; height:auto; border:1px solid #ccc; padding:2px; border-radius:4px;">
+        <div id="imageMeta" style="font-size:0.9em; color:#555; margin-top:4px;"></div>
+        <button type="button" id="clearImage" style="margin-top:6px;">Remove selection</button>
+        </div>
+
+        <p id="imageError" style="display:none; color:#b00020; margin-top:6px;"></p>
+
+        <button type="submit">Update Intro</button>
+    </form>
+</body>

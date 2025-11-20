@@ -22,6 +22,13 @@ h1{
     font-family: 'Futura', 'Inter', sans-serif;
 }
 
+.intro_paragraph p {
+    display: block;
+    margin: 1rem 0;
+    white-space: pre-wrap; /* preserves newlines from textarea */
+}
+
+
 .video_wrapper{
     padding-top: 1rem;
     padding-bottom: 2rem;
