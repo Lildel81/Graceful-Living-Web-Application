@@ -11,6 +11,7 @@ jest.mock("../../middleware/csrf", () => (req, res, next) => next());
 
 const ChakraAssessment = require("../../models/chakraAssessment");
 const statsRouter = require("../statsRoutes");
+const { getMonthFilter, calculateAggregateStats, prepareChartData } = require("../statsRoutes");
 
 describe("Stats routes", () => {
   let app;
@@ -223,5 +224,18 @@ describe("Stats routes", () => {
     const res3 = await request(app).get("/api/stats-summary");
     expect(res3.status).toBe(500);
     expect(res3.body).toHaveProperty("error");
+  });
+
+  test("getMonthFilter builds inclusive month range", () => {
+    const f = getMonthFilter("2025-10");
+    expect(f.createdAt.$gte).toEqual(new Date(2025, 9, 1));
+    expect(f.createdAt.$lte).toEqual(new Date(2025, 9, 31, 23, 59, 59, 999));
+  });
+
+  test("prepareChartData returns stable shapes", () => {
+    const stats = calculateAggregateStats(buildAssessments());
+    const chart = prepareChartData([{ /* doesn’t matter; using function itself */ }]); // or pass buildAssessments()
+    expect(chart).toHaveProperty("chakraData.labels");
+    expect(Array.isArray(chart.chakraData.datasets)).toBe(true);
   });
 });
