@@ -113,8 +113,8 @@ h3 + p {
 
 /* modal content box */
 .modal-content {
-  background: linear-gradient(135deg, #e6f7ef 0%, #d1f1dc 100%);
-  border: 1px solid #79c7a0;
+  background: white;
+  border: 2px solid #79c7a0;
   padding: 2rem;
   border-radius: 12px;
   text-align: center;

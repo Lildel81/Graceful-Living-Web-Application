@@ -59,8 +59,8 @@ router.get("/api/chart-data", async (req, res) => {
     let assessments;
 
     if (isCacheValid() && !req.query.month) {
-      console.log("Using cached chart data");
-      //assessments = statsCache.data.assessments;
+      //console.log("Using cached chart data");
+      assessments = statsCache.data.assessments;
     } else {
       //console.log("Fetching fresh chart data");
       assessments = await ChakraAssessment.find(monthFilter);
@@ -536,3 +536,6 @@ function prepareChartData(assessments) {
 }
 
 module.exports = router;
+module.exports.calculateAggregateStats = calculateAggregateStats;
+module.exports.prepareChartData = prepareChartData;
+module.exports.getMonthFilter = getMonthFilter;

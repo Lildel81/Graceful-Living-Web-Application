@@ -508,3 +508,5 @@ function adminAutoFill() {
   
   console.log("Admin autofill complete!");
 }
+
+module.exports = { adminAutoFill };
