@@ -145,33 +145,6 @@
   
   </main>
 
-  <!-- ML Conversion Analysis Section - Separate, Beautiful UI -->
-  <section class="ml-conversion-section">
-    <div class="ml-conversion-container">
-      <div class="ml-section-header">
-        <h2 class="ml-section-title"> Quiz-to-Appointment Conversion Analysis</h2>
-        <p class="ml-section-subtitle">AI-Powered insights to help you identify and prioritize high-value leads</p>
-        <% if (typeof mlPredictions !== 'undefined' && mlPredictions && mlPredictions.length > 0) { %>
-          <div class="ml-status-badge active">ML Predictions Active</div>
-        <% } else { %>
-          <div class="ml-status-badge">Database Analytics</div>
-        <% } %>
-      </div>
-      
-      <!-- Data container - JavaScript will render the content -->
-      <div id="conversion-prediction-container"
-           data-conversion-stats='<%- typeof conversionStats !== "undefined" && conversionStats ? JSON.stringify(conversionStats) : "null" %>'
-           data-ml-predictions='<%- typeof mlPredictions !== "undefined" && mlPredictions ? JSON.stringify(mlPredictions) : "null" %>'
-           data-high-probability-leads='<%= typeof highProbabilityLeads !== "undefined" ? highProbabilityLeads : 0 %>'>
-        <!-- Loading message -->
-        <div class="ml-loading">
-          <div class="ml-loading-spinner"></div>
-          <p class="ml-loading-text">Loading conversion statistics...</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Chakra Assessment Statistics Section -->
   <section class="stats-dashboard-section">
     <div class="stats-dashboard-header">
@@ -288,6 +261,33 @@
               <tr><td colspan="3">Loading...</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ML Conversion Analysis Section - Separate, Beautiful UI -->
+  <section class="ml-conversion-section">
+    <div class="ml-conversion-container">
+      <div class="ml-section-header">
+        <h2 class="ml-section-title"> Quiz-to-Appointment Conversion Analysis</h2>
+        <p class="ml-section-subtitle">AI-Powered insights to help you identify and prioritize high-value leads</p>
+        <% if (typeof mlPredictions !== 'undefined' && mlPredictions && mlPredictions.length > 0) { %>
+          <div class="ml-status-badge active">ML Predictions Active</div>
+        <% } else { %>
+          <div class="ml-status-badge">Database Analytics</div>
+        <% } %>
+      </div>
+      
+      <!-- Data container - JavaScript will render the content -->
+      <div id="conversion-prediction-container"
+           data-conversion-stats='<%- typeof conversionStats !== "undefined" && conversionStats ? JSON.stringify(conversionStats) : "null" %>'
+           data-ml-predictions='<%- typeof mlPredictions !== "undefined" && mlPredictions ? JSON.stringify(mlPredictions) : "null" %>'
+           data-high-probability-leads='<%= typeof highProbabilityLeads !== "undefined" ? highProbabilityLeads : 0 %>'>
+        <!-- Loading message -->
+        <div class="ml-loading">
+          <div class="ml-loading-spinner"></div>
+          <p class="ml-loading-text">Loading conversion statistics...</p>
         </div>
       </div>
     </div>
