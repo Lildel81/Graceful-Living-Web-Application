@@ -63,7 +63,7 @@ let currentYear = new Date().getFullYear();
  * 4. Initialize calendar header
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing booking system...');
+    // console.log('DOM loaded, initializing booking system...');
     setupEventListeners();
     loadAvailableSlots();
     updateCalendarHeader();
@@ -100,7 +100,7 @@ async function loadAvailableSlots() {
         if (data.success && data.slots.length > 0) {
             // Store slots in global variable
             availableSlots = data.slots;
-            console.log('Loaded available slots:', availableSlots.length);
+            // console.log('Loaded available slots:', availableSlots.length);
             
             // Generate calendar with available dates
             generateCalendar();
@@ -260,7 +260,7 @@ function generateCalendar() {
 
     // Extract unique available dates from all time slots
     const availableDates = [...new Set(availableSlots.map(slot => slot.date))];
-    console.log('Available dates:', availableDates);
+    // console.log('Available dates:', availableDates);
     
     // Calculate calendar start date (first day of month)
     const firstDay = new Date(currentYear, currentMonth, 1);
@@ -298,9 +298,9 @@ function generateCalendar() {
         }
         
         // Debug log for available dates
-        if (isAvailable && isCurrentMonth && !isPast) {
-            console.log('Available date found:', dateStr, 'Day:', date.getDate());
-        }
+        // if (isAvailable && isCurrentMonth && !isPast) {
+        //     console.log('Available date found:', dateStr, 'Day:', date.getDate());
+        // }
         
         // Create date cell HTML
         html += `<div class="${classes}" data-date="${dateStr}">${date.getDate()}</div>`;
@@ -308,7 +308,7 @@ function generateCalendar() {
     
     // Insert all date cells into calendar
     calendarDates.innerHTML = html;
-    console.log('Calendar generated with', html.split('date-cell').length - 1, 'date cells');
+    // console.log('Calendar generated with', html.split('date-cell').length - 1, 'date cells');
     
     // Add click listeners to all date cells
     document.querySelectorAll('.date-cell').forEach(cell => {
@@ -334,14 +334,14 @@ function generateCalendar() {
  * @param {string} date - Date in YYYY-MM-DD format
  */
 function selectDate(date) {
-    console.log('Attempting to select date:', date);
+    // console.log('Attempting to select date:', date);
     
     const dateCell = document.querySelector(`[data-date="${date}"]`);
-    console.log('Found date cell:', dateCell);
+    // console.log('Found date cell:', dateCell);
     
     // Prevent selection of disabled dates
     if (dateCell.classList.contains('disabled')) {
-        console.log('Date is disabled, cannot select');
+        // console.log('Date is disabled, cannot select');
         return;                        // Exit function, do nothing
     }
     
@@ -359,7 +359,7 @@ function selectDate(date) {
     // Enable "Next" button now that a date is selected
     document.getElementById('continueBtn').disabled = false;
     
-    console.log('Date selected successfully:', date);
+    // console.log('Date selected successfully:', date);
 }
 
 /* ==========================================
@@ -396,7 +396,7 @@ function loadTimeSlots() {
     // Filter slots for the selected date
     const slots = availableSlots.filter(slot => slot.date === selectedDate);
     
-    console.log('Available slots for', selectedDate, ':', slots);
+    // console.log('Available slots for', selectedDate, ':', slots);
     
     // Generate time slot HTML
     let html = '';
@@ -607,7 +607,7 @@ async function handleFormSubmission(e) {
         notes: formData.get('notes') || ''             // Optional notes
     };
     
-    console.log('Sending appointment data:', appointmentData);
+    // console.log('Sending appointment data:', appointmentData);
     
     try {
         // Send POST request to book appointment
@@ -619,11 +619,11 @@ async function handleFormSubmission(e) {
             body: JSON.stringify(appointmentData)
         });
         
-        console.log('Response status:', response.status);
+        // console.log('Response status:', response.status);
         
         // Parse JSON response
         const result = await response.json();
-        console.log('Response data:', result);
+        // console.log('Response data:', result);
         
         if (result.success) {
             // Appointment booked successfully

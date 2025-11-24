@@ -37,7 +37,7 @@ class DataExtractor:
         self.db = self.client.get_database()
 
         # Confirm that we connect to the db
-        print(f"Connected to MongoDB: {self.db.name}")
+        # print(f"Connected to MongoDB: {self.db.name}")
 
     # ================= chakraassessments extraction - get raw data from DB =============
     def extract_chakra_assessments(self):
@@ -45,7 +45,7 @@ class DataExtractor:
         assessments = list(self.db.chakraassessments.find())
 
         # Confirm found assessemnts
-        print(f"Found {len(assessments)} assessments")
+        # print(f"Found {len(assessments)} assessments")
         return assessments
     
     # ================ appointments extraction - get raw data from DB ====================
@@ -54,7 +54,7 @@ class DataExtractor:
         appointments = list(self.db.appointments.find())
 
         # Confirm found appointments
-        print(f"Found {len(appointments)} appointments")
+        # print(f"Found {len(appointments)} appointments")
         return appointments
     
     # =============== Conversion checking - create target col ============================
@@ -272,16 +272,16 @@ class DataExtractor:
 
 
             except Exception as e:
-                print(f"Error processing assessment {e}")
+                # print(f"Error processing assessment {e}")
                 continue
 
         # Step 5: Convert list of dictionaries to pandas df
         df = pd.DataFrame(dataset)
 
         # Confirm some statistics
-        print(f"\nDataset created with {len(df)} records")
-        print(f"Conversion rate: {df['converted'].mean():.2%}")
-        print(f"Conversions: {df['converted'].sum()} out of {len(df)}")
+        # print(f"\nDataset created with {len(df)} records")
+        # print(f"Conversion rate: {df['converted'].mean():.2%}")
+        # print(f"Conversions: {df['converted'].sum()} out of {len(df)}")
 
         return df
     
@@ -294,7 +294,7 @@ class DataExtractor:
         df.to_csv(output_path, index=False)
 
         # Confirm the path of saved dataset
-        print(f"\nDataset saved to {output_path}")
+        # print(f"\nDataset saved to {output_path}")
 
         return output_path
     
@@ -318,22 +318,22 @@ def main():
         df = extractor.create_dataset()
 
         # Step 3: Display stats about dataset
-        print(f"\nTotal records: {len(df)}")
-        print(f"\nTarget distribution: {df['converted'].value_counts()}")
-        print(f"\nConversion rate: {df['converted'].mean():.2%}")
+        # print(f"\nTotal records: {len(df)}")
+        # print(f"\nTarget distribution: {df['converted'].value_counts()}")
+        # print(f"\nConversion rate: {df['converted'].mean():.2%}")
 
         # Step 4: Save dataset to CSV
         extractor.save_dataset(df)
 
         # Step 5: Display the fist 5 rows 
-        print(f"First 5 rows of dataset\n")
-        print(df.head())
+        # print(f"First 5 rows of dataset\n")
+        # print(df.head())
 
         # Step 6: Close MongoDB connection
         extractor.close
 
     except Exception as e:
-        print(f"ERROR: {e}")
+        # print(f"ERROR: {e}")
         # Show full error trace for easily debugging
         import traceback
         traceback.print_exc()

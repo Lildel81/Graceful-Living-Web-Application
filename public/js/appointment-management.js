@@ -49,7 +49,7 @@
  * 4. Load all data from server
  */
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("Admin Dashboard initialized");
+  // console.log("Admin Dashboard initialized");
 
   initializeDashboard();
   setupEventListeners();
@@ -93,7 +93,7 @@ let csrfToken = "";
 function initializeDashboard() {
   // Load CSRF token from hidden input (required for all POST/PUT/DELETE requests)
   csrfToken = document.getElementById("csrfToken").value;
-  console.log("CSRF Token loaded:", csrfToken);
+  // console.log("CSRF Token loaded:", csrfToken);
 
   // Setup tab switching between 4 tabs
   setupTabSwitching();
@@ -206,7 +206,7 @@ function setupTabSwitching() {
       button.classList.add("active");
       document.getElementById(targetTab).classList.add("active");
 
-      console.log("Switched to tab:", targetTab);
+      // console.log("Switched to tab:", targetTab);
     });
   });
 }
@@ -232,10 +232,10 @@ function setupTabSwitching() {
  */
 async function loadAdminAvailability() {
   try {
-    console.log("Loading admin availability...");
+    // console.log("Loading admin availability...");
     const response = await fetch("/appointments/adminportal/availability");
     const data = await response.json();
-    console.log("Availability response:", data);
+    // console.log("Availability response:", data);
 
     if (data.success) {
       availableDays = data.availabilities;
@@ -290,7 +290,7 @@ function updateAvailableDays() {
     document.querySelectorAll('.day-option input[type="checkbox"]:checked')
   ).map((checkbox) => parseInt(checkbox.getAttribute("data-day")));
 
-  console.log("Selected days:", checkedDays);
+  // console.log("Selected days:", checkedDays);
   updateStats(); // Recalculate statistics
 }
 
@@ -334,7 +334,7 @@ async function loadTimeSlots() {
         }
       });
 
-      console.log("Loaded unique time slots:", timeSlots.length);
+      // console.log("Loaded unique time slots:", timeSlots.length);
       updateTimeSlotsDisplay();
       updateStats();
     }
@@ -390,11 +390,11 @@ async function addTimeSlot() {
   const time = convertTo12Hour(timeValue);
   const endTime = getEndTime(timeValue);
 
-  console.log("Adding time slot:", {
-    input: timeValue,
-    start: time,
-    end: endTime,
-  });
+  // console.log("Adding time slot:", {
+  //   input: timeValue,
+  //   start: time,
+  //   end: endTime,
+  // });
 
   const newSlot = {
     start: time,
@@ -409,7 +409,7 @@ async function addTimeSlot() {
   // Clear input
   timeInput.value = "";
 
-  console.log("Added time slot:", newSlot);
+  // console.log("Added time slot:", newSlot);
 }
 
 // Remove time slot
@@ -426,12 +426,12 @@ async function removeTimeSlot(slotString) {
     updateTimeSlotsDisplay();
     updateStats();
 
-    console.log(
-      "Removed time slot:",
-      slotString,
-      "Remaining slots:",
-      timeSlots
-    );
+    // console.log(
+    //   "Removed time slot:",
+    //   slotString,
+    //   "Remaining slots:",
+    //   timeSlots
+    // );
   }
 }
 
@@ -455,14 +455,14 @@ async function removeTimeSlot(slotString) {
  */
 async function loadBlockedDates() {
   try {
-    console.log("Loading blocked dates...");
+    // console.log("Loading blocked dates...");
     const response = await fetch("/appointments/adminportal/blocked-dates");
     const data = await response.json();
-    console.log("Blocked dates response:", data);
+    // console.log("Blocked dates response:", data);
 
     if (data.success) {
       blockedDates = data.blockedDates;
-      console.log("Blocked dates loaded:", blockedDates);
+      // console.log("Blocked dates loaded:", blockedDates);
       updateBlockedDatesDisplay();
       updateStats();
     }
@@ -486,14 +486,14 @@ function updateBlockedDatesDisplay() {
       let dateObj;
       const dateValue = date.date;
 
-      console.log(
-        "Processing date:",
-        dateValue,
-        "Type:",
-        typeof dateValue,
-        "ID:",
-        date._id
-      );
+      // console.log(
+      //   "Processing date:",
+      //   dateValue,
+      //   "Type:",
+      //   typeof dateValue,
+      //   "ID:",
+      //   date._id
+      // );
 
       if (typeof dateValue === "string") {
         // If it's a string like "2025-10-17", parse it correctly
@@ -532,7 +532,7 @@ function updateBlockedDatesDisplay() {
         year: "numeric",
       });
 
-      console.log("Displaying date as:", dateStr, "from original:", dateValue);
+      // console.log("Displaying date as:", dateStr, "from original:", dateValue);
 
       return `
             <div class="blocked-date-item">
@@ -550,7 +550,7 @@ function updateBlockedDatesDisplay() {
     container.addEventListener("click", function (e) {
       if (e.target.classList.contains("remove-btn")) {
         const dateId = e.target.getAttribute("data-date-id");
-        console.log("Remove button clicked via delegation, ID:", dateId);
+        // console.log("Remove button clicked via delegation, ID:", dateId);
         removeBlockedDate(dateId);
       }
     });
@@ -586,8 +586,8 @@ async function blockDate() {
   }
 
   try {
-    console.log("Blocking date:", selectedDate);
-    console.log("Selected date type:", typeof selectedDate);
+    // console.log("Blocking date:", selectedDate);
+    // console.log("Selected date type:", typeof selectedDate);
 
     const response = await fetch("/appointments/adminportal/blocked-dates", {
       method: "POST",
@@ -602,14 +602,14 @@ async function blockDate() {
     });
 
     const data = await response.json();
-    console.log("Block date response:", data);
-    console.log("Stored date in DB:", data.blockedDate?.date);
+    // console.log("Block date response:", data);
+    // console.log("Stored date in DB:", data.blockedDate?.date);
 
     if (data.success) {
       // Reload blocked dates
       loadBlockedDates();
       dateInput.value = "";
-      console.log("Date blocked successfully");
+      // console.log("Date blocked successfully");
     } else {
       alert("Error blocking date: " + data.message);
     }
@@ -621,11 +621,11 @@ async function blockDate() {
 
 // Remove blocked date
 async function removeBlockedDate(dateId) {
-  console.log("Attempting to remove blocked date with ID:", dateId);
+  // console.log("Attempting to remove blocked date with ID:", dateId);
 
   if (confirm("Are you sure you want to unblock this date?")) {
     try {
-      console.log("Sending DELETE request for date ID:", dateId);
+      // console.log("Sending DELETE request for date ID:", dateId);
 
       const response = await fetch(
         `/appointments/adminportal/blocked-dates/${dateId}`,
@@ -640,14 +640,14 @@ async function removeBlockedDate(dateId) {
         }
       );
 
-      console.log("Delete response status:", response.status);
+      // console.log("Delete response status:", response.status);
 
       const data = await response.json();
-      console.log("Delete response data:", data);
+      // console.log("Delete response data:", data);
 
       if (data.success) {
         loadBlockedDates();
-        console.log("Blocked date removed successfully:", dateId);
+        // console.log("Blocked date removed successfully:", dateId);
       } else {
         alert("Error removing blocked date: " + data.message);
       }
@@ -778,7 +778,7 @@ async function cancelAppointment(appointmentId) {
 
       if (data.success) {
         loadAppointments();
-        console.log("Appointment cancelled");
+        // console.log("Appointment cancelled");
       } else {
         alert("Error cancelling appointment: " + data.message);
       }
@@ -869,12 +869,12 @@ async function saveAllChanges() {
         isActive: isActive,
       };
 
-      console.log(`Saving day ${dayOfWeek}:`, {
-        dayOfWeek,
-        slotCount: dayTimeSlots.length,
-        isActive,
-        payloadSize: JSON.stringify(requestData).length,
-      });
+      // console.log(`Saving day ${dayOfWeek}:`, {
+      //   dayOfWeek,
+      //   slotCount: dayTimeSlots.length,
+      //   isActive,
+      //   payloadSize: JSON.stringify(requestData).length,
+      // });
 
       requests.push(
         fetch("/appointments/adminportal/availability", {
@@ -895,7 +895,7 @@ async function saveAllChanges() {
       const response = responses[i];
       const dayOfWeek = i;
 
-      console.log(`Day ${dayOfWeek} response status:`, response.status);
+      // console.log(`Day ${dayOfWeek} response status:`, response.status);
 
       // Check if response is JSON
       const contentType = response.headers.get("content-type");
@@ -908,7 +908,7 @@ async function saveAllChanges() {
       }
 
       const responseData = await response.json();
-      console.log(`Day ${dayOfWeek} response:`, responseData);
+      // console.log(`Day ${dayOfWeek} response:`, responseData);
 
       if (!response.ok) {
         throw new Error(
@@ -920,7 +920,7 @@ async function saveAllChanges() {
     }
 
     alert("All changes saved successfully!");
-    console.log("All changes saved");
+    // console.log("All changes saved");
 
     // Reload data to reflect changes
     loadAllData();
@@ -1185,7 +1185,7 @@ async function updateAppointmentStatus(appointmentId, newStatus) {
     const data = await response.json();
 
     if (data.success) {
-      console.log("Appointment status updated:", newStatus);
+      // console.log("Appointment status updated:", newStatus);
       // Reload all data to reflect changes
       await loadAllAppointments();
       await loadAppointments();
@@ -1243,7 +1243,7 @@ async function deleteAppointmentPermanently(appointmentId) {
     const data = await response.json();
 
     if (data.success) {
-      console.log("Appointment deleted permanently");
+      // console.log("Appointment deleted permanently");
       // Reload all data to reflect deletion
       await loadAllAppointments();
       await loadAppointments();

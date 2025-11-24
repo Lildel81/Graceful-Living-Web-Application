@@ -48,54 +48,54 @@ async function getMLConversionStats(options = {}) {
     const log = (msg) => verbose && console.log(msg);
     
     try {
-        log('\n' + '='.repeat(60));
-        log('🤖 ML CONVERSION STATS - Starting...');
-        log('='.repeat(60));
+        // log('\n' + '='.repeat(60));
+        // log('🤖 ML CONVERSION STATS - Starting...');
+        // log('='.repeat(60));
         
-        // Step 1: Check ML API health
-        log('🔍 Step 1: Checking ML API health...');
-        log(`   Connecting to: ${ML_API_URL}`);
+        // // Step 1: Check ML API health
+        // log('🔍 Step 1: Checking ML API health...');
+        // log(`   Connecting to: ${ML_API_URL}`);
         const healthCheck = await axios.get(`${ML_API_URL}/health`, {timeout: 2000});
-        log('✅ ML API Response:', healthCheck.data);
+        // log('✅ ML API Response:', healthCheck.data);
         
         if(healthCheck.data.status !== 'ok'){
             throw new Error('ML model not ready');
         }
 
         // Step 2: Get model information
-        log('🔍 Step 2: Getting model info...');
+        // log('🔍 Step 2: Getting model info...');
         const modelInfo = await axios.get(`${ML_API_URL}/model/info`, {timeout: 2000});
-        log('✅ Model Info:', {
-            type: modelInfo.data.model_type,
-            features: modelInfo.data.num_features,
-            training_samples: modelInfo.data.training_samples
-        });
+        // log('✅ Model Info:', {
+        //     type: modelInfo.data.model_type,
+        //     features: modelInfo.data.num_features,
+        //     training_samples: modelInfo.data.training_samples
+        // });
 
         // Step 3: Get recent assessments to predict
-        log(`🔍 Step 3: Querying assessments from last ${daysBack} days...`);
+        // log(`🔍 Step 3: Querying assessments from last ${daysBack} days...`);
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - daysBack);
-        log(`   Looking for assessments since: ${cutoffDate.toISOString()}`);
+        // log(`   Looking for assessments since: ${cutoffDate.toISOString()}`);
 
         const recentAssessments = await ChakraAssessment.find({
             createdAt: {$gte: cutoffDate}
         }).limit(limit).lean();
         
-        log(`✅ Found ${recentAssessments.length} recent assessments`);
+        // log(`✅ Found ${recentAssessments.length} recent assessments`);
         
-        if (recentAssessments.length > 0 && verbose) {
-            log('   Sample assessment structure:', {
-                hasEmail: !!recentAssessments[0].email,
-                hasAgeBracket: !!recentAssessments[0].ageBracket,
-                hasScoredChakras: !!recentAssessments[0].scoredChakras,
-                hasScoredLifeQuadrants: !!recentAssessments[0].scoredLifeQuadrants,
-                hasFocusChakra: !!recentAssessments[0].focusChakra,
-                hasArchetype: !!recentAssessments[0].archetype
-            });
-        }
+        // if (recentAssessments.length > 0 && verbose) {
+        //     log('   Sample assessment structure:', {
+        //         hasEmail: !!recentAssessments[0].email,
+        //         hasAgeBracket: !!recentAssessments[0].ageBracket,
+        //         hasScoredChakras: !!recentAssessments[0].scoredChakras,
+        //         hasScoredLifeQuadrants: !!recentAssessments[0].scoredLifeQuadrants,
+        //         hasFocusChakra: !!recentAssessments[0].focusChakra,
+        //         hasArchetype: !!recentAssessments[0].archetype
+        //     });
+        // }
 
-        // Step 4: Get basic stats from database
-        log('📊 Step 4: Fetching basic conversion stats from database...');
+        // // Step 4: Get basic stats from database
+        // log('📊 Step 4: Fetching basic conversion stats from database...');
         const basicStats = await getBasicConversionStats();
         
         // Step 5: Get ML predictions if we have recent assessments
@@ -104,60 +104,60 @@ async function getMLConversionStats(options = {}) {
         let conversionStats = null;
         
         if (recentAssessments.length > 0) {
-            log(`🤖 Step 5: Sending ${recentAssessments.length} assessments to ML API...`);
+            // log(`🤖 Step 5: Sending ${recentAssessments.length} assessments to ML API...`);
             
-            // Log first assessment to debug data structure
-            if (verbose && recentAssessments[0]) {
-                log('   First assessment sample:', {
-                    email: recentAssessments[0].email,
-                    ageBracket: recentAssessments[0].ageBracket,
-                    healthcareWorker: recentAssessments[0].healthcareWorker,
-                    hasResults: !!recentAssessments[0].results,
-                    hasScoredChakras: !!recentAssessments[0].scoredChakras,
-                    hasScoredLifeQuadrants: !!recentAssessments[0].scoredLifeQuadrants
-                });
-            }
+            // // Log first assessment to debug data structure
+            // if (verbose && recentAssessments[0]) {
+            //     log('   First assessment sample:', {
+            //         email: recentAssessments[0].email,
+            //         ageBracket: recentAssessments[0].ageBracket,
+            //         healthcareWorker: recentAssessments[0].healthcareWorker,
+            //         hasResults: !!recentAssessments[0].results,
+            //         hasScoredChakras: !!recentAssessments[0].scoredChakras,
+            //         hasScoredLifeQuadrants: !!recentAssessments[0].scoredLifeQuadrants
+            //     });
+            // }
             
             try {
                 // Transform assessments to match ML API expected format
-                log(`   🔄 Transforming ${recentAssessments.length} assessments for ML API...`);
+                // log(`   🔄 Transforming ${recentAssessments.length} assessments for ML API...`);
                 
                 let transformedAssessments;
                 try {
                     transformedAssessments = recentAssessments.map(assessment => transformAssessmentForML(assessment));
-                    log(`   ✅ Successfully transformed ${transformedAssessments.length} assessments`);
+                    // log(`   ✅ Successfully transformed ${transformedAssessments.length} assessments`);
                     
                     // Log first transformed assessment structure
-                    if (verbose && transformedAssessments[0]) {
-                        log('   📋 Transformed assessment sample:', {
-                            email: transformedAssessments[0].email ? '✓' : '✗',
-                            ageBracket: transformedAssessments[0].ageBracket ? '✓' : '✗',
-                            healthcareWorker: transformedAssessments[0].healthcareWorker ? '✓' : '✗',
-                            challenges: `${transformedAssessments[0].challenges.length} items`,
-                            familiarWith: `${transformedAssessments[0].familiarWith.length} items`,
-                            focusChakra: transformedAssessments[0].focusChakra,
-                            archetype: transformedAssessments[0].archetype
-                        });
-                    }
+                    // if (verbose && transformedAssessments[0]) {
+                    //     log('   📋 Transformed assessment sample:', {
+                    //         email: transformedAssessments[0].email ? '✓' : '✗',
+                    //         ageBracket: transformedAssessments[0].ageBracket ? '✓' : '✗',
+                    //         healthcareWorker: transformedAssessments[0].healthcareWorker ? '✓' : '✗',
+                    //         challenges: `${transformedAssessments[0].challenges.length} items`,
+                    //         familiarWith: `${transformedAssessments[0].familiarWith.length} items`,
+                    //         focusChakra: transformedAssessments[0].focusChakra,
+                    //         archetype: transformedAssessments[0].archetype
+                    //     });
+                    // }
                     
                     // Check payload size
                     const payloadSize = JSON.stringify(transformedAssessments).length;
-                    log(`   📦 Payload size: ${(payloadSize / 1024).toFixed(2)} KB`);
+                    // log(`   📦 Payload size: ${(payloadSize / 1024).toFixed(2)} KB`);
                     
                     if (payloadSize > 10 * 1024 * 1024) { // 10MB
-                        log(`   ⚠️  Payload too large, reducing batch size...`);
+                        // log(`   ⚠️  Payload too large, reducing batch size...`);
                         transformedAssessments = transformedAssessments.slice(0, 20);
-                        log(`   📦 Reduced to ${transformedAssessments.length} assessments`);
+                        // log(`   📦 Reduced to ${transformedAssessments.length} assessments`);
                     }
                 } catch (transformError) {
-                    log(`   ❌ Transformation error: ${transformError.message}`);
+                    // log(`   ❌ Transformation error: ${transformError.message}`);
                     throw new Error(`Cannot transform assessment data: ${transformError.message}`);
                 }
                 
                 // Test with single assessment first
-                log(`   🧪 Testing with single assessment first...`);
+                // log(`   🧪 Testing with single assessment first...`);
                 try {
-                    const singleTestResponse = await axios.post(
+                    await axios.post(
                         `${ML_API_URL}/predict`,
                         transformedAssessments[0],
                         {
@@ -168,18 +168,18 @@ async function getMLConversionStats(options = {}) {
                             }
                         }
                     );
-                    log(`   ✅ Single assessment test passed!`);
+                    // log(`   ✅ Single assessment test passed!`);
                 } catch (singleTestError) {
-                    log(`   ❌ Single assessment test failed: ${singleTestError.message}`);
+                    // log(`   ❌ Single assessment test failed: ${singleTestError.message}`);
                     if (singleTestError.response) {
-                        log(`      Status: ${singleTestError.response.status}`);
-                        log(`      Error: ${JSON.stringify(singleTestError.response.data)}`);
+                        // log(`      Status: ${singleTestError.response.status}`);
+                        // log(`      Error: ${JSON.stringify(singleTestError.response.data)}`);
                     }
                     throw new Error(`ML API cannot process assessment format: ${singleTestError.message}`);
                 }
                 
                 // Now send batch
-                log(`   🌐 Sending batch of ${transformedAssessments.length} assessments to ML API...`);
+                // log(`   🌐 Sending batch of ${transformedAssessments.length} assessments to ML API...`);
                 
                 const predictionsResponse = await axios.post(
                     `${ML_API_URL}/predict/batch`,
@@ -195,37 +195,37 @@ async function getMLConversionStats(options = {}) {
                     }
                 );
 
-                log(`   📥 Received response from ML API`);
-                log(`   🔍 Response structure:`, {
-                    success: predictionsResponse.data.success,
-                    hasPredictions: !!predictionsResponse.data.predictions,
-                    hasPrediction: !!predictionsResponse.data.prediction,
-                    keys: Object.keys(predictionsResponse.data)
-                });
+                // log(`   📥 Received response from ML API`);
+                // log(`   🔍 Response structure:`, {
+                //     success: predictionsResponse.data.success,
+                //     hasPredictions: !!predictionsResponse.data.predictions,
+                //     hasPrediction: !!predictionsResponse.data.prediction,
+                //     keys: Object.keys(predictionsResponse.data)
+                // });
                 
                 if (predictionsResponse.data.success){
                     // Handle both 'predictions' (batch) and 'prediction' (single)
                     mlPredictions = predictionsResponse.data.predictions || predictionsResponse.data.prediction;
                     
                     if (!mlPredictions) {
-                        log(`   ⚠️  Warning: Response has success=true but no predictions data`);
-                        log(`   Full response:`, JSON.stringify(predictionsResponse.data, null, 2));
+                        // log(`   ⚠️  Warning: Response has success=true but no predictions data`);
+                        // log(`   Full response:`, JSON.stringify(predictionsResponse.data, null, 2));
                         throw new Error('ML API returned success but no predictions data');
                     }
                     
                     // Ensure it's an array
                     if (!Array.isArray(mlPredictions)) {
-                        log(`   ⚠️  Predictions is not an array, converting...`);
+                        // log(`   ⚠️  Predictions is not an array, converting...`);
                         mlPredictions = [mlPredictions];
                     }
                     
-                    log(`✅ Received ${mlPredictions.length} ML predictions`);
+                    // log(`✅ Received ${mlPredictions.length} ML predictions`);
                 
                     // Count high probability leads (70%+)
                     highProbabilityLeads = mlPredictions.filter(
                         p => p.conversion_probability >= 0.7
                     ).length;
-                log(`🎯 Found ${highProbabilityLeads} high-probability leads (70%+)`);
+                // log(`🎯 Found ${highProbabilityLeads} high-probability leads (70%+)`);
                 
                 // Calculate average conversion probability
                 const avgProb = mlPredictions.length > 0
@@ -247,47 +247,47 @@ async function getMLConversionStats(options = {}) {
                         description: `Model trained on ${modelInfo.data.training_samples || 'N/A'} samples with ${recentAssessments.length} recent assessments analyzed`
                     }]
                 };
-                log('✅ ML conversion stats built successfully');
+                // log('✅ ML conversion stats built successfully');
                 } else {
                     // API returned success: false
-                    log('⚠️  ML API returned success=false');
-                    log('   Error from ML API:', predictionsResponse.data.error || 'No error message provided');
-                    log('   Full response:', JSON.stringify(predictionsResponse.data, null, 2));
+                    // log('⚠️  ML API returned success=false');
+                    // log('   Error from ML API:', predictionsResponse.data.error || 'No error message provided');
+                    // log('   Full response:', JSON.stringify(predictionsResponse.data, null, 2));
                     throw new Error(`ML API processing failed: ${predictionsResponse.data.error || 'Unknown error'}`);
                 }
             } catch (predictionError) {
-                log('❌ Error calling ML prediction API:', predictionError.message);
+                // log('❌ Error calling ML prediction API:', predictionError.message);
                 
-                if (predictionError.response) {
-                    // Server responded with error status
-                    log('   📡 Server Response Error:');
-                    log('      Status:', predictionError.response.status);
-                    log('      Status Text:', predictionError.response.statusText);
-                    log('      Data:', JSON.stringify(predictionError.response.data, null, 2));
-                } else if (predictionError.request) {
-                    // Request was made but no response
-                    log('   📡 No response received from ML API');
-                    log('      Request config:', {
-                        url: predictionError.config?.url,
-                        method: predictionError.config?.method,
-                        timeout: predictionError.config?.timeout
-                    });
-                } else {
-                    // Error in request setup
-                    log('   ⚙️  Request setup error:');
-                    log('      Message:', predictionError.message);
-                    log('      Code:', predictionError.code);
-                    log('      Name:', predictionError.name);
-                    if (predictionError.stack) {
-                        log('      Stack trace (first 3 lines):');
-                        const stackLines = predictionError.stack.split('\n').slice(0, 3);
-                        stackLines.forEach(line => log('         ' + line));
-                    }
-                }
+                // if (predictionError.response) {
+                //     // Server responded with error status
+                //     log('   📡 Server Response Error:');
+                //     log('      Status:', predictionError.response.status);
+                //     log('      Status Text:', predictionError.response.statusText);
+                //     log('      Data:', JSON.stringify(predictionError.response.data, null, 2));
+                // } else if (predictionError.request) {
+                //     // Request was made but no response
+                //     log('   📡 No response received from ML API');
+                //     log('      Request config:', {
+                //         url: predictionError.config?.url,
+                //         method: predictionError.config?.method,
+                //         timeout: predictionError.config?.timeout
+                //     });
+                // } else {
+                //     // Error in request setup
+                //     log('   ⚙️  Request setup error:');
+                //     log('      Message:', predictionError.message);
+                //     log('      Code:', predictionError.code);
+                //     log('      Name:', predictionError.name);
+                //     if (predictionError.stack) {
+                //         log('      Stack trace (first 3 lines):');
+                //         const stackLines = predictionError.stack.split('\n').slice(0, 3);
+                //         stackLines.forEach(line => log('         ' + line));
+                //     }
+                // }
                 // Don't throw - let it continue to use basic stats
             }
         } else {
-            log('⚠️  No recent assessments - using historical stats only');
+            // log('⚠️  No recent assessments - using historical stats only');
             
             // No recent assessments but ML API is running
             if (basicStats) {
@@ -302,7 +302,7 @@ async function getMLConversionStats(options = {}) {
                         description: 'Based on past conversions - no recent assessments to predict'
                     }]
                 };
-                log('✅ Using historical/basic stats');
+                // log('✅ Using historical/basic stats');
             }
         }
 
@@ -315,13 +315,13 @@ async function getMLConversionStats(options = {}) {
         };
         
     } catch (error) {
-        log('❌ ML API not available:', error.message);
+        // log('❌ ML API not available:', error.message);
         
         // Fallback to basic stats
         try {
             const basicStats = await getBasicConversionStats();
             if (basicStats) {
-                log('✅ Falling back to basic database stats');
+                // log('✅ Falling back to basic database stats');
                 return {
                     success: false,
                     mlApiAvailable: false,
@@ -339,7 +339,7 @@ async function getMLConversionStats(options = {}) {
                 };
             }
         } catch (fallbackErr) {
-            log('❌ Failed to get basic stats:', fallbackErr.message);
+            // log('❌ Failed to get basic stats:', fallbackErr.message);
         }
         
         return {
@@ -456,6 +456,6 @@ async function getBasicConversionStats() {
 }
 
 module.exports = {
-    getMLConversionStats,  // NEW: Comprehensive ML stats function
+    getMLConversionStats,  // Comprehensive ML stats function
     getBasicConversionStats
 };

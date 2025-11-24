@@ -68,12 +68,12 @@ class ConversionPredictor:
     def load_data(self):
         self.df = pd.read_csv(self.dataset_path)
 
-        print(f"\nIn train_model.py\n")
+        # print(f"\nIn train_model.py\n")
         # Confirm the data loaded
-        print(f"Loaded {len(self.df)} records")
+        # print(f"Loaded {len(self.df)} records")
 
         # Confirm conversion rate
-        print(f"Conversion rate: {self.df['converted'].mean():.2%}\n")
+        # print(f"Conversion rate: {self.df['converted'].mean():.2%}\n")
 
         return self.df
     
@@ -91,11 +91,11 @@ class ConversionPredictor:
         # Step 2: Handle categorical cols
         catagorical_cols = df_features.select_dtypes(include=['object']).columns
         # Confirm
-        print(f"Categorical cols: {list(catagorical_cols)}")
+        # print(f"Categorical cols: {list(catagorical_cols)}")
 
         # Using dummies for OHE
         df_encoded = pd.get_dummies(df_features, columns=catagorical_cols, drop_first=True)
-        print(f"\n Categorical cols: {df_encoded}")
+        # print(f"\n Categorical cols: {df_encoded}")
 
         # Step 3: Handle missing values
         df_encoded = df_encoded.fillna(0)
@@ -116,17 +116,17 @@ class ConversionPredictor:
         can_stratify = len(unique_values) > 1 and all(unique_values >=2)
 
         if can_stratify:
-            print("Use stratify split to maintain class ballance")
+            # print("Use stratify split to maintain class ballance")
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=0.2, stratify=y)
         else:
-            print("Use regular split")
+            # print("Use regular split")
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=0.2)
         
         # Confirm the splitted sets
-        print(f"Training set: {len(self.X_train)} samples")
-        print(f"Training conversion rate: {self.y_train.mean():.2%}")
-        print(f"Test set: {len(self.X_test)} samples")
-        print(f"Test conversion rate: {self.y_test.mean():.2%}")
+        # print(f"Training set: {len(self.X_train)} samples")
+        # print(f"Training conversion rate: {self.y_train.mean():.2%}")
+        # print(f"Test set: {len(self.X_test)} samples")
+        # print(f"Test conversion rate: {self.y_test.mean():.2%}")
 
         # Step 6: Scale features
         self.X_train = self.scaler.fit_transform(self.X_train)      # fit_transform on training
@@ -138,13 +138,13 @@ class ConversionPredictor:
 
     def train_logistic_regression(self):
         # Confirm the model
-        print(f"\nTraining LogisticRegression\n")
+        # print(f"\nTraining LogisticRegression\n")
 
         # Check if we have at least 2 classes (0 and 1)
         unique_classes = set(self.y_train)
         if len(unique_classes) < 2:
-            print(f"WARNING: Only {len(unique_classes)} class(es) in training data: {unique_classes}")
-            print(f"\nNeed at least 1 assessment that lead to an appointment\n") 
+            # print(f"WARNING: Only {len(unique_classes)} class(es) in training data: {unique_classes}")
+            # print(f"\nNeed at least 1 assessment that lead to an appointment\n") 
 
             return None, None
         
@@ -160,22 +160,22 @@ class ConversionPredictor:
         y_pred_proba = model.predict_proba(self.X_test)[:, 1]
 
         # Classification report
-        print(classification_report(self.y_test, y_pred))
+        # print(classification_report(self.y_test, y_pred))
 
         # Cross-validation
-        cv_scores = cross_val_score(model, self.X_train, self.y_train, cv=5, scoring='roc_auc')
-        print(f"Cross validation ROC-AUC: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})\n")
+        # cv_scores = cross_val_score(model, self.X_train, self.y_train, cv=5, scoring='roc_auc')
+        # print(f"Cross validation ROC-AUC: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})\n")
 
         return model, y_pred_proba
     
     def train_randon_forest(self):
-        print(f"\nTraining RandomForest\n")
+        # print(f"\nTraining RandomForest\n")
 
         # Check if we have at least 2 classes
         unique_classes = set(self.y_train)
         if len(unique_classes) < 2:
-            print(f"WARNING: Only {len(unique_classes)} class(es) in training data: {unique_classes}")
-            print(f"\nNeed at least 1 assessment that lead to an appointment\n") 
+            # print(f"WARNING: Only {len(unique_classes)} class(es) in training data: {unique_classes}")
+            # print(f"\nNeed at least 1 assessment that lead to an appointment\n") 
 
             return None, None
         
@@ -192,20 +192,21 @@ class ConversionPredictor:
         y_pred_proba = model.predict_proba(self.X_test)[:, 1]
 
         # Classification report
-        print(classification_report(self.y_test, y_pred))
+        # print(classification_report(self.y_test, y_pred))
          # Cross-validation
-        cv_scores = cross_val_score(model, self.X_train, self.y_train, cv=5, scoring='roc_auc')
-        print(f"Cross validation ROC-AUC: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})\n")
+        # cv_scores = cross_val_score(model, self.X_train, self.y_train, cv=5, scoring='roc_auc')
+        # print(f"Cross validation ROC-AUC: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})\n")
 
         return model, y_pred_proba
     
     def train_gradient_boosting(self):
-        print(f"\nTraining Gradient Boosting\n")
+        # print(f"\nTraining Gradient Boosting\n")
         # Check if we have at least 2 classes
         unique_classes = set(self.y_train)
         if len(unique_classes) < 2:
-            print(f"WARNING: Only {len(unique_classes)} class(es) in training data: {unique_classes}")
-            print(f"\nNeed at least 1 assessment that lead to an appointment\n") 
+            # print(f"WARNING: Only {len(unique_classes)} class(es) in training data: {unique_classes}")
+            # print(f"\nNeed at least 1 assessment that lead to an appointment\n") 
+            return None, None
 
         model = GradientBoostingClassifier(
             n_estimators=100,
@@ -218,10 +219,10 @@ class ConversionPredictor:
         y_pred_proba = model.predict_proba(self.X_test)[:, 1]
 
         # Classification report
-        print(classification_report(self.y_test, y_pred))
+        # print(classification_report(self.y_test, y_pred))
          # Cross-validation
-        cv_scores = cross_val_score(model, self.X_train, self.y_train, cv=5, scoring='roc_auc')
-        print(f"Cross validation ROC-AUC: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})\n")
+        # cv_scores = cross_val_score(model, self.X_train, self.y_train, cv=5, scoring='roc_auc')
+        # print(f"Cross validation ROC-AUC: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})\n")
 
         return model, y_pred_proba
 
@@ -235,9 +236,9 @@ class ConversionPredictor:
         joblib.dump(self.feature_names, features_path)
 
     def train_all_models(self):
-        print(f"\n" + "="*60)
-        print("Training conversion prediction model")
-        print("="*60 + f"\n")
+        # print(f"\n" + "="*60)
+        # print("Training conversion prediction model")
+        # print("="*60 + f"\n")
 
         # Train model
         lr_model, lr_proba = self.train_logistic_regression()
@@ -254,9 +255,9 @@ class ConversionPredictor:
             models_dict['Gradient Boosting'] = (gb_model, gb_proba)
 
         # Check if we have any trained model
-        if len(models_dict) == 0:
-            print("ERROR: No models trained")
-            print(f"\nNeed to create 2 classes in the dataset")
+        # if len(models_dict) == 0:
+        #     print("ERROR: No models trained")
+        #     print(f"\nNeed to create 2 classes in the dataset")
         
         # Compare models
         best_auc = 0
@@ -269,27 +270,29 @@ class ConversionPredictor:
                 continue
             try:
                 auc = roc_auc_score(self.y_test, y_pred_proba)
-                acc = accuracy_score(self.y_test, model.predict(self.X_test))
-                print(f"{name}:")
-                print(f"  Accuracy: {acc:.4f}")
-                print(f"  ROC-AUC: {auc:.4f}\n")
+                # acc = accuracy_score(self.y_test, model.predict(self.X_test))
+                # print(f"{name}:")
+                # print(f"  Accuracy: {acc:.4f}")
+                # print(f"  ROC-AUC: {auc:.4f}\n")
 
                 if auc > best_auc:
                     best_auc = auc
                     best_model_name = name
                     best_model = model
             except Exception as e:
-                print(f"Error Comparing {name}: {e}\n")
+                # print(f"Error Comparing {name}: {e}\n")
         
-        if best_model is None:
-            print(f"No valide models to compare\n")
-        else:
-            print(f"Best Model: {best_model_name} (ROC-AUC: {best_auc:.4f})\n")
+        # if best_model is None:
+        #     print(f"No valide models to compare\n")
+        # else:
+        #     print(f"Best Model: {best_model_name} (ROC-AUC: {best_auc:.4f})\n")
+                pass
         
         self.best_model = best_model
 
         # Save best model
-        self.save_model(best_model, 'best_conversion_model')
+        if best_model is not None:
+            self.save_model(best_model, 'best_conversion_model')
 
         return best_model
     
@@ -306,9 +309,10 @@ def main():
         best_model = predictor.train_all_models()
 
     except Exception as e:
-        print(f"ERROR: {e}")
-        import traceback
-        traceback.print_exc()
+        # print(f"ERROR: {e}")
+        # import traceback
+        # traceback.print_exc()
+        pass
 
 if __name__ == "__main__":
     main()
