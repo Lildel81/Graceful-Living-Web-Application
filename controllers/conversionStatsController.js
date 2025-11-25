@@ -45,7 +45,7 @@ function transformAssessmentForML(assessment) {
 async function getMLConversionStats(options = {}) {
     const { daysBack = 90, limit = 50, verbose = true } = options;
     
-    // const log = (msg) => verbose && console.log(msg);
+    const log = (msg) => verbose && console.log(msg);
     
     try {
         // log('\n' + '='.repeat(60));
@@ -220,35 +220,7 @@ async function getMLConversionStats(options = {}) {
                     }
                     
                     // log(`✅ Received ${mlPredictions.length} ML predictions`);
-                    // =============================== Deduplicate by email - keep most recent assessment =============================
-                    // Group predictions by email and keep only the most recent assessment per email
-                    const emailMap = new Map();
-
-                    mlPredictions.forEach(prediction => {
-                        const email = (prediction.email || '').toLowerCase().trim();
-                        if (!email) return; // Skip predictions without email
-
-                        const existing = emailMap.get(email);
-
-                        // If no existing entry, or this one is more recent, use this one
-                        if (!existing) {
-                            emailMap.set(email, prediction);
-                        }
-                        else {
-                            const existingDate = existing.createdAt ? new Date(existing.createdAt) : new Date(0);
-                            const currentDate = prediction.createdAt ? new Date(prediction.createdAt) : new Date(0);
-
-                            // Keep the one with the most recent createdAt date
-                            if (currentDate > existingDate) {
-                                emailMap.set(email, prediction);
-                            }
-                        }
-                    });
-
-                    // convert map back to array
-                    mlPredictions = Array.from(emailMap.values());
-                    // =================================== End of deduplicate by email =================================
-
+                
                     // Count high probability leads (70%+)
                     highProbabilityLeads = mlPredictions.filter(
                         p => p.conversion_probability >= 0.7
