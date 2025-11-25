@@ -30,6 +30,7 @@ const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
+
 const adminVideoRoutes = require('./routes/adminVideoRoutes');
 
 const app = express();

@@ -8,6 +8,11 @@ const csrfProtection = require('../middleware/csrf');
 
 const router = express.Router();
 
+router.use(csrfProtection, (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 const createDOMPurify = require('dompurify')
 const { JSDOM } = require('jsdom')
 
