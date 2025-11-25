@@ -6,6 +6,20 @@
   <link rel="stylesheet" href="/css/chakra-forecast.css">
 </head>
 <body>
+
+  <!-- MAPPING FOR CHAKRA NAMES-->
+   <% 
+    const chakraLabels = {
+      rootChakra: "Root Chakra",
+      sacralChakra: "Sacral Chakra",
+      solarPlexusChakra: "Solar Plexus Chakra",
+      heartChakra: "Heart Chakra",
+      throatChakra: "Throat Chakra",
+      thirdEyeChakra: "Third Eye Chakra",
+      crownChakra: "Crown Chakra"
+    };
+  %>
+
   <div class="chakra-dashboard">
     <h1>🔮 Chakra Forecast</h1>
     <p class="subtitle">AI-powered insights from your recent chakra assessments</p>
@@ -16,12 +30,12 @@
       <div class="cards-container">
         <div class="card highlight">
           <h3>✨ Predicted Focus Chakra</h3>
-          <h2><%= predicted || "No data" %></h2>
+          <h2><%= chakraLabels[predicted] || "No data" %></h2>
         </div>
 
         <% for (const [chakra, count] of Object.entries(counts || {})) { %>
           <div class="card">
-            <h4><%= chakra %></h4>
+            <h4><%= chakraLabels[chakra] || chakra %></h4>
             <p><%= count %> projected next month</p>
           </div>
         <% } %>
