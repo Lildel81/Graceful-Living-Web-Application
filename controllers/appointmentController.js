@@ -353,7 +353,19 @@ const createAppointment = async (req, res) => {
 
     // STEP 4: Create and save appointment to database
     // Exclude CSRF token from being saved to database
-    const { _csrf, ...appointmentData } = req.body;
+    const { _csrf, ...appointmentBody } = req.body;
+    const appointmentData = { ...appointmentBody };
+
+    if (req.session && req.session.user) {
+      appointmentData.userId = req.session.user._id;
+
+      if (!appointmentData.clientEmail) {
+        appointmentData.clientEmail = req.session.user.email;
+      }
+      if (!appointmentData.clientName) {
+        appointmentData.clientName = req.session.user.fullName;
+      }
+    }
     const appointment = new Appointment(appointmentData);
     await appointment.save();
 
