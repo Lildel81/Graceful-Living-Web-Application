@@ -1,10 +1,10 @@
 const express = require("express");
 const ChakraAssessment = require("../models/chakraAssessment");
 const router = express.Router();
-const csrfProtection = require('../middleware/csrf');
-const bcrypt = require('bcrypt');
-const User = require('../models/userSchema');
-
+const csrfProtection = require("../middleware/csrf");
+const bcrypt = require("bcrypt");
+const User = require("../models/userSchema");
+const Appointment = require("../models/appointment");
 
 router.post("/delete/:id", requireLogin, async (req, res) => {
   const id = req.params.id;
@@ -21,31 +21,31 @@ function requireLogin(req, res, next) {
 }
 
 // Update Email Route
-router.post('/update-email', csrfProtection, async (req, res) => {
+router.post("/update-email", csrfProtection, async (req, res) => {
   try {
     const { newEmail, password } = req.body;
     const userId = req.session.user?._id;
 
     if (!userId) {
-      return res.status(401).send('Not authenticated');
+      return res.status(401).send("Not authenticated");
     }
 
     // Get user from database
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return res.status(400).send('Incorrect password');
+      return res.status(400).send("Incorrect password");
     }
 
     // Check if new email is already taken
     const existingUser = await User.findOne({ email: newEmail });
     if (existingUser && existingUser._id.toString() !== userId) {
-      return res.status(400).send('Email already in use');
+      return res.status(400).send("Email already in use");
     }
 
     // Update email
@@ -55,43 +55,46 @@ router.post('/update-email', csrfProtection, async (req, res) => {
     // Update session
     req.session.user.email = newEmail;
 
-    res.redirect('/user-dashboard?success=email-updated');
+    res.redirect("/user-dashboard?success=email-updated");
   } catch (err) {
-    console.error('Error updating email:', err);
-    res.status(500).send('Error updating email');
+    console.error("Error updating email:", err);
+    res.status(500).send("Error updating email");
   }
 });
 
 // Change Password Route
-router.post('/change-password', csrfProtection, async (req, res) => {
+router.post("/change-password", csrfProtection, async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
     const userId = req.session.user?._id;
 
     if (!userId) {
-      return res.status(401).send('Not authenticated');
+      return res.status(401).send("Not authenticated");
     }
 
     // Validate passwords match
     if (newPassword !== confirmNewPassword) {
-      return res.status(400).send('New passwords do not match');
+      return res.status(400).send("New passwords do not match");
     }
 
     // Validate password length
     if (newPassword.length < 8) {
-      return res.status(400).send('Password must be at least 8 characters');
+      return res.status(400).send("Password must be at least 8 characters");
     }
 
     // Get user from database
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
 
     // Verify current password
-    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    const isValidPassword = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
     if (!isValidPassword) {
-      return res.status(400).send('Current password is incorrect');
+      return res.status(400).send("Current password is incorrect");
     }
 
     // Hash new password
@@ -99,33 +102,33 @@ router.post('/change-password', csrfProtection, async (req, res) => {
     user.password = hashedPassword;
     await user.save();
 
-    res.redirect('/user-dashboard?success=password-changed');
+    res.redirect("/user-dashboard?success=password-changed");
   } catch (err) {
-    console.error('Error changing password:', err);
-    res.status(500).send('Error changing password');
+    console.error("Error changing password:", err);
+    res.status(500).send("Error changing password");
   }
 });
 
 // Delete Account Route
-router.post('/delete-account', csrfProtection, async (req, res) => {
+router.post("/delete-account", csrfProtection, async (req, res) => {
   try {
     const { password } = req.body;
     const userId = req.session.user?._id;
 
     if (!userId) {
-      return res.status(401).send('Not authenticated');
+      return res.status(401).send("Not authenticated");
     }
 
     // Get user from database
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return res.status(400).send('Incorrect password');
+      return res.status(400).send("Incorrect password");
     }
 
     // Delete all user's assessments
@@ -137,13 +140,13 @@ router.post('/delete-account', csrfProtection, async (req, res) => {
     // Destroy session
     req.session.destroy((err) => {
       if (err) {
-        console.error('Error destroying session:', err);
+        console.error("Error destroying session:", err);
       }
-      res.redirect('/?deleted=true');
+      res.redirect("/?deleted=true");
     });
   } catch (err) {
-    console.error('Error deleting account:', err);
-    res.status(500).send('Error deleting account');
+    console.error("Error deleting account:", err);
+    res.status(500).send("Error deleting account");
   }
 });
 
@@ -154,9 +157,22 @@ router.get("/", requireLogin, csrfProtection, async (req, res) => {
       .sort({ createdAt: -1 })
       .select("submissionId focusChakra archetype createdAt");
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingAppointments = await Appointment.find({
+      userId: req.session.user._id,
+      status: { $ne: "cancelled" },
+      appointmentDate: { $gte: new Date() },
+    })
+      .sort({ appointmentDate: 1, appointmentTime: 1 })
+      .limit(5)
+      .lean();
+
     res.render("user-dashboard", {
       assessments,
-      csrfToken: req.csrfToken()
+      csrfToken: req.csrfToken(),
+      upcomingAppointments,
     });
   } catch (err) {
     console.error("Error loading dashboard:", err);

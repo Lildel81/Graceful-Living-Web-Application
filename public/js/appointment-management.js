@@ -58,6 +58,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Zoom integration init
   setupZoomIntegrationListeners();
   loadZoomIntegrationState();
+
+  // Tab 6: Admin create appointment form validation
+  setupAdminCreateAppointmentValidation();
 });
 
 /* ==========================================
@@ -973,6 +976,206 @@ function getEndTime(time24) {
   return convertTo12Hour(`${endHour}:${endMinuteStr}`);
 }
 
+/**
+ * ADMIN CREATE-APPOINTMENT FORM VALIDATION (TAB 6)
+ *
+ * Validates client email and phone number when admin creates an appointment.
+ * This is purely front-end validation and will prevent submission if invalid.
+ *
+ * Expected HTML IDs:
+ * - Form: #adminCreateAppointmentForm
+ * - Email input: #clientEmail
+ * - Phone input: #clientPhone
+ * - Error/message container: #createAppointmentMessage
+ */
+function setupAdminCreateAppointmentValidation() {
+  const form = document.getElementById("adminCreateAppointmentForm");
+  if (!form) return;
+
+  const emailInput = document.getElementById("clientEmail");
+  const phoneInput = document.getElementById("clientPhone");
+  const dateInput = document.getElementById("appointmentDate");
+  const timeInput = document.getElementById("appointmentTime");
+  const messageEl = document.getElementById("createAppointmentMessage");
+
+  // Phone auto-format mask
+  if (phoneInput) {
+    phoneInput.addEventListener("input", () => {
+      let digits = phoneInput.value.replace(/\D/g, ""); // strip non-digits
+      if (digits.length > 10) digits = digits.slice(0, 10);
+
+      if (digits.length > 3 && digits.length <= 6) {
+        phoneInput.value = digits.replace(/(\d{3})(\d+)/, "$1-$2");
+      } else if (digits.length > 6) {
+        phoneInput.value = digits.replace(/(\d{3})(\d{3})(\d+)/, "$1-$2-$3");
+      } else {
+        phoneInput.value = digits;
+      }
+    });
+  }
+
+  form.addEventListener("submit", function (e) {
+    const errors = [];
+
+    // Email check
+    if (emailInput) {
+      const email = emailInput.value.trim();
+      if (!isValidEmail(email)) {
+        errors.push(
+          "Please enter a valid email address (for example user@example.com)."
+        );
+      }
+    }
+
+    // Phone check
+    if (phoneInput) {
+      const phone = phoneInput.value.trim();
+      if (!isValidPhone(phone)) {
+        errors.push(
+          "Please enter a valid 10-digit phone number (for example 916-555-1234)."
+        );
+      }
+    }
+
+    // Date / time availability checks
+    if (dateInput && timeInput) {
+      const dateStr = dateInput.value; // "YYYY-MM-DD"
+      const time24 = timeInput.value; // "HH:MM"
+
+      if (!dateStr) {
+        errors.push("Please choose an appointment date.");
+      } else {
+        // Is this day in the admin's available days?
+        if (!isDateOnAvailableDay(dateStr)) {
+          errors.push(
+            "That date is not one of your available days. Please choose another date."
+          );
+        }
+
+        // Is this date blocked?
+        if (isDateBlocked(dateStr)) {
+          errors.push(
+            "That date is currently blocked. Please choose another date."
+          );
+        }
+      }
+
+      if (!time24) {
+        errors.push("Please choose an appointment time.");
+      } else {
+        // Time must exist in configured time slots
+        if (!isTimeInConfiguredSlots(time24)) {
+          errors.push(
+            "That time is not in your configured time slots. Choose one of your available times."
+          );
+        }
+
+        // Avoid double-booking
+        if (!errors.length && isTimeAlreadyBooked(dateStr, time24)) {
+          errors.push(
+            "That time slot is already booked for this date. Please choose a different time."
+          );
+        }
+      }
+    }
+
+    // If anything failed, block submit + show message
+    if (errors.length > 0) {
+      e.preventDefault();
+      alert(errors.join("\n"));
+
+      if (messageEl) {
+        messageEl.innerHTML = errors
+          .map((msg) => `<p class="form-error">${msg}</p>`)
+          .join("");
+        messageEl.classList.add("visible");
+      }
+    } else if (messageEl) {
+      messageEl.innerHTML = "";
+      messageEl.classList.remove("visible");
+    }
+  });
+}
+
+// Simple email validation helper
+function isValidEmail(value) {
+  if (!value) return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value);
+}
+
+// Simple US-style phone validation helper (e.g. 916-555-1234, (916) 555-1234, 9165551234)
+function isValidPhone(value) {
+  if (!value) return false;
+  const digitsOnly = value.replace(/[^0-9]/g, "");
+  if (digitsOnly.length !== 10) return false;
+
+  const phoneRegex = /^(\(?\d{3}\)?[\s-]?)?\d{3}[\s-]?\d{4}$/;
+  return phoneRegex.test(value);
+}
+/**
+ * Normalize a date (string or Date) into "YYYY-MM-DD".
+ */
+function normalizeToYMD(dateValue) {
+  const d = parseAppointmentDate(dateValue);
+  if (isNaN(d.getTime())) return null;
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Is this date on an active available day?
+ * Uses global `availableDays` loaded from /availability.
+ */
+function isDateOnAvailableDay(dateStr) {
+  const d = parseAppointmentDate(dateStr);
+  if (isNaN(d.getTime())) return false;
+  const dow = d.getDay(); // 0 = Sunday ... 6 = Saturday
+
+  return availableDays.some((day) => day.dayOfWeek === dow && day.isActive);
+}
+
+/**
+ * Is this date blocked?
+ * Uses global `blockedDates` loaded from /blocked-dates.
+ */
+function isDateBlocked(dateStr) {
+  const target = normalizeToYMD(dateStr);
+  if (!target) return false;
+
+  return blockedDates.some((bd) => {
+    const bdYMD = normalizeToYMD(bd.date);
+    return bdYMD === target;
+  });
+}
+
+/**
+ * Is this time part of the configured time slots?
+ * Uses global `timeSlots` (start/end in 12-hr format).
+ */
+function isTimeInConfiguredSlots(time24Str) {
+  if (!time24Str) return false;
+  const label = convertTo12Hour(time24Str); // e.g. "2:00 PM"
+  return timeSlots.some((slot) => slot.start === label);
+}
+
+/**
+ * Is this specific date + time already booked by another appointment?
+ * Uses global `appointments` (future, non-cancelled ones).
+ */
+function isTimeAlreadyBooked(dateStr, time24Str) {
+  if (!dateStr || !time24Str) return false;
+  const label = convertTo12Hour(time24Str);
+  const targetYMD = normalizeToYMD(dateStr);
+
+  return appointments.some((apt) => {
+    const aptYMD = normalizeToYMD(apt.appointmentDate);
+    return (
+      aptYMD === targetYMD &&
+      apt.status !== "cancelled" &&
+      apt.appointmentTime === label
+    );
+  });
+}
 /* ==========================================
    HELPER FUNCTIONS
    ========================================== */

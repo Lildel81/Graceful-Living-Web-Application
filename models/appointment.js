@@ -25,6 +25,12 @@ const Joi = require("joi"); // Schema validation library
  * Each appointment contains client info, scheduling details, and tracking data.
  */
 const appointmentSchema = new mongoose.Schema({
+  //user id to for user dashboard
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: false,
+  },
   // CLIENT INFORMATION FIELDS
   clientName: {
     type: String,
