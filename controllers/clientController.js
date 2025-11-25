@@ -40,7 +40,7 @@ function allowAdminEmbeds(res) {
     .trim();
 
   res.set('Content-Security-Policy', cleaned ? `${cleaned}; ${extra}` : extra);
-  res.set('adminportal-Options');
+  res.set('X-Frame-Options', 'SAMEORIGIN');
 }
 
 
@@ -96,7 +96,7 @@ const getHubView = async (req, res, next) => {
 const getHomeView = async (req, res, next) => {
   try {
     const slides = await CarouselSlide.find().sort({ order: 1 });
-    const IntroVideo = await IntroVideo.findOne().sort({ createdAt: -1 });    /*
+    const introVideo = await IntroVideo.findOne().sort({ createdAt: -1 });    /*
     const allReviews = [
       {
         name: "Vicki Carroll",
@@ -328,14 +328,14 @@ const getHomeView = async (req, res, next) => {
     const selectedReviews = await testimonials.aggregate([{ $sample: { size: 3 } }]);
 
     const services = await Services.find().sort({ createdAt: -1 }).limit(3);
-    const introVideo = null; // was not rendering home page added this for intro video 
+    //const introVideo = null; // was not rendering home page added this for intro video 
 
     res.render("home", { 
       slides, 
       selectedReviews,
       //to view services 
       services,
-      IntroVideo
+      introVideo
     });
   } catch (error) {
     console.error("Error fetching slides:", error.message);

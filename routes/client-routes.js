@@ -99,7 +99,7 @@ router.post('/clientmanagement/:id/delete', requireAdmin, postDeleteClient);
 /* ---------- Allow iframe only for testimonials manager (same-origin) ---------- */
 router.use('/admin/testimonials', (req, res, next) => {
   // XFO: allow same-origin embedding
-  res.setHeader('adminportal-Options');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
 
   // CSP: ensure frame-ancestors includes self (and remove any older FA if present)
   const existing = res.getHeader('Content-Security-Policy');

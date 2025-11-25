@@ -154,6 +154,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
        src="<%= videoSrc %>""
        title="YouTube video player"
        allowfullscreen
+       referrerpolicy="strict-origin-when-cross-origin" 
 ></iframe>
 
       <!-- STATIC IMPLEMENTATION -->
@@ -169,139 +170,6 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
     </div>
   </div>
 
-  <!-- Added Services Section Here 
-  <section style="padding: 50px; background: #f3f3f3; text-align: center;">
-      <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Services</h2>
-      <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-          
-          Service 1 
-          <div style="
-            width: 18rem; 
-            height: 28rem; 
-            background: url('/images/service%201.png') center / cover no-repeat; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-end; 
-            align-items: center; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            padding: 1rem;
-          ">
-            Overlay box 
-            <div style="
-              background: rgba(0,0,0,0.5); 
-              padding: 1rem; 
-              border-radius: 8px; 
-              width: 100%; 
-              display: flex; 
-              flex-direction: column; 
-              align-items: center;
-              text-align: center;
-            ">
-              <h3 style="font-size: 18px; font-weight: bold; color: #fff; margin: 0;">Service 1</h3>
-              <p style="font-size: 14px; margin: 10px 0; color: #fff;">Lorem ipsum dolor sit amet.</p>
-              <button style="
-                padding: 8px 12px; 
-                background: #333; 
-                color: #fff; 
-                border-radius: 5px; 
-                border: none; 
-                cursor: pointer;
-                margin-top: 0.5rem;
-                margin-right:0;
-              ">
-                Let explore it
-              </button>
-            </div>
-          </div>
-
-          Service 2 
-          <div style="
-            width: 18rem; 
-            height: 28rem; 
-            background: url('/images/service%202.png') center / cover no-repeat; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-end; 
-            align-items: center; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            padding: 1rem;
-          ">
-            Overlay box 
-            <div style="
-              background: rgba(0,0,0,0.5); 
-              padding: 1rem; 
-              border-radius: 8px; 
-              width: 100%; 
-              display: flex; 
-              flex-direction: column; 
-              align-items: center;
-              text-align: center;
-            ">
-              <h3 style="font-size: 18px; font-weight: bold; color: #fff; margin: 0;">Service 2</h3>
-              <p style="font-size: 14px; margin: 10px 0; color: #fff;">Lorem ipsum dolor sit amet.</p>
-              <button style="
-                padding: 8px 12px; 
-                background: #333; 
-                color: #fff; 
-                border-radius: 5px; 
-                border: none; 
-                cursor: pointer;
-                margin-top: 0.5rem;
-                margin-right:0;
-              ">
-                Let explore it
-              </button>
-            </div>
-          </div>
-
-          Service 3 
-          <div style="
-            width: 18rem; 
-            height: 28rem; 
-            background: url('/images/service%203.png') center / cover no-repeat; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-end; 
-            align-items: center; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            padding: 1rem;
-          ">
-            Overlay box 
-            <div style="
-              background: rgba(0,0,0,0.5); 
-              padding: 1rem; 
-              border-radius: 8px; 
-              width: 100%; 
-              display: flex; 
-              flex-direction: column; 
-              align-items: center;
-              text-align: center;
-            ">
-              <h3 style="font-size: 18px; font-weight: bold; color: #fff; margin: 0;">Service 3</h3>
-              <p style="font-size: 14px; margin: 10px 0; color: #fff;">Lorem ipsum dolor sit amet.</p>
-              <button style="
-                padding: 8px 12px; 
-                background: #333; 
-                color: #fff; 
-                border-radius: 5px; 
-                border: none; 
-                cursor: pointer;
-                margin-top: 0.5rem;
-                margin-right:0;
-              ">
-                Let explore it
-              </button>
-            </div>
-          </div>
-
-      </div>
-  </section>
-  Services Section Ends Here -->
-
-  <!-- Services Section -->
   
 <link rel="stylesheet" href="/css/home-services.css">
 
