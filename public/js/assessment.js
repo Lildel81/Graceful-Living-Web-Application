@@ -50,7 +50,7 @@ function validateSection(sectionIndex) {
         
         // Skip challengeOtherText unless "other" is selected
         if (input.name === 'challengeOtherText') {
-            const challengesOther = section.querySelector('input[name="challenges"][value="other"]');
+            const challengesOther = section.querySelector('input[name^="challenges"][value="other"]');
             if (!challengesOther || !challengesOther.checked) return;
         }
         
@@ -331,7 +331,7 @@ challengesOtherCheckbox.addEventListener('change', function() {
 
 // handle "none of the above" exclusivity for familiar with
 const noneCheckbox = document.getElementById('noneCheckbox');
-const familiarCheckboxes = document.querySelectorAll('input[name="familiarWith"]:not(#noneCheckbox)');
+const familiarCheckboxes = document.querySelectorAll('input[name^="familiarWith"]:not(#noneCheckbox)');
 
 noneCheckbox.addEventListener('change', function() {
     if (this.checked) {
@@ -361,7 +361,7 @@ form.addEventListener('submit', function(e) {
     }
     
     // check if at least one checkbox is selected for "familiar with"
-    const familiarWithChecked = document.querySelectorAll('input[name="familiarWith"]:checked');
+    const familiarWithChecked = document.querySelectorAll('input[name^="familiarWith"]:checked');
     if (familiarWithChecked.length === 0) {
     e.preventDefault();
     alert('Please select at least one option for "Which of the following are you familiar with?"');
@@ -369,7 +369,7 @@ form.addEventListener('submit', function(e) {
     }
 
     // check if at least one checkbox is selected for "challenges"
-    const challengesChecked = document.querySelectorAll('input[name="challenges"]:checked');
+    const challengesChecked = document.querySelectorAll('input[name^="challenges"]:checked');
     if (challengesChecked.length === 0) {
     e.preventDefault();
     alert('Please select at least one option for "Are there specific challenges you\'re currently facing?"');
@@ -508,3 +508,5 @@ function adminAutoFill() {
   
   console.log("Admin autofill complete!");
 }
+
+module.exports = { adminAutoFill };

@@ -24,127 +24,136 @@
         </section>
 
 
-        <!--Filters-->
+        <!-- Filters -->
         <form id="filters" class="filters" method="get" action="/clientmanagement/chakraquiz-results">
-            <div class="field">
-                <label for="q">Search</label>
-                <input id="q" name="q" value="<%= q %>" placeholder="Name, email, phone, job title…">
-            </div>
+        <div class="field">
+            <label for="q">Search</label>
+            <input id="q" name="q" value="<%= q %>" placeholder="Name, email, phone, job title…">
+        </div>
 
-            <!--Age Bracket Filter-->
-            <div class="field">
+        <!-- Age Bracket Filter -->
+        <div class="field">
             <label for="ageBracket">Age Bracket</label>
             <select id="ageBracket" name="ageBracket">
-                <option value="">Any</option>
-                <option <%= ageBracket==='20-30'?'selected':'' %>>20-30</option>
-                <option <%= ageBracket==='30-40'?'selected':'' %>>30-40</option>
-                <option <%= ageBracket==='40-50'?'selected':'' %>>40-50</option>
-                <option <%= ageBracket==='50+'?'selected':'' %>>50+</option>
+            <option value="">Any</option>
+            <option <%= ageBracket==='20-30'?'selected':'' %>>20-30</option>
+            <option <%= ageBracket==='30-40'?'selected':'' %>>30-40</option>
+            <option <%= ageBracket==='40-50'?'selected':'' %>>40-50</option>
+            <option <%= ageBracket==='50+'?'selected':'' %>>50+</option>
             </select>
+        </div>
+
+        <!-- Healthcare Worker -->
+        <div class="field">
+            <label for="healthcareWorker">Healthcare Worker</label>
+            <select id="healthcareWorker" name="healthcareWorker">
+            <option value="">Any</option>
+            <option value="yes" <%= healthcareWorker==='yes'?'selected':'' %>>Yes</option>
+            <option value="no"  <%= healthcareWorker==='no'?'selected':'' %>>No</option>
+            </select>
+        </div>
+
+        <!-- Experience -->
+        <div class="field">
+            <label for="experience">Worked With Practitioner</label>
+            <select id="experience" name="experience">
+            <option value="">Any</option>
+            <option value="current"  <%= experience==='current'  ?'selected':'' %>>Currently working with one</option>
+            <option value="past"     <%= experience==='past'     ?'selected':'' %>>In the past</option>
+            <option value="no"       <%= experience==='no'       ?'selected':'' %>>First time</option>
+            <option value="notSure"  <%= experience==='notSure'  ?'selected':'' %>>Not sure</option>
+            <option value="other"    <%= experience==='other'    ?'selected':'' %>>Other</option>
+            </select>
+        </div>
+
+        <!-- Familiar With -->
+        <div class="field">
+            <label>Familiar With</label>
+            <div class="checkbx">
+            <%
+                const famSel = familiarWith || [];
+                const FAM_MAP = {
+                kundalini: 'Kundalini Yoga',
+                soundBaths: 'Sound Baths',
+                lifeCoaching: 'Life Coaching',
+                eft: 'Emotional Freedom Technique',
+                none: 'None of the above'
+                };
+                Object.entries(FAM_MAP).forEach(([slug,label]) => { %>
+                <label class="cb">
+                    <input type="checkbox" name="familiarWith" value="<%= slug %>" <%= famSel.includes(slug)?'checked':'' %> />
+                    <span><%= label %></span>
+                </label>
+            <% }); %>
             </div>
+        </div>
 
-
-            <!--Healtcare Worker Filter-->
-            <div class="field">
-                <label for="healthcareWorker">Healthcare Worker</label>
-                <select id="healthcareWorker" name="healthcareWorker">
-                    <option value="">Any</option>
-                    <option value="Yes" <%= healthcareWorker==='Yes'?'selected':'' %>>Yes</option>
-                    <option value="No"  <%= healthcareWorker==='No'?'selected':'' %>>No</option>
-                </select>
+        <!-- Challenges -->
+        <div class="field">
+            <label>Challenges</label>
+            <div class="checkbx">
+            <%
+                const chSel = challenges || [];
+                const CHALLENGE_MAP = {
+                physical: 'Physical (fatigue, pain, chronic issues)',
+                emotional: 'Emotional (stress, anxiety, overwhelm)',
+                mental: 'Mental (overthinking, lack of focus, burnout)',
+                spiritual: 'Spiritual (disconnection, lack of clarity, seeking purpose)',
+                other: 'Other'
+                };
+                Object.entries(CHALLENGE_MAP).forEach(([slug, label]) => { %>
+                <label class="cb">
+                    <input type="checkbox" name="challenges" value="<%= slug %>" <%= chSel.includes(slug) ? 'checked' : '' %> />
+                    <span><%= label %></span>
+                </label>
+            <% }); %>
             </div>
+        </div>
 
-
-            <!--Worked with Practitionar Filter-->
-            <div class="field">
-                <label for="experience">Worked With Practitioner</label>
-                <select id="experience" name="experience">
-                    <option value="">Any</option>
-                    <option value="Currently working with one" <%= experience==='Currently working with one'?'selected':'' %>>Currently working with one</option>
-                    <option value="In the past" <%= experience==='In the past'?'selected':'' %>>In the past</option>
-                    <option value="First time" <%= experience==='First time'?'selected':'' %>>First time</option>
-                    <option value="Not sure" <%= experience==='Not sure'?'selected':'' %>>Not sure</option>
-                    <option value="Other" <%= experience==='Other'?'selected':'' %>>Other</option>
-                </select>
+        <!-- Focus Chakra -->
+        <div class="field">
+            <label>Focus Chakra</label>
+            <div class="checkbx">
+            <% const fc = focusChakra || []; %>
+            <% ['rootChakra','sacralChakra','solarPlexusChakra','heartChakra','throatChakra','thirdEyeChakra','crownChakra'].forEach(opt => { %>
+                <label class="cb">
+                <input type="checkbox" name="focusChakra" value="<%= opt %>" <%= fc.includes(opt)?'checked':'' %> />
+                <span><%= opt %></span>
+                </label>
+            <% }) %>
             </div>
+        </div>
 
-
-            <!--Familur with Filter-->
-            <div class="field">
-                <label>Familiar With</label>
-                <div class="checkbx">
-                <% const fam = familiarWith || []; %>
-                <% ['Kundalini Yoga','Sound Baths','Life Coaching','Emotional Freedom Technique','None of the above'].forEach(opt => { %>
-                    <label class="cb">
-                    <input type="checkbox" name="familiarWith[]" value="<%= opt %>" <%= fam.includes(opt)?'checked':'' %> />
-                    <span><%= opt %></span>
-                    </label>
-                <% }) %>
-                </div>
+        <!-- Archetype -->
+        <div class="field">
+            <label>Archetype</label>
+            <div class="checkbx">
+            <% const arch = archetype || []; %>
+            <% ['workerBee','martyr','innerChild','saboteur','lover','caretaker','rebel', 'creatorVisionary', 'ruler'].forEach(opt => { %>
+                <label class="cb">
+                <input type="checkbox" name="archetype" value="<%= opt %>" <%= arch.includes(opt)?'checked':'' %> />
+                <span><%= opt %></span>
+                </label>
+            <% }) %>
             </div>
+        </div>
 
+        <!-- Dates -->
+        <div class="field">
+            <label for="from">From</label>
+            <input type="date" id="from" name="from" value="<%= from %>">
+        </div>
+        <div class="field">
+            <label for="to">To</label>
+            <input type="date" id="to" name="to" value="<%= to %>">
+        </div>
 
-            <!--Challenges Filter-->
-            <div class="field">
-                <label>Challenges</label>
-                <div class="checkbx">
-                <% const ch = challenges || []; %>
-                <% ['Physical','Emotional','Mental','Spiritual','Other'].forEach(opt => { %>
-                    <label class="cb">
-                    <input type="checkbox" name="challenges[]" value="<%= opt %>" <%= ch.includes(opt)?'checked':'' %> />
-                    <span><%= opt %></span>
-                    </label>
-                <% }) %>
-                </div>
-            </div>
-
-            <!--Focus Chakra Filter-->
-            <div class="field">
-                <label>Focus Chakra</label>
-                <div class="checkbx">
-                <% const fc = focusChakra || []; %>
-                <% ['rootChakra','sacralChakra','solarPlexusChakra','heartChakra','throatChakra','thirdEyeChakra','crownChakra'].forEach(opt => { %>
-                    <label class="cb">
-                    <input type="checkbox" name="focusChakra" value="<%= opt %>" <%= fc.includes(opt)?'checked':'' %> />
-                    <span><%= opt %></span>
-                    </label>
-                <% }) %>
-                </div>
-            </div>
-
-            <!--Archetype Filter-->
-            <div class="field">
-                <label>Archetype</label>
-                <div class="checkbx">
-                <% const arch = archetype || []; %>
-                <% ['workerBee','martyr','innerChild','saboteur','lover','caretaker','rebel', 'creatorVisionary', 'ruler'].forEach(opt => { %>
-                    <label class="cb">
-                    <input type="checkbox" name="archetype" value="<%= opt %>" <%= arch.includes(opt)?'checked':'' %> />
-                    <span><%= opt %></span>
-                    </label>
-                <% }) %>
-                </div>
-            </div>
-
-
-            <!--Date Filter-->
-            <div class="field">
-                <label for="from">From</label>
-                <input type="date" id="from" name="from" value="<%= from %>">
-            </div>
-
-            <div class="field">
-                <label for="to">To</label>
-                <input type="date" id="to" name="to" value="<%= to %>">
-            </div>
-
-            <div class="actions">
-                <button class="btn" type="submit">Apply</button>
-                <a class="btn ghost" href="/clientmanagement/chakraquiz-results">Reset</a>
-            </div>
-  
-
+        <div class="actions">
+            <button class="btn" type="submit">Apply</button>
+            <a class="btn ghost" href="/clientmanagement/chakraquiz-results">Reset</a>
+        </div>
         </form>
+
 
             <!-- Table -->
         <section class="card">
@@ -199,14 +208,58 @@
                             <td><%= r.jobTitle %></td>
                             
                             <td>
-                                <% if (r.experience === 'Other' && r.experienceOther) { %>
-                                    Other – <%= r.experienceOther %>
-                                <% } else { %>
-                                    <%= r.experience %>
-                                <% } %>
+                            <%
+                                let exp = r.experience || '-';
+                                if (/^Other:\s*/i.test(exp)) {
+                                exp = exp.replace(/^Other:\s*/i, 'Other — ');
+                                } else {
+                                const EXP_LABEL = {
+                                    current: 'Currently working with one',
+                                    past: 'In the past',
+                                    no: 'First time',
+                                    notSure: 'Not sure'
+                                };
+                                exp = EXP_LABEL[exp] || exp;
+                                }
+                            %>
+                            <%= exp %>
                             </td>
-                            <td><%= (r.familiarWith||[]).join(', ') %></td>
-                            <td><%= (r.challenges||[]).join(', ') %></td>
+                            <% 
+                            const FAM_MAP = {
+                                kundalini: 'Kundalini Yoga',
+                                soundBaths: 'Sound Baths',
+                                lifeCoaching: 'Life Coaching',
+                                eft: 'Emotional Freedom Technique',
+                                none: 'None of the above'
+                            };
+                            %>
+                            <td>
+                            <%= (r.familiarWith || []).map(s => FAM_MAP[s] || s).join(', ') %>
+                            </td>
+                            <td>
+                            <%
+                                const CHALLENGE_LABELS = {
+                                physical: 'Physical',
+                                emotional: 'Emotional',
+                                mental: 'Mental',
+                                spiritual: 'Spiritual',
+                                other: 'Other'
+                                };
+
+                                const challenges = r.challenges || [];
+                                let displayChallenges = challenges
+                                .map(ch => CHALLENGE_LABELS[ch] || ch) // map slug → label
+                                .join(', ');
+
+                                if (challenges.includes('other') && r.challengeOther) {
+                                displayChallenges = displayChallenges.replace(
+                                    'Other',
+                                    `Other — ${r.challengeOther}`
+                                );
+                                }
+                            %>
+                            <%= displayChallenges || '—' %>
+                            </td>                            
                             <td class="wrap"><%= r.goals %></td>
                             <td class="wrap"><%= r.experienceDetails %></td>
 

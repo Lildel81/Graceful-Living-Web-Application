@@ -6,7 +6,7 @@
   let t = null;
   q.addEventListener('input', () => {
     clearTimeout(t);
-    t = setTimeout(() => form.submit(), 400);
+    t = setTimeout(() => form.submit(), 1000);
   });
 })();
 

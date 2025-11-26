@@ -15,6 +15,10 @@ const ResourcesText = require('../models/resourcesText');
 const Services = require("../models/servicesSchema");
 const Application = require('../models/appSchema');
 const ChakraAssessment = require('../models/chakraAssessment');
+const AboutUsIntro = require("../models/aboutUsIntroSchema");
+const AboutUsContent = require("../models/aboutUsContentSchema");
+
+const IntroVideo = require('../models/introVideo');
 
 const mongoose = require("mongoose"); 
 // ML conversion prediction - uses centralized controller
@@ -92,7 +96,7 @@ const getHubView = async (req, res, next) => {
 const getHomeView = async (req, res, next) => {
   try {
     const slides = await CarouselSlide.find().sort({ order: 1 });
-    /*
+    const introVideo = await IntroVideo.findOne().sort({ createdAt: -1 });    /*
     const allReviews = [
       {
         name: "Vicki Carroll",
@@ -324,7 +328,7 @@ const getHomeView = async (req, res, next) => {
     const selectedReviews = await testimonials.aggregate([{ $sample: { size: 3 } }]);
 
     const services = await Services.find().sort({ createdAt: -1 }).limit(3);
-    const introVideo = null; // was not rendering home page added this for intro video 
+    //const introVideo = null; // was not rendering home page added this for intro video 
 
     res.render("home", { 
       slides, 
@@ -332,11 +336,10 @@ const getHomeView = async (req, res, next) => {
       //to view services 
       services,
       introVideo
-
     });
   } catch (error) {
     console.error("Error fetching slides:", error.message);
-    res.render("home", { slides: [], selectedReviews: [] });
+    res.render("home", { slides: [], selectedReviews: [], introVideo: null });
   }
 };
 
@@ -667,6 +670,32 @@ const getContactView = async (req, res, next) => {
   res.render("contact");
 };
 
+const getAboutUsView = async (req, res, next) => {
+  try {
+    // get most recent intro block (title, description, headshot)
+    const introData = await AboutUsIntro.findOne().sort({ createdAt: -1 });
+
+    // get all content blocks (Q&A items, alternating layout)
+    const contentBlocks = await AboutUsContent.find().sort({ createdAt: -1 });
+
+    // fallback if nothing exists yet
+    const fallbackIntro = {
+      title: "Meet Coach Tay",
+      description: "Our About page is being updated. Check back soon!",
+      headshotUrl: "/images/default-fallback.jpg"
+    };
+
+    res.render("aboutUs", {
+      introData: introData || fallbackIntro,
+      contentBlocks
+    });
+
+  } catch (err) {
+    console.error("Error loading About Us page:", err);
+    res.status(500).send("Error loading About Us page");
+  }
+};
+
 const getResourcesView = async (req, res, next) => {
   // res.render('resources');
 
@@ -894,10 +923,19 @@ const getUserDashboardView = async (req, res, next) => {
   res.render("user-dashboard");
 };
 
-const getContentManagementView = (req, res) => {
-  // loosen CSP only for this admin page (it hosts the testimonials iframe)
-  allowAdminEmbeds(res);
-  res.render("content-management");
+const getContentManagementView = async (req, res) => {
+  try {
+    allowAdminEmbeds(res);
+
+    // Fetch intro video if it exists
+    const introVideo = await IntroVideo.findOne();
+
+    res.render("content-management", { introVideo, csrfToken: req.csrfToken() });
+  } catch (error) {
+    csrfToken: req.csrfToken(),
+    console.error("Error loading content management page:", error);
+    res.status(500).send("Error loading content management page.");
+  }
 };
 
 
@@ -1001,6 +1039,7 @@ module.exports = {
   getAdminPortalView,
   postCreateClient,
   getContactView,
+  getAboutUsView,
   getResourcesView,
   getNotFoundView,
   getServicesView,

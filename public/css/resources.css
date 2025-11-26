@@ -22,6 +22,13 @@ h1{
     font-family: 'Futura', 'Inter', sans-serif;
 }
 
+.intro_paragraph p {
+    display: block;
+    margin: 1rem 0;
+    white-space: pre-wrap; /* preserves newlines from textarea */
+}
+
+
 .video_wrapper{
     padding-top: 1rem;
     padding-bottom: 2rem;
@@ -65,13 +72,18 @@ h1{
 }
 
 .image-item {
+    width: 100%;
+    border-radius: 15px;
     position: relative; /* absolute positioning of text */
+    overflow: hidden;
+    max-width: 450px;
+    aspect-ratio: 3 / 4;
 }
 
 .image{
-    width: 350px;
-    height: 450px;
-    border-radius: 15px;  
+    width: 100%;
+    height: auto;
+    border-radius: 0;  
     object-fit: cover;  
     display: block;  
 }
@@ -85,7 +97,6 @@ h1{
     height: 100%;
     background-color: rgba(0, 0, 0, 0.2);  /* dark transparent overlay */
     z-index: 1;  /* ensures overlay is beneath the text */
-    border-radius: 15px;
 }
 
 .text-overlay {
@@ -119,4 +130,27 @@ h1{
 
 .image-button:hover {
     background-color: #34495E; /* darker background on hover */
+}
+
+@media (max-width: 768px) {
+    .downloads_wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px; 
+    }
+    .image-item {
+        max-width: 95%; 
+    }
+
+    .text-overlay {
+        font-size: 18px; 
+        top: 8%;
+    }
+
+    .image-button {
+        font-size: 14px;
+        padding: 8px 16px;
+        bottom: 8%;
+    }
 }

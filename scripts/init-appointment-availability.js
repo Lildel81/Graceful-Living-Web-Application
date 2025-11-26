@@ -61,7 +61,7 @@ const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/graceful-living';
     await mongoose.connect(mongoURI);
-    console.log('✅ Connected to MongoDB');
+    // console.log('✅ Connected to MongoDB');
   } catch (error) {
     console.error('❌ MongoDB connection error:', error.message);
     process.exit(1);  // Exit with error code
@@ -172,7 +172,7 @@ const defaultAvailability = [
  */
 const initializeAvailability = async () => {
   try {
-    console.log('\n🔧 Initializing default availability...\n');
+    // console.log('\n🔧 Initializing default availability...\n');
 
     /* STEP 1: Clear existing availability */
     /*
@@ -180,7 +180,7 @@ const initializeAvailability = async () => {
        This ensures a clean slate for the default schedule.
     */
     await AdminAvailability.deleteMany({});
-    console.log('✅ Cleared existing availability');
+    // console.log('✅ Cleared existing availability');
 
     /* STEP 2: Insert default availability */
     /*
@@ -199,25 +199,25 @@ const initializeAvailability = async () => {
       if (avail.isActive) {
         // Format time slots for display
         const slots = avail.timeSlots.map(s => `${s.start} - ${s.end}`).join(', ');
-        console.log(`✅ ${dayName}: ${slots}`);
+        // console.log(`✅ ${dayName}: ${slots}`);
       } else {
-        console.log(`✅ ${dayName}: Closed`);
+        // console.log(`✅ ${dayName}: Closed`);
       }
     }
 
     /* STEP 3: Display success message and next steps */
-    console.log('\n✅ Default availability initialized successfully!');
-    console.log('\n📝 You can now:');
-    console.log('   1. Start your server: npm start');
-    console.log('   2. Visit: http://localhost:8080/booking');
-    console.log('   3. Or customize availability at: http://localhost:8080/adminportal/appointments\n');
+    // console.log('\n✅ Default availability initialized successfully!');
+    // console.log('\n📝 You can now:');
+    // console.log('   1. Start your server: npm start');
+    // console.log('   2. Visit: http://localhost:8080/booking');
+    // console.log('   3. Or customize availability at: http://localhost:8080/adminportal/appointments\n');
   } catch (error) {
     // Handle initialization errors
     console.error('❌ Error initializing availability:', error.message);
   } finally {
     // Always close database connection
     await mongoose.connection.close();
-    console.log('✅ Database connection closed');
+    // console.log('✅ Database connection closed');
   }
 };
 

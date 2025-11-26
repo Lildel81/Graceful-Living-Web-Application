@@ -3,47 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <title>Add Client</title>
-  <link rel="stylesheet" href="/css/adminportal.css">
+  <link rel="stylesheet" href="/css/adminportal.css" />
+  <style>
+    .page-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #23423f;
+    }
+
+    .btn-back {
+      background-color: #0b8;
+      color: #fff;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background-color: #097a66;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem 1.5rem;
+    }
+
+    form label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-footer {
+      grid-column: 1 / -1;
+      margin-top: 1rem;
+      text-align: right;
+    }
+
+    button[type="submit"] {
+      background-color: #23423f;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.25s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #2b5955;
+    }
+
+    .form-note {
+      grid-column: 1 / -1;
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    .alert-error {
+      grid-column: 1 / -1;
+      background: #ffecec;
+      border: 1px solid #f5c2c7;
+      color: #842029;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
+
 <body>
-  <div class="hero"><b>Add Client</b></div>
-  <div class="overview" style="max-width:900px;margin:0 auto;">
-    <a href="/adminportal" class="btn-back" style="display:inline-block;margin-bottom:12px;padding:8px 12px;background:#0b8;color:#fff;border-radius:8px;text-decoration:none">← Back to Admin Portal</a>
+  <div class="page-container">
+    <div class="page-header">
+      <h1>Add Client</h1>
+      <a href="/adminportal" class="btn-back">← Back to Admin Portal</a>
+    </div>
 
     <% if (formError) { %>
-      <div style="margin:10px 0 20px;padding:10px;background:#ffecec;border:1px solid #f5c2c7;color:#842029;border-radius:8px;">
-        <%= formError %>
-      </div>
+      <div class="alert-error"><%= formError %></div>
     <% } %>
 
-    <form action="/admin/clients" method="POST" class="form-stacked" style="text-align:left;">
-      <label>First Name *</label>
-      <input name="firstname" required value="<%= formValues?.firstname || '' %>" />
+    <form action="/admin/clients" method="POST">
+      <div>
+        <label>First Name *</label>
+        <input name="firstname" required value="<%= formValues?.firstname || '' %>" />
+      </div>
 
-      <label>Last Name *</label>
-      <input name="lastname" required value="<%= formValues?.lastname || '' %>" />
+      <div>
+        <label>Last Name *</label>
+        <input name="lastname" required value="<%= formValues?.lastname || '' %>" />
+      </div>
 
-      <label>Phone Number *</label>
-      <input name="phonenumber" required value="<%= formValues?.phonenumber || '' %>" />
+      <div>
+        <label>Phone Number *</label>
+        <input name="phonenumber" required value="<%= formValues?.phonenumber || '' %>" />
+      </div>
 
-      <label>Email *</label>
-      <input name="email" type="email" required value="<%= formValues?.email || '' %>" />
+      <div>
+        <label>Email *</label>
+        <input name="email" type="email" required value="<%= formValues?.email || '' %>" />
+      </div>
 
-      <label>Closed Chakra *</label>
-      <select name="closedChakra" required>
-        <option value="" disabled <%= formValues?.closedChakra ? '' : 'selected' %>>Select one</option>
-        <option value="root"        <%= formValues?.closedChakra==='root'?'selected':'' %>>Root</option>
-        <option value="sacral"      <%= formValues?.closedChakra==='sacral'?'selected':'' %>>Sacral</option>
-        <option value="solarPlexus" <%= formValues?.closedChakra==='solarPlexus'?'selected':'' %>>Solar Plexus</option>
-        <option value="heart"       <%= formValues?.closedChakra==='heart'?'selected':'' %>>Heart</option>
-        <option value="throat"      <%= formValues?.closedChakra==='throat'?'selected':'' %>>Throat</option>
-        <option value="thirdEye"    <%= formValues?.closedChakra==='thirdEye'?'selected':'' %>>Third Eye</option>
-        <option value="crown"       <%= formValues?.closedChakra==='crown'?'selected':'' %>>Crown</option>
-      </select>
+      <div class="full-width">
+        <label>Closed Chakra *</label>
+        <select name="closedChakra" required>
+          <option value="" disabled <%= formValues?.closedChakra ? '' : 'selected' %>>Select one</option>
+          <option value="root"        <%= formValues?.closedChakra==='root'?'selected':'' %>>Root</option>
+          <option value="sacral"      <%= formValues?.closedChakra==='sacral'?'selected':'' %>>Sacral</option>
+          <option value="solarPlexus" <%= formValues?.closedChakra==='solarPlexus'?'selected':'' %>>Solar Plexus</option>
+          <option value="heart"       <%= formValues?.closedChakra==='heart'?'selected':'' %>>Heart</option>
+          <option value="throat"      <%= formValues?.closedChakra==='throat'?'selected':'' %>>Throat</option>
+          <option value="thirdEye"    <%= formValues?.closedChakra==='thirdEye'?'selected':'' %>>Third Eye</option>
+          <option value="crown"       <%= formValues?.closedChakra==='crown'?'selected':'' %>>Crown</option>
+        </select>
+      </div>
 
-      <button type="submit" style="margin-top:12px;">Add Client</button>
-      <p style="opacity:.7;margin-top:6px;">* Required by current schema</p>
+      <div class="form-footer">
+        <button type="submit">Add Client</button>
+      </div>
+
+      <p class="form-note">* Required by current schema</p>
     </form>
   </div>
 </body>
 </html>
+

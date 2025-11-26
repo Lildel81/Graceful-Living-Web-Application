@@ -65,7 +65,7 @@ const AdminAvailability = require('../models/adminAvailability').AdminAvailabili
 async function connectDB() {
     try {
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('✅ Connected to MongoDB');
+        // console.log('✅ Connected to MongoDB');
     } catch (error) {
         console.error('❌ MongoDB connection error:', error);
         process.exit(1);  // Exit with error code
@@ -100,7 +100,7 @@ async function connectDB() {
  */
 async function cleanupTimeSlots() {
     try {
-        console.log('🧹 Cleaning up corrupted time slots...');
+        // console.log('🧹 Cleaning up corrupted time slots...');
         
         /* STEP 1: Delete corrupted data */
         /*
@@ -108,7 +108,7 @@ async function cleanupTimeSlots() {
            This clears out any corrupted time slot data.
         */
         await AdminAvailability.deleteMany({});
-        console.log('🗑️  Deleted all existing availability records');
+        // console.log('🗑️  Deleted all existing availability records');
         
         /* STEP 2: Define proper 30-minute time slots */
         /*
@@ -153,7 +153,7 @@ async function cleanupTimeSlots() {
         });
         
         await mondayAvailability.save();
-        console.log('✅ Created Monday availability with proper 30-minute slots');
+        // console.log('✅ Created Monday availability with proper 30-minute slots');
         
         /* STEP 4: Create Tuesday availability */
         /*
@@ -167,12 +167,12 @@ async function cleanupTimeSlots() {
         });
         
         await tuesdayAvailability.save();
-        console.log('✅ Created Tuesday availability with proper 30-minute slots');
+        // console.log('✅ Created Tuesday availability with proper 30-minute slots');
         
         /* STEP 5: Display success messages */
-        console.log('🎉 Cleanup completed successfully!');
-        console.log('📊 Database now contains proper 30-minute time slots');
-        console.log('📝 Add other days (Wed-Sun) via admin dashboard if needed');
+        // console.log('🎉 Cleanup completed successfully!');
+        // console.log('📊 Database now contains proper 30-minute time slots');
+        // console.log('📝 Add other days (Wed-Sun) via admin dashboard if needed');
         
     } catch (error) {
         // Handle cleanup errors
@@ -198,7 +198,7 @@ async function main() {
     await connectDB();              // Connect to database
     await cleanupTimeSlots();       // Run cleanup
     await mongoose.disconnect();    // Close connection
-    console.log('👋 Disconnected from MongoDB');
+    // console.log('👋 Disconnected from MongoDB');
 }
 
 /* ==========================================

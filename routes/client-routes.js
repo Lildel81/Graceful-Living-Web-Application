@@ -5,6 +5,7 @@ const {
   getHomeView,
   getAssessmentView,
   getIntroductionView,
+  getAboutUsView,
   getAdminPortalView,
   getContactView,
   getResourcesView,
@@ -47,6 +48,7 @@ const router = express.Router();
 router.get('/', getHomeView);
 router.get('/hub', getHubView);
 router.get('/intro', getIntroductionView)
+router.get('/about', getAboutUsView);
 router.get('/assessment', getAssessmentView);
 router.get('/contact', getContactView);
 router.get('/resources', getResourcesView);
@@ -72,7 +74,7 @@ const csrfProtection = require('csurf')({
 
 /* -------------------- Admin-only Views -------------------- */
 router.get('/adminportal', csrfProtection, requireAdmin, getAdminPortalView);
-router.get('/content-management', requireAdmin, getContentManagementView);
+router.get('/content-management', csrfProtection, requireAdmin, getContentManagementView);
 router.get('/user-login', getLoginView);     // reuse existing login view
 router.get('/user-signup', getLoginView);    // reuse existing login view
 router.get('/adminportal/resourcesmanagement', requireAdmin, getResourcesManagementView);
@@ -112,13 +114,14 @@ router.use('/admin/testimonials', (req, res, next) => {
   next();
 });
 
-/* -------------------- Testimonials Management (CRUD) -------------------- */
-router.get('/admin/testimonials', requireAdmin, listTestimonials);
-router.get('/admin/testimonials/new', requireAdmin, getCreateTestimonial);
-router.post('/admin/testimonials', requireAdmin, postCreateTestimonial);
-router.get('/admin/testimonials/:id/edit', requireAdmin, getEditTestimonial);
-router.post('/admin/testimonials/:id', requireAdmin, postUpdateTestimonial);
-router.post('/admin/testimonials/:id/delete', requireAdmin, postDeleteTestimonial);
+/* -------------------- Testimonials Management (CRUD + CSRF) -------------------- */
+router.get('/admin/testimonials', requireAdmin, csrfProtection, listTestimonials);
+router.get('/admin/testimonials/new', requireAdmin, csrfProtection, getCreateTestimonial);
+router.post('/admin/testimonials', requireAdmin, csrfProtection, postCreateTestimonial);
+router.get('/admin/testimonials/:id/edit', requireAdmin, csrfProtection, getEditTestimonial);
+router.post('/admin/testimonials/:id', requireAdmin, csrfProtection, postUpdateTestimonial);
+router.post('/admin/testimonials/:id/delete', requireAdmin, csrfProtection, postDeleteTestimonial);
+
 
 /* -------------------- Applications -------------------- */
 router.post('/application', submitApplication);

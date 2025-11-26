@@ -146,33 +146,6 @@
   
   </main>
 
-  <!-- ML Conversion Analysis Section - Separate, Beautiful UI -->
-  <section class="ml-conversion-section">
-    <div class="ml-conversion-container">
-      <div class="ml-section-header">
-        <h2 class="ml-section-title"> Quiz-to-Appointment Conversion Analysis</h2>
-        <p class="ml-section-subtitle">AI-Powered insights to help you identify and prioritize high-value leads</p>
-        <% if (typeof mlPredictions !== 'undefined' && mlPredictions && mlPredictions.length > 0) { %>
-          <div class="ml-status-badge active">ML Predictions Active</div>
-        <% } else { %>
-          <div class="ml-status-badge">Database Analytics</div>
-        <% } %>
-      </div>
-      
-      <!-- Data container - JavaScript will render the content -->
-      <div id="conversion-prediction-container"
-           data-conversion-stats='<%- typeof conversionStats !== "undefined" && conversionStats ? JSON.stringify(conversionStats) : "null" %>'
-           data-ml-predictions='<%- typeof mlPredictions !== "undefined" && mlPredictions ? JSON.stringify(mlPredictions) : "null" %>'
-           data-high-probability-leads='<%= typeof highProbabilityLeads !== "undefined" ? highProbabilityLeads : 0 %>'>
-        <!-- Loading message -->
-        <div class="ml-loading">
-          <div class="ml-loading-spinner"></div>
-          <p class="ml-loading-text">Loading conversion statistics...</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Chakra Assessment Statistics Section -->
   <section class="stats-dashboard-section">
     <div class="stats-dashboard-header">
@@ -294,18 +267,45 @@
     </div>
   </section>
 
+  <!-- ML Conversion Analysis Section - Separate, Beautiful UI -->
+  <section class="ml-conversion-section">
+    <div class="ml-conversion-container">
+      <div class="ml-section-header">
+        <h2 class="ml-section-title"> Quiz-to-Appointment Conversion Analysis</h2>
+        <p class="ml-section-subtitle">AI-Powered insights to help you identify and prioritize high-value leads</p>
+        <% if (typeof mlPredictions !== 'undefined' && mlPredictions && mlPredictions.length > 0) { %>
+          <div class="ml-status-badge active">ML Predictions Active</div>
+        <% } else { %>
+          <div class="ml-status-badge">Database Analytics</div>
+        <% } %>
+      </div>
+      
+      <!-- Data container - JavaScript will render the content -->
+      <div id="conversion-prediction-container"
+           data-conversion-stats='<%- typeof conversionStats !== "undefined" && conversionStats ? JSON.stringify(conversionStats) : "null" %>'
+           data-ml-predictions='<%- typeof mlPredictions !== "undefined" && mlPredictions ? JSON.stringify(mlPredictions) : "null" %>'
+           data-high-probability-leads='<%= typeof highProbabilityLeads !== "undefined" ? highProbabilityLeads : 0 %>'>
+        <!-- Loading message -->
+        <div class="ml-loading">
+          <div class="ml-loading-spinner"></div>
+          <p class="ml-loading-text">Loading conversion statistics...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
  
 <!-- rest of homepage content -->
   <!-- CHAKRA PREDICTION -->
   <div style="margin: 1rem 0;">
-    <button id="showTrendBtn" class="btn btn-info">📊 View Chakra Trends</button>
+    <button id="showTrendBtn" class="btn btn-info">📊 View Chakra Forecast</button>
   </div>
 
   <!-- Hidden iframe (starts invisible) -->
   <iframe
     id="trendFrame"
     src="/adminportal/predict-chakra"
-    style="display:block;width:100%;height:400px;border:1px solid #ccc;border-radius:8px;">
+    style="display:block;width:100%;height:750px;border:0">
   </iframe>
 
  

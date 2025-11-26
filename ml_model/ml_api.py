@@ -29,7 +29,7 @@ app = Flask(__name__)
 if os.environ.get('NODE_ENV') == 'development':
     # Development mode - allow all origins
     CORS(app)
-    print("CORS: Allowing all origins (development mode)")
+    # print("CORS: Allowing all origins (development mode)")
 else:
     # Production mode - only allow your specific web app URLs
     allowed_origins = [
@@ -38,12 +38,12 @@ else:
         "https://www.coachshante.com"  # Custom domain with www
     ]
     CORS(app, origins=allowed_origins)
-    print(f"CORS: Restricted to {len(allowed_origins)} allowed origins (production mode)")
+    # print(f"CORS: Restricted to {len(allowed_origins)} allowed origins (production mode)")
 
 try:
     predictor = ConversionPredictorService()
 except Exception as e:
-    print(f"ERROR loading model: {e}")
+    # print(f"ERROR loading model: {e}")
     predictor = None
 
 # ================================= API ENDPOINTS =========================
@@ -156,16 +156,16 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
     
     # Print info about endpoints
-    print("\n" + "="*60)
-    print("CONVERSION PREDICTION API")
-    print("="*60)
-    print("\nEndpoints:")
-    print("  GET  /health          - Health check")
-    print("  POST /predict         - Single prediction")
-    print("  POST /predict/batch   - Batch predictions")
-    print("  GET  /model/info      - Model information")
-    print(f"\nStarting server on http://0.0.0.0:{port}")
-    print("="*60 + "\n")
+    # print("\n" + "="*60)
+    # print("CONVERSION PREDICTION API")
+    # print("="*60)
+    # print("\nEndpoints:")
+    # print("  GET  /health          - Health check")
+    # print("  POST /predict         - Single prediction")
+    # print("  POST /predict/batch   - Batch predictions")
+    # print("  GET  /model/info      - Model information")
+    # print(f"\nStarting server on http://0.0.0.0:{port}")
+    # print("="*60 + "\n")
 
     app.run(
         host='0.0.0.0',     # Listen to all network interfaces

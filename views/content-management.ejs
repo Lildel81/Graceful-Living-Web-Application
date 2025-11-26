@@ -28,7 +28,7 @@
             <button class="tab" data-target="panel-services">Services</button>
             <button class="tab" data-target="panel-voices">Testimonial</button>
             <button class="tab" data-target="panel-about">About Us</button>
-            <button class="tab" data-target="panel-quiz">Chakra Quiz</button>
+            <!--<button class="tab" data-target="panel-quiz">Chakra Quiz</button>-->
             <button class="tab" data-target="panel-resources">Resources</button>
             <button class="tab" data-target="panel-contact">Contact</button>
         </nav>
@@ -60,7 +60,7 @@
             </div>
         </section>
 
-        <section id="panel-video" class="panel">
+        <!-- <section id="panel-video" class="panel">
             <h2>Introduction Video</h2>
             <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save intro video URL.');">
                 <label for="introVideoUrl">Video URL (YouTube, Vimeo, or MP4)</label>
@@ -69,13 +69,75 @@
                     <button class="btn" type="submit">Save Video</button>
                 </div>
             </form>
+        </section> -->
+        <section id="panel-video" class="panel">
+            <h2>Introduction Video</h2>
+            <p>Paste a YouTube embed link or any valid video URL to update the intro video shown on the homepage.</p>
+
+            <form
+                id="introVideoForm" 
+                action="/adminportal/update-intro-video" 
+                method="POST"
+                class="admin-form"
+            >
+                <!-- CSRF Protection -->
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <!-- Video URL Input -->
+                <div class="form-group">
+                    <label for="videoUrl">Video URL (YouTube, Vimeo, or MP4)</label>
+                    <input 
+                        type="url" 
+                        id="videoUrl" 
+                        name="videoUrl" 
+                        class="form-control"
+                        placeholder="https://www.youtube.com/embed/YourVideoID"
+                        value="<%= introVideo && introVideo.videoUrl ? introVideo.videoUrl : '' %>"
+                        required
+                    >
+                </div>
+
+                <!-- Preview (optional, dynamic JS update) -->
+                <div id="videoPreview" class="video-preview" style="margin-top: 1rem;">
+                    <% if (introVideo && introVideo.videoUrl) { %>
+                        <iframe 
+                        src="<%= introVideo.videoUrl %>" 
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        width="480" 
+                        height="270">
+                        </iframe>
+                    <% } else { %>
+                        <p>No video set yet.</p>
+                    <% } %>
+                </div>
+
+                <!-- Save Button -->
+                <div class="actions">
+                    <button class="btn" type="submit">Save Video</button>
+                </div>
+            </form>
+
+            <!-- Optional JS for live preview -->
+            <script>
+                const videoUrlInput = document.getElementById('videoUrl');
+                const preview = document.getElementById('videoPreview');
+                videoUrlInput?.addEventListener('input', e => {
+                    const url = e.target.value.trim();
+                    if (url) {
+                        preview.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen width="480" height="270"></iframe>`;
+                    } else {
+                        preview.innerHTML = '<p>No video set yet.</p>';
+                    }
+                });
+            </script>
         </section>
 
         <section id="panel-services" class="panel">
             <h2>Services</h2>
 
-             <div class="iframe-container">
-                <iframe src="/adminportal/servicesmanagement" title="SIMPLE FORM TEST"></iframe>
+            <div class="iframe-container">
+                <iframe src="/adminportal/servicesmanagement" title="Services Management"></iframe>
             </div>
         </section>
 
@@ -83,15 +145,13 @@
 
         <section id="panel-about" class="panel">
             <h2>About Us</h2>
-            <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Hook up endpoint to save About Us content.');">
-                <label for="aboutContent">About content (Markdown or HTML)</label>
-                <textarea id="aboutContent" name="aboutContent" placeholder="Tell your story, mission, and team..."></textarea>
-                <div class="actions">
-                    <button class="btn" type="submit">Save About</button>
-                </div>
-            </form>
+
+            <div class="iframe-container">
+                <iframe src="/adminportal/aboutusmanagement" title="About Us Management"></iframe>
+            </div>
         </section>
 
+        <!--
         <section id="panel-quiz" class="panel">
             <h2>Chakra Quiz</h2>
             <p>Manage copy, intro text, or link to the quiz.</p>
@@ -104,6 +164,7 @@
                 </div>
             </form>
         </section>
+         -->
 
         <section id="panel-resources" class="panel">
             <h2>Resources</h2>

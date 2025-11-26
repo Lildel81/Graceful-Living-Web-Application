@@ -30,9 +30,10 @@ const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
+
 const footerRoutes = require('./routes/footer-routes');
 const homeQuoteRoutes = require('./routes/home-quote-routes');
-
+const adminVideoRoutes = require('./routes/adminVideoRoutes');
 
 const app = express();
 app.set("trust proxy", 1);
@@ -40,10 +41,10 @@ app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.set('query parser', 'extended');
+app.set("query parser", "extended");
 app.use(expressLayouts);
 
-// For application PDF endings 
+// For application PDF endings
 app.use("/pdfs", express.static(path.join(__dirname, "public", "pdfs")));
 
 app.use(
@@ -110,8 +111,6 @@ app.use(
 
 const isProd = process.env.NODE_ENV === "production";
 
-
-
 app.use(
   session({
     name: "sid",
@@ -129,23 +128,29 @@ app.use(
 
 app.use(mongoSanitize());
 
+// for delete
+app.use(
+  hpp({
+    whitelist: [
+      // bulk delete
+      "ids",
+      "ids[]",
 
-// for delete 
-app.use(hpp({
-  whitelist: [
-    // bulk delete
-    'ids', 'ids[]',
+      // your filters that can be arrays
+      "familiarWith",
+      "familiarWith[]",
+      "challenges",
+      "challenges[]",
+      "focusChakra",
+      "focusChakra[]",
+      "archetype",
+      "archetype[]",
 
-    // your filters that can be arrays
-    'familiarWith', 'familiarWith[]',
-    'challenges', 'challenges[]',     
-    'focusChakra', 'focusChakra[]',
-    'archetype', 'archetype[]',
-
-    // csrf
-    '_csrf'
-  ]
-}));
+      // csrf
+      "_csrf",
+    ],
+  })
+);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // ✅ Allow same-origin iframing ONLY for the testimonials manager pages
@@ -187,7 +192,7 @@ mongoose.connection.once("open", async () => {
   googleCalendarService.initialize();
 });
 
-// renders resources on footer 
+// renders resources on footer
 const ResourcesImage = require("./models/resourcesImage");
 app.use(async (req, res, next) => {
   try {
@@ -201,9 +206,9 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// renders services on footer 
+// renders services on footer
 const Services = require("./models/servicesSchema");
-app.use(async(req, res, next) => {
+app.use(async (req, res, next) => {
   try {
     res.locals.footerServices = await Services.find()
       .sort({ createdAt: -1 })
@@ -215,37 +220,41 @@ app.use(async(req, res, next) => {
   next();
 });
 
-
-// load contact content on the footer 
-const Footer = require('./models/footer');
+// load contact content on the footer
+const Footer = require("./models/footer");
 
 app.use(async (req, res, next) => {
   try {
     const s = await Footer.findOne().lean();
-    res.locals.footerContact = s ? {
-      phone: s.phone || '',
-      facebookUrl: s.facebookUrl || '',
-      facebookLabel: s.facebookLabel || 'Facebook',
-      instagramUrl: s.instagramUrl || '',
-      instagramLabel: s.instagramLabel || 'Instagram',
-    } : {};
+    res.locals.footerContact = s
+      ? {
+          phone: s.phone || "",
+          facebookUrl: s.facebookUrl || "",
+          facebookLabel: s.facebookLabel || "Facebook",
+          instagramUrl: s.instagramUrl || "",
+          instagramLabel: s.instagramLabel || "Instagram",
+        }
+      : {};
   } catch (err) {
-    console.error('Error loading footer contact:', err);
+    console.error("Error loading footer contact:", err);
     res.locals.footerContact = {};
   }
   next();
 });
 
-
 // load the quote on the homepage
-const HomeQuote = require('./models/homeQuote');
+const HomeQuote = require("./models/homeQuote");
 
 app.use(async (req, res, next) => {
   try {
     const quote = await HomeQuote.findOne().lean();
-    res.locals.homeQuote = quote || { quoteText: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”' };
+    res.locals.homeQuote = quote || {
+      quoteText: "“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”",
+    };
   } catch {
-    res.locals.homeQuote = { quoteText: '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”' };
+    res.locals.homeQuote = {
+      quoteText: "“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”",
+    };
   }
   next();
 });
@@ -262,7 +271,7 @@ const csrfProtection = csurf({
   },
 });
 
-// for delete 
+// for delete
 app.use(express.urlencoded({ extended: true }));
 
 // middleware to make user available in all views (for nav bar)
@@ -286,7 +295,7 @@ function requireTOS(req, res, next) {
   next();
 }
 
-app.use(['/application'], csrfProtection, (req, res, next) => {
+app.use(["/application"], csrfProtection, (req, res, next) => {
   res.locals.csrfToken = req.csrfToken(); // This allows CSRF tokens  to access all redners in the application route
   next();
 });
@@ -294,30 +303,31 @@ app.use(['/application'], csrfProtection, (req, res, next) => {
 // Only here: pass the token to the view that has the form
 app.get("/application", csrfProtection, (req, res) => {
   req.session.appFlow = true; // touching the session triggers Set-Cookie: sid=...
-  res.render("prequiz/application",);
+  res.render("prequiz/application");
 });
 
-
-
 app.use((err, req, res, next) => {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err);
-  res.status(403).render('prequiz/application', {
-    error: 'Your form expired or was submitted twice. Please try again.'
+  if (err.code !== "EBADCSRFTOKEN") return next(err);
+  res.status(403).render("prequiz/application", {
+    error: "Your form expired or was submitted twice. Please try again.",
     // csrfToken already in res.locals
   });
 });
 
-app.use(['/assessment'], csrfProtection, (req, res, next) => {
+app.use(["/assessment"], csrfProtection, (req, res, next) => {
   res.locals.csrfToken = req.csrfToken(); // available to every render()
   next();
 });
 
 app.get("/assessment", requireTOS, csrfProtection, (req, res) => {
-  res.render("quiz/assessment", { csrfToken: req.csrfToken(), session: req.session });
+  res.render("quiz/assessment", {
+    csrfToken: req.csrfToken(),
+    session: req.session,
+  });
 });
 
 app.get("/intro", csrfProtection, (req, res) => {
-  res.render("quiz/intro", {csrfToken: req.csrfToken()});
+  res.render("quiz/intro", { csrfToken: req.csrfToken() });
 });
 
 const rateLimit = require("express-rate-limit");
@@ -339,36 +349,35 @@ app.get("/services", (req, res) => {
 app.get("/contact", (req, res) => {
   res.render("contact");
 });
+/*
 app.get("/about", (req, res) => {
   res.render("aboutUs");
-});
+});*/
 
 app.use("/stats", statsRoutes);
 
 // Routes for the shop
-const csrf = require('./middleware/csrf');
+const csrf = require("./middleware/csrf");
 
 // helper: expose a CSRF token to EJS views rendered by these routes
 const exposeCsrf = (req, res, next) => {
-  if (typeof req.csrfToken === 'function') {
+  if (typeof req.csrfToken === "function") {
     res.locals.csrfToken = req.csrfToken();
   }
   next();
 };
 
-app.use('/shop', require('./routes/shop'));
-app.use('/cart', require('./routes/cart'));
+app.use("/shop", require("./routes/shop"));
+app.use("/cart", require("./routes/cart"));
 
 // Ensure /checkout pages/forms have a CSRF token available
-app.use('/checkout', csrf, exposeCsrf, require('./routes/checkout'));
+app.use("/checkout", csrf, exposeCsrf, require("./routes/checkout"));
 
 
 
 // Stripe redirect landing pages
-app.get('/success', (req, res) => res.render('success'));
-app.get('/cancel',  (req, res) => res.render('cancel'));
-
-
+app.get("/success", (req, res) => res.render("success"));
+app.get("/cancel", (req, res) => res.render("cancel"));
 
 // Appointment booking routes
 app.get("/booking", csrfProtection, (req, res) => {
@@ -475,9 +484,15 @@ app.use("/", chakraApplications);
 const simpleFormRoutes = require("./routes/simpleFormRoutes");
 app.use("/", simpleFormRoutes);
 
+app.use('/adminportal', adminVideoRoutes);
+
 // for services in content management & home page
 const servicesRoutes = require("./routes/servicesRoutes");
 app.use("/", servicesRoutes);
+
+// for about us in content management
+const aboutUsRoutes = require("./routes/aboutUsRoutes");
+app.use("/", aboutUsRoutes);
 
 exports.getHomePage = async (req, res) => {
   const homeQuote = await HomeQuote.findOne();

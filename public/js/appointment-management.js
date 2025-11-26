@@ -49,7 +49,7 @@
  * 4. Load all data from server
  */
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("Admin Dashboard initialized");
+  // console.log("Admin Dashboard initialized");
 
   initializeDashboard();
   setupEventListeners();
@@ -58,6 +58,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Zoom integration init
   setupZoomIntegrationListeners();
   loadZoomIntegrationState();
+
+  // Tab 6: Admin create appointment form validation
+  setupAdminCreateAppointmentValidation();
 });
 
 /* ==========================================
@@ -93,7 +96,7 @@ let csrfToken = "";
 function initializeDashboard() {
   // Load CSRF token from hidden input (required for all POST/PUT/DELETE requests)
   csrfToken = document.getElementById("csrfToken").value;
-  console.log("CSRF Token loaded:", csrfToken);
+  // console.log("CSRF Token loaded:", csrfToken);
 
   // Setup tab switching between 4 tabs
   setupTabSwitching();
@@ -206,7 +209,7 @@ function setupTabSwitching() {
       button.classList.add("active");
       document.getElementById(targetTab).classList.add("active");
 
-      console.log("Switched to tab:", targetTab);
+      // console.log("Switched to tab:", targetTab);
     });
   });
 }
@@ -232,10 +235,10 @@ function setupTabSwitching() {
  */
 async function loadAdminAvailability() {
   try {
-    console.log("Loading admin availability...");
+    // console.log("Loading admin availability...");
     const response = await fetch("/appointments/adminportal/availability");
     const data = await response.json();
-    console.log("Availability response:", data);
+    // console.log("Availability response:", data);
 
     if (data.success) {
       availableDays = data.availabilities;
@@ -290,7 +293,7 @@ function updateAvailableDays() {
     document.querySelectorAll('.day-option input[type="checkbox"]:checked')
   ).map((checkbox) => parseInt(checkbox.getAttribute("data-day")));
 
-  console.log("Selected days:", checkedDays);
+  // console.log("Selected days:", checkedDays);
   updateStats(); // Recalculate statistics
 }
 
@@ -334,7 +337,7 @@ async function loadTimeSlots() {
         }
       });
 
-      console.log("Loaded unique time slots:", timeSlots.length);
+      // console.log("Loaded unique time slots:", timeSlots.length);
       updateTimeSlotsDisplay();
       updateStats();
     }
@@ -390,11 +393,11 @@ async function addTimeSlot() {
   const time = convertTo12Hour(timeValue);
   const endTime = getEndTime(timeValue);
 
-  console.log("Adding time slot:", {
-    input: timeValue,
-    start: time,
-    end: endTime,
-  });
+  // console.log("Adding time slot:", {
+  //   input: timeValue,
+  //   start: time,
+  //   end: endTime,
+  // });
 
   const newSlot = {
     start: time,
@@ -409,7 +412,7 @@ async function addTimeSlot() {
   // Clear input
   timeInput.value = "";
 
-  console.log("Added time slot:", newSlot);
+  // console.log("Added time slot:", newSlot);
 }
 
 // Remove time slot
@@ -426,12 +429,12 @@ async function removeTimeSlot(slotString) {
     updateTimeSlotsDisplay();
     updateStats();
 
-    console.log(
-      "Removed time slot:",
-      slotString,
-      "Remaining slots:",
-      timeSlots
-    );
+    // console.log(
+    //   "Removed time slot:",
+    //   slotString,
+    //   "Remaining slots:",
+    //   timeSlots
+    // );
   }
 }
 
@@ -455,14 +458,14 @@ async function removeTimeSlot(slotString) {
  */
 async function loadBlockedDates() {
   try {
-    console.log("Loading blocked dates...");
+    // console.log("Loading blocked dates...");
     const response = await fetch("/appointments/adminportal/blocked-dates");
     const data = await response.json();
-    console.log("Blocked dates response:", data);
+    // console.log("Blocked dates response:", data);
 
     if (data.success) {
       blockedDates = data.blockedDates;
-      console.log("Blocked dates loaded:", blockedDates);
+      // console.log("Blocked dates loaded:", blockedDates);
       updateBlockedDatesDisplay();
       updateStats();
     }
@@ -486,14 +489,14 @@ function updateBlockedDatesDisplay() {
       let dateObj;
       const dateValue = date.date;
 
-      console.log(
-        "Processing date:",
-        dateValue,
-        "Type:",
-        typeof dateValue,
-        "ID:",
-        date._id
-      );
+      // console.log(
+      //   "Processing date:",
+      //   dateValue,
+      //   "Type:",
+      //   typeof dateValue,
+      //   "ID:",
+      //   date._id
+      // );
 
       if (typeof dateValue === "string") {
         // If it's a string like "2025-10-17", parse it correctly
@@ -532,7 +535,7 @@ function updateBlockedDatesDisplay() {
         year: "numeric",
       });
 
-      console.log("Displaying date as:", dateStr, "from original:", dateValue);
+      // console.log("Displaying date as:", dateStr, "from original:", dateValue);
 
       return `
             <div class="blocked-date-item">
@@ -550,7 +553,7 @@ function updateBlockedDatesDisplay() {
     container.addEventListener("click", function (e) {
       if (e.target.classList.contains("remove-btn")) {
         const dateId = e.target.getAttribute("data-date-id");
-        console.log("Remove button clicked via delegation, ID:", dateId);
+        // console.log("Remove button clicked via delegation, ID:", dateId);
         removeBlockedDate(dateId);
       }
     });
@@ -586,8 +589,8 @@ async function blockDate() {
   }
 
   try {
-    console.log("Blocking date:", selectedDate);
-    console.log("Selected date type:", typeof selectedDate);
+    // console.log("Blocking date:", selectedDate);
+    // console.log("Selected date type:", typeof selectedDate);
 
     const response = await fetch("/appointments/adminportal/blocked-dates", {
       method: "POST",
@@ -602,14 +605,14 @@ async function blockDate() {
     });
 
     const data = await response.json();
-    console.log("Block date response:", data);
-    console.log("Stored date in DB:", data.blockedDate?.date);
+    // console.log("Block date response:", data);
+    // console.log("Stored date in DB:", data.blockedDate?.date);
 
     if (data.success) {
       // Reload blocked dates
       loadBlockedDates();
       dateInput.value = "";
-      console.log("Date blocked successfully");
+      // console.log("Date blocked successfully");
     } else {
       alert("Error blocking date: " + data.message);
     }
@@ -621,11 +624,11 @@ async function blockDate() {
 
 // Remove blocked date
 async function removeBlockedDate(dateId) {
-  console.log("Attempting to remove blocked date with ID:", dateId);
+  // console.log("Attempting to remove blocked date with ID:", dateId);
 
   if (confirm("Are you sure you want to unblock this date?")) {
     try {
-      console.log("Sending DELETE request for date ID:", dateId);
+      // console.log("Sending DELETE request for date ID:", dateId);
 
       const response = await fetch(
         `/appointments/adminportal/blocked-dates/${dateId}`,
@@ -640,14 +643,14 @@ async function removeBlockedDate(dateId) {
         }
       );
 
-      console.log("Delete response status:", response.status);
+      // console.log("Delete response status:", response.status);
 
       const data = await response.json();
-      console.log("Delete response data:", data);
+      // console.log("Delete response data:", data);
 
       if (data.success) {
         loadBlockedDates();
-        console.log("Blocked date removed successfully:", dateId);
+        // console.log("Blocked date removed successfully:", dateId);
       } else {
         alert("Error removing blocked date: " + data.message);
       }
@@ -778,7 +781,7 @@ async function cancelAppointment(appointmentId) {
 
       if (data.success) {
         loadAppointments();
-        console.log("Appointment cancelled");
+        // console.log("Appointment cancelled");
       } else {
         alert("Error cancelling appointment: " + data.message);
       }
@@ -869,12 +872,12 @@ async function saveAllChanges() {
         isActive: isActive,
       };
 
-      console.log(`Saving day ${dayOfWeek}:`, {
-        dayOfWeek,
-        slotCount: dayTimeSlots.length,
-        isActive,
-        payloadSize: JSON.stringify(requestData).length,
-      });
+      // console.log(`Saving day ${dayOfWeek}:`, {
+      //   dayOfWeek,
+      //   slotCount: dayTimeSlots.length,
+      //   isActive,
+      //   payloadSize: JSON.stringify(requestData).length,
+      // });
 
       requests.push(
         fetch("/appointments/adminportal/availability", {
@@ -895,7 +898,7 @@ async function saveAllChanges() {
       const response = responses[i];
       const dayOfWeek = i;
 
-      console.log(`Day ${dayOfWeek} response status:`, response.status);
+      // console.log(`Day ${dayOfWeek} response status:`, response.status);
 
       // Check if response is JSON
       const contentType = response.headers.get("content-type");
@@ -908,7 +911,7 @@ async function saveAllChanges() {
       }
 
       const responseData = await response.json();
-      console.log(`Day ${dayOfWeek} response:`, responseData);
+      // console.log(`Day ${dayOfWeek} response:`, responseData);
 
       if (!response.ok) {
         throw new Error(
@@ -920,7 +923,7 @@ async function saveAllChanges() {
     }
 
     alert("All changes saved successfully!");
-    console.log("All changes saved");
+    // console.log("All changes saved");
 
     // Reload data to reflect changes
     loadAllData();
@@ -973,6 +976,206 @@ function getEndTime(time24) {
   return convertTo12Hour(`${endHour}:${endMinuteStr}`);
 }
 
+/**
+ * ADMIN CREATE-APPOINTMENT FORM VALIDATION (TAB 6)
+ *
+ * Validates client email and phone number when admin creates an appointment.
+ * This is purely front-end validation and will prevent submission if invalid.
+ *
+ * Expected HTML IDs:
+ * - Form: #adminCreateAppointmentForm
+ * - Email input: #clientEmail
+ * - Phone input: #clientPhone
+ * - Error/message container: #createAppointmentMessage
+ */
+function setupAdminCreateAppointmentValidation() {
+  const form = document.getElementById("adminCreateAppointmentForm");
+  if (!form) return;
+
+  const emailInput = document.getElementById("clientEmail");
+  const phoneInput = document.getElementById("clientPhone");
+  const dateInput = document.getElementById("appointmentDate");
+  const timeInput = document.getElementById("appointmentTime");
+  const messageEl = document.getElementById("createAppointmentMessage");
+
+  // Phone auto-format mask
+  if (phoneInput) {
+    phoneInput.addEventListener("input", () => {
+      let digits = phoneInput.value.replace(/\D/g, ""); // strip non-digits
+      if (digits.length > 10) digits = digits.slice(0, 10);
+
+      if (digits.length > 3 && digits.length <= 6) {
+        phoneInput.value = digits.replace(/(\d{3})(\d+)/, "$1-$2");
+      } else if (digits.length > 6) {
+        phoneInput.value = digits.replace(/(\d{3})(\d{3})(\d+)/, "$1-$2-$3");
+      } else {
+        phoneInput.value = digits;
+      }
+    });
+  }
+
+  form.addEventListener("submit", function (e) {
+    const errors = [];
+
+    // Email check
+    if (emailInput) {
+      const email = emailInput.value.trim();
+      if (!isValidEmail(email)) {
+        errors.push(
+          "Please enter a valid email address (for example user@example.com)."
+        );
+      }
+    }
+
+    // Phone check
+    if (phoneInput) {
+      const phone = phoneInput.value.trim();
+      if (!isValidPhone(phone)) {
+        errors.push(
+          "Please enter a valid 10-digit phone number (for example 916-555-1234)."
+        );
+      }
+    }
+
+    // Date / time availability checks
+    if (dateInput && timeInput) {
+      const dateStr = dateInput.value; // "YYYY-MM-DD"
+      const time24 = timeInput.value; // "HH:MM"
+
+      if (!dateStr) {
+        errors.push("Please choose an appointment date.");
+      } else {
+        // Is this day in the admin's available days?
+        if (!isDateOnAvailableDay(dateStr)) {
+          errors.push(
+            "That date is not one of your available days. Please choose another date."
+          );
+        }
+
+        // Is this date blocked?
+        if (isDateBlocked(dateStr)) {
+          errors.push(
+            "That date is currently blocked. Please choose another date."
+          );
+        }
+      }
+
+      if (!time24) {
+        errors.push("Please choose an appointment time.");
+      } else {
+        // Time must exist in configured time slots
+        if (!isTimeInConfiguredSlots(time24)) {
+          errors.push(
+            "That time is not in your configured time slots. Choose one of your available times."
+          );
+        }
+
+        // Avoid double-booking
+        if (!errors.length && isTimeAlreadyBooked(dateStr, time24)) {
+          errors.push(
+            "That time slot is already booked for this date. Please choose a different time."
+          );
+        }
+      }
+    }
+
+    // If anything failed, block submit + show message
+    if (errors.length > 0) {
+      e.preventDefault();
+      alert(errors.join("\n"));
+
+      if (messageEl) {
+        messageEl.innerHTML = errors
+          .map((msg) => `<p class="form-error">${msg}</p>`)
+          .join("");
+        messageEl.classList.add("visible");
+      }
+    } else if (messageEl) {
+      messageEl.innerHTML = "";
+      messageEl.classList.remove("visible");
+    }
+  });
+}
+
+// Simple email validation helper
+function isValidEmail(value) {
+  if (!value) return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value);
+}
+
+// Simple US-style phone validation helper (e.g. 916-555-1234, (916) 555-1234, 9165551234)
+function isValidPhone(value) {
+  if (!value) return false;
+  const digitsOnly = value.replace(/[^0-9]/g, "");
+  if (digitsOnly.length !== 10) return false;
+
+  const phoneRegex = /^(\(?\d{3}\)?[\s-]?)?\d{3}[\s-]?\d{4}$/;
+  return phoneRegex.test(value);
+}
+/**
+ * Normalize a date (string or Date) into "YYYY-MM-DD".
+ */
+function normalizeToYMD(dateValue) {
+  const d = parseAppointmentDate(dateValue);
+  if (isNaN(d.getTime())) return null;
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Is this date on an active available day?
+ * Uses global `availableDays` loaded from /availability.
+ */
+function isDateOnAvailableDay(dateStr) {
+  const d = parseAppointmentDate(dateStr);
+  if (isNaN(d.getTime())) return false;
+  const dow = d.getDay(); // 0 = Sunday ... 6 = Saturday
+
+  return availableDays.some((day) => day.dayOfWeek === dow && day.isActive);
+}
+
+/**
+ * Is this date blocked?
+ * Uses global `blockedDates` loaded from /blocked-dates.
+ */
+function isDateBlocked(dateStr) {
+  const target = normalizeToYMD(dateStr);
+  if (!target) return false;
+
+  return blockedDates.some((bd) => {
+    const bdYMD = normalizeToYMD(bd.date);
+    return bdYMD === target;
+  });
+}
+
+/**
+ * Is this time part of the configured time slots?
+ * Uses global `timeSlots` (start/end in 12-hr format).
+ */
+function isTimeInConfiguredSlots(time24Str) {
+  if (!time24Str) return false;
+  const label = convertTo12Hour(time24Str); // e.g. "2:00 PM"
+  return timeSlots.some((slot) => slot.start === label);
+}
+
+/**
+ * Is this specific date + time already booked by another appointment?
+ * Uses global `appointments` (future, non-cancelled ones).
+ */
+function isTimeAlreadyBooked(dateStr, time24Str) {
+  if (!dateStr || !time24Str) return false;
+  const label = convertTo12Hour(time24Str);
+  const targetYMD = normalizeToYMD(dateStr);
+
+  return appointments.some((apt) => {
+    const aptYMD = normalizeToYMD(apt.appointmentDate);
+    return (
+      aptYMD === targetYMD &&
+      apt.status !== "cancelled" &&
+      apt.appointmentTime === label
+    );
+  });
+}
 /* ==========================================
    HELPER FUNCTIONS
    ========================================== */
@@ -1185,7 +1388,7 @@ async function updateAppointmentStatus(appointmentId, newStatus) {
     const data = await response.json();
 
     if (data.success) {
-      console.log("Appointment status updated:", newStatus);
+      // console.log("Appointment status updated:", newStatus);
       // Reload all data to reflect changes
       await loadAllAppointments();
       await loadAppointments();
@@ -1243,7 +1446,7 @@ async function deleteAppointmentPermanently(appointmentId) {
     const data = await response.json();
 
     if (data.success) {
-      console.log("Appointment deleted permanently");
+      // console.log("Appointment deleted permanently");
       // Reload all data to reflect deletion
       await loadAllAppointments();
       await loadAppointments();

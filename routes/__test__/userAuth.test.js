@@ -1,31 +1,53 @@
+// routes/__test__/userAuth.test.js
 const request = require("supertest");
 const express = require("express");
 const session = require("express-session");
+
+// IMPORTANT: mock *factories* so methods like findOne, hash, compare exist,
+// and so User itself is a jest.fn() constructor (we call new User() in the code).
+jest.mock("../../models/userSchema", () => {
+  const UserMock = jest.fn();        // constructor we can .mockImplementation(...)
+  UserMock.findOne = jest.fn();      // static method used in the router
+  return UserMock;
+});
+
+jest.mock("../../models/chakraAssessment", () => ({
+  findOne: jest.fn(),                // only the static method is used
+}));
+
+jest.mock("bcrypt", () => ({
+  hash: jest.fn(),
+  compare: jest.fn(),
+}));
+
+// The router imports ../middleware/csrf (relative to routes/), so from this test
+// (in routes/__test__) we mock it at ../middleware/csrf. Make it a no-op middleware.
+jest.mock("../../middleware/csrf", () => (req, res, next) => next());
+
 const bcrypt = require("bcrypt");
 const User = require("../../models/userSchema");
 const ChakraAssessment = require("../../models/chakraAssessment");
 const authRouter = require("../userAuth");
 
-// mock dependencies
-jest.mock("../../models/userSchema");
-jest.mock("../../models/chakraAssessment");
-jest.mock("bcrypt");
-
 describe("User Authentication Routes", () => {
   let app;
+  let logSpy, errorSpy;
 
-  // suppressing logs
+  // suppress logs safely
   beforeAll(() => {
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterAll(() => {
-    console.log.mockRestore();
-    console.error.mockRestore();
+    logSpy.mockRestore();
+    errorSpy.mockRestore();
   });
 
   beforeEach(() => {
+    // reset all mock state before each test
+    jest.clearAllMocks();
+
     app = express();
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -37,24 +59,22 @@ describe("User Authentication Routes", () => {
       })
     );
 
-    // mock CSRF token
+    // provide a csrfToken function (the router calls req.csrfToken() in handlers)
     app.use((req, res, next) => {
       req.csrfToken = () => "mock-csrf-token";
       next();
     });
 
-    // mock view engine
+    // very simple view engine that returns the data passed to render()
     app.set("view engine", "ejs");
     app.engine("ejs", (path, data, cb) => cb(null, JSON.stringify(data)));
 
     app.use(authRouter);
-
-    jest.clearAllMocks();
   });
 
   // --- helper functions ---
   describe("saveTempResultsToUser helper", () => {
-    it("should associate temp assessment with user", async () => {
+    it("should associate temp assessment with user (sanity)", async () => {
       const mockAssessment = {
         submissionId: "sub123",
         user: null,
@@ -63,7 +83,14 @@ describe("User Authentication Routes", () => {
 
       ChakraAssessment.findOne.mockResolvedValue(mockAssessment);
 
-      expect(ChakraAssessment.findOne).toBeDefined();
+      // Safer checks than toBeInstanceOf(Function)
+      expect(typeof ChakraAssessment.findOne).toBe("function");
+      expect(jest.isMockFunction(ChakraAssessment.findOne)).toBe(true);
+
+      // And prove the mock resolves as intended
+      await expect(
+        ChakraAssessment.findOne({ submissionId: "sub123" })
+      ).resolves.toBe(mockAssessment);
     });
   });
 
@@ -122,6 +149,7 @@ describe("User Authentication Routes", () => {
         save: jest.fn().mockResolvedValue(true),
       };
 
+      // because we mocked the module as a jest.fn() constructor
       User.mockImplementation(() => mockUser);
 
       const res = await request(app).post("/user-signup").send(signupData);

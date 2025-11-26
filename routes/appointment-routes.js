@@ -55,8 +55,8 @@ const {
  * @param {Function} next - Express next middleware function
  */
 const isAdmin = (req, res, next) => {
-  console.log("isAdmin middleware - session:", req.session);
-  console.log("isAdmin middleware - isAdmin:", req.session?.isAdmin);
+  // console.log("isAdmin middleware - session:", req.session);
+  // console.log("isAdmin middleware - isAdmin:", req.session?.isAdmin);
 
   // Check if user has admin session
   if (req.session && req.session.isAdmin) {
@@ -64,7 +64,7 @@ const isAdmin = (req, res, next) => {
   }
 
   // User is not admin, deny access
-  console.log("Admin access denied - redirecting to login");
+  // console.log("Admin access denied - redirecting to login");
   return res.status(403).json({
     success: false,
     message: "Access denied. Admin only.",

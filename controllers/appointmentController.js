@@ -309,12 +309,12 @@ const getAvailableSlots = async (req, res) => {
  */
 const createAppointment = async (req, res) => {
   try {
-    console.log("Received appointment request:", req.body); // Debug log
+    // console.log("Received appointment request:", req.body); // Debug log
 
     // STEP 1: Validate appointment data using Joi schema
     const { error } = Appointment.validate(req.body);
     if (error) {
-      console.log("Validation error:", error.details[0].message); // Debug log
+      // console.log("Validation error:", error.details[0].message); // Debug log
       return res.status(400).json({
         success: false,
         message: error.details[0].message,
@@ -353,7 +353,19 @@ const createAppointment = async (req, res) => {
 
     // STEP 4: Create and save appointment to database
     // Exclude CSRF token from being saved to database
-    const { _csrf, ...appointmentData } = req.body;
+    const { _csrf, ...appointmentBody } = req.body;
+    const appointmentData = { ...appointmentBody };
+
+    if (req.session && req.session.user) {
+      appointmentData.userId = req.session.user._id;
+
+      if (!appointmentData.clientEmail) {
+        appointmentData.clientEmail = req.session.user.email;
+      }
+      if (!appointmentData.clientName) {
+        appointmentData.clientName = req.session.user.fullName;
+      }
+    }
     const appointment = new Appointment(appointmentData);
     await appointment.save();
 
@@ -436,7 +448,7 @@ const createAppointment = async (req, res) => {
             },
             { async: true }
           );
-          console.log("[APPT][MAIL] appointment-confirm.ejs rendered");
+          // console.log("[APPT][MAIL] appointment-confirm.ejs rendered");
         } catch (tplErr) {
           console.warn(
             "[APPT][MAIL] template missing or failed, using inline HTML:",
@@ -451,10 +463,10 @@ const createAppointment = async (req, res) => {
           text: textBody,
           html,
         });
-        console.log("[APPT][MAIL] sent", {
-          messageId: info && info.messageId,
-          to,
-        });
+        // console.log("[APPT][MAIL] sent", {
+        //   messageId: info && info.messageId,
+        //   to,
+        // });
       }
     } catch (mailErr) {
       console.error(
@@ -665,7 +677,7 @@ const createAppointmentByAdmin = async (req, res) => {
             },
             { async: true }
           );
-          console.log("[APPT-ADMIN][MAIL] appointment-confirm.ejs rendered");
+          // console.log("[APPT-ADMIN][MAIL] appointment-confirm.ejs rendered");
         } catch (tplErr) {
           console.warn(
             "[APPT-ADMIN][MAIL] template missing or failed, using inline HTML:",
@@ -680,10 +692,10 @@ const createAppointmentByAdmin = async (req, res) => {
           text: textBody,
           html,
         });
-        console.log("[APPT-ADMIN][MAIL] sent", {
-          messageId: info && info.messageId,
-          to,
-        });
+        // console.log("[APPT-ADMIN][MAIL] sent", {
+        //   messageId: info && info.messageId,
+        //   to,
+        // });
       }
     } catch (mailErr) {
       console.error(
@@ -895,7 +907,7 @@ const getAdminAvailability = async (req, res) => {
  */
 const setAdminAvailability = async (req, res) => {
   try {
-    console.log("setAdminAvailability called with:", req.body);
+    // console.log("setAdminAvailability called with:", req.body);
 
     // Extract data (excluding CSRF token)
     const { _csrf, dayOfWeek, timeSlots, isActive } = req.body;
@@ -917,7 +929,7 @@ const setAdminAvailability = async (req, res) => {
       availability.isActive =
         isActive !== undefined ? isActive : availability.isActive;
       await availability.save();
-      console.log("Updated existing availability for day:", dayOfWeek);
+      // console.log("Updated existing availability for day:", dayOfWeek);
     } else {
       // Create new availability for this day
       availability = new AdminAvailability({
@@ -926,7 +938,7 @@ const setAdminAvailability = async (req, res) => {
         isActive: isActive !== undefined ? isActive : true,
       });
       await availability.save();
-      console.log("Created new availability for day:", dayOfWeek);
+      // console.log("Created new availability for day:", dayOfWeek);
     }
 
     // Return updated availability
@@ -977,7 +989,7 @@ const addBlockedDate = async (req, res) => {
   try {
     // Extract data (excluding CSRF token)
     const { _csrf, date, reason } = req.body;
-    console.log("Received date to block:", date, "Type:", typeof date);
+    // console.log("Received date to block:", date, "Type:", typeof date);
 
     // Handle dates in Pacific timezone to prevent day shift
     let dateToStore;
@@ -993,12 +1005,12 @@ const addBlockedDate = async (req, res) => {
       dateToStore = new Date(date);
     }
 
-    console.log(
-      "Storing date as:",
-      dateToStore,
-      "ISO:",
-      dateToStore.toISOString()
-    );
+    // console.log(
+    //   "Storing date as:",
+    //   dateToStore,
+    //   "ISO:",
+    //   dateToStore.toISOString()
+    // );
 
     // Create and save blocked date
     const blockedDate = new BlockedDate({
@@ -1007,7 +1019,7 @@ const addBlockedDate = async (req, res) => {
     });
     await blockedDate.save();
 
-    console.log("Saved blocked date:", blockedDate);
+    // console.log("Saved blocked date:", blockedDate);
 
     // Return success response
     res.json({
@@ -1037,11 +1049,11 @@ const addBlockedDate = async (req, res) => {
 const removeBlockedDate = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("Attempting to delete blocked date with ID:", id);
+    // console.log("Attempting to delete blocked date with ID:", id);
 
     // Find and delete blocked date by ID
     const result = await BlockedDate.findByIdAndDelete(id);
-    console.log("Delete result:", result);
+    // console.log("Delete result:", result);
 
     // Check if blocked date was found
     if (!result) {
@@ -1079,14 +1091,14 @@ const getBlockedDates = async (req, res) => {
   try {
     // Fetch all blocked dates sorted by date (earliest first)
     const blockedDates = await BlockedDate.find().sort({ date: 1 });
-    console.log(
-      "Fetched blocked dates from DB:",
-      blockedDates.map((bd) => ({
-        id: bd._id,
-        date: bd.date,
-        dateType: typeof bd.date,
-      }))
-    );
+    // console.log(
+    //   "Fetched blocked dates from DB:",
+    //   blockedDates.map((bd) => ({
+    //     id: bd._id,
+    //     date: bd.date,
+    //     dateType: typeof bd.date,
+    //   }))
+    // );
 
     // Return blocked dates
     res.json({ success: true, blockedDates });
