@@ -114,13 +114,14 @@ router.use('/admin/testimonials', (req, res, next) => {
   next();
 });
 
-/* -------------------- Testimonials Management (CRUD) -------------------- */
-router.get('/admin/testimonials', requireAdmin, listTestimonials);
-router.get('/admin/testimonials/new', requireAdmin, getCreateTestimonial);
-router.post('/admin/testimonials', requireAdmin, postCreateTestimonial);
-router.get('/admin/testimonials/:id/edit', requireAdmin, getEditTestimonial);
-router.post('/admin/testimonials/:id', requireAdmin, postUpdateTestimonial);
-router.post('/admin/testimonials/:id/delete', requireAdmin, postDeleteTestimonial);
+/* -------------------- Testimonials Management (CRUD + CSRF) -------------------- */
+router.get('/admin/testimonials', requireAdmin, csrfProtection, listTestimonials);
+router.get('/admin/testimonials/new', requireAdmin, csrfProtection, getCreateTestimonial);
+router.post('/admin/testimonials', requireAdmin, csrfProtection, postCreateTestimonial);
+router.get('/admin/testimonials/:id/edit', requireAdmin, csrfProtection, getEditTestimonial);
+router.post('/admin/testimonials/:id', requireAdmin, csrfProtection, postUpdateTestimonial);
+router.post('/admin/testimonials/:id/delete', requireAdmin, csrfProtection, postDeleteTestimonial);
+
 
 /* -------------------- Applications -------------------- */
 router.post('/application', submitApplication);
