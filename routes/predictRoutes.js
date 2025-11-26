@@ -3,8 +3,8 @@ const router = express.Router();
 const axios = require("axios");
 
 // point to your Flask service (env var OR default)
-const ML_API_URL =
-  process.env.ML_API_URL || "http://127.0.0.1:5000/api/predict_trend";
+const ML_API_URL2 =
+  process.env.ML_API_URL2 || "http://127.0.0.1:5000/api/predict_trend";
 const ML_HEALTH_URL =
   process.env.ML_HEALTH_URL || "http://127.0.0.1:5000/health";
 
@@ -26,7 +26,7 @@ router.get("/adminportal/predict-chakra", async (req, res) => {
     }
 
     // fetch forecast JSON from Flask
-    const { data } = await axios.get(ML_API_URL, {
+    const { data } = await axios.get(ML_API_URL2, {
       timeout: 10000,
       headers: { Accept: "application/json" },
     });

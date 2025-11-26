@@ -7,7 +7,7 @@ function buildChakraFilter(qs = {}) {
         q, 
         ageBracket,
         healthcareWorker,          
-        workedWithPractitioner,    
+        experience,    
         familiarWith,
         challenges,
         from,
@@ -32,10 +32,12 @@ function buildChakraFilter(qs = {}) {
 
     if (healthcareWorker) filter.healthcareWorker = healthcareWorker;
 
-    const fam = toArr(familiarWith);
+    const fam = toArr(familiarWith ?? qs['familiarWith[]']);
     if (fam.length) {
-        filter.familiarWith = { $all: fam };
+        const famRx = fam.map(v => new RegExp(`^\\s*${esc(v)}\\s*$`, 'i'));
+        filter.familiarWith = { $in: famRx };    
     }
+
 
     const ch = toArr(challenges);
     if (ch.length) {

@@ -35,11 +35,27 @@ const submitApplication = async (req, res) => {
             : undefined,
         jobTitle: DOMPurify.sanitize(req.body.jobTitle),
         workedWithPractitioner: DOMPurify.sanitize(req.body.workedWithPractitioner),
-        familiarWith: DOMPurify.sanitize(req.body.familiarWith),
-        experience: DOMPurify.sanitize(req.body.experience),
+        //familiarWith: DOMPurify.sanitize(req.body.familiarWith),
+        //experience: DOMPurify.sanitize(req.body.experience),
         goals: DOMPurify.sanitize(req.body.goals),
-        challenges: DOMPurify.sanitize(req.body.challenges),
+        //challenges: DOMPurify.sanitize(req.body.challenges),
+
+        // include other 
+        workedWithPractitionerOther: DOMPurify.sanitize(
+            req.body.workedWithPractitionerOther || ''
+        ),
+        familiarWith: toArray(req.body.familiarWith).map((item) =>
+            DOMPurify.sanitize(item)
+        ),
+        experience: DOMPurify.sanitize(req.body.experience || ''),
+
+        challenges: toArray(req.body.challenges).map((item) =>
+            DOMPurify.sanitize(item)
+        ),
+        challengesOtherText: DOMPurify.sanitize(req.body.challengesOtherText || '')
     }
+
+    
 
    
    // validate the data with schema joi
