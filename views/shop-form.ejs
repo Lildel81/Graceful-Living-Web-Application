@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/css/shop.css">
 <div class="newProduct">
-<div class="gl-shop" style="max-width: 720px">
+<div class="gl-shop" style="max-width: 720px; margin: 2rem auto; padding-top: 10%;">
   <h1 class="gl-shop-title"><%= title || 'New Product' %></h1>
 
   <% if (typeof error === 'string' && error) { %>
@@ -54,7 +54,7 @@
       <textarea name="description" rows="6"><%= (product && product.description) || '' %></textarea>
       <small class="gl-muted"></small>
     </div>
-  </div>
+  
     <div class="gl-actions" style="display:flex; gap:0.5rem;">
       <button type="submit" class="btn">Create</button>
       <a class="btn" href="/shop" style="background:#f4f4f4; color:#333;">Cancel</a>
