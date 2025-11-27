@@ -5,6 +5,10 @@ const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const PasswordResetToken = require('../models/passwordResetToken');
+const csrfProtection = require('../middleware/csrf');
+
+
+
 
 
 const mongoose = require('mongoose');
@@ -14,6 +18,13 @@ const passwdSchema = new mongoose.Schema({
 }, { timestamps: true });
 const Passwd = mongoose.models.Passwd || mongoose.model('Passwd', passwdSchema);
 
+
+router.use(csrfProtection, (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
+
 function hashToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
@@ -22,7 +33,8 @@ function hashToken(token) {
 const passwordSchema = Joi.object({
   password: Joi.string().min(8).max(256).required(),
   confirm: Joi.ref('password'),
-}).with('password', 'confirm');
+}).with('password', 'confirm')
+.unknown(true);
 
 router.get('/', (req, res) => {
   const { token } = req.query || {};
@@ -31,7 +43,7 @@ router.get('/', (req, res) => {
 });
 
 // ----- GET /reset/:token  -> render form if token is valid -----
-router.get('/:token', async (req, res) => {
+router.get('/:token', csrfProtection, async (req, res) => {
   const { token } = req.params;
   const tokenHash = hashToken(token);
   const now = new Date();
@@ -52,11 +64,12 @@ router.get('/:token', async (req, res) => {
     title: 'Set a new password',
     token,                 // will post to /reset/:token
     minutesLeft: Math.max(1, Math.ceil((t.expiresAt - now) / 60000)),
+    csrfToken: req.csrfToken(),
   });
 });
 
 // make sure its one time token use
-router.post('/:token', async (req, res) => {
+router.post('/:token', csrfProtection, async (req, res) => {
   const { token } = req.params;
   const tokenHash = hashToken(token);
   const now = new Date();
@@ -81,6 +94,7 @@ router.post('/:token', async (req, res) => {
         token,
         minutesLeft: Math.max(1, Math.ceil((t.expiresAt - now) / 60000)),
         errors: error.details.map(d => d.message),
+        csrfToken: req.csrfToken(),
       });
     }
 
@@ -98,10 +112,13 @@ router.post('/:token', async (req, res) => {
     t.usedAt = new Date();
     await t.save();
 
-    return res.render('reset-done', { title: 'Password updated' });
+    return res.render('reset-done', { title: 'Password updated',
+      csrfToken: req.csrfToken(),
+     });
   } catch (e) {
     console.error('[reset] post error:', e);
     return res.status(500).render('reset-invalid', { title: 'Unexpected error' });
+    
   }
 });
 

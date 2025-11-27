@@ -68,8 +68,7 @@ const loginLimiter = rateLimit({
 
 /* ---------- GET /login ---------- */
 router.get('/', csrfProtection, (req, res) => {
-  // res.locals.csrfToken is already set by your GET middleware,
-  // but passing explicitly is fine too:
+
   res.render('login', {
     ok: req.query.ok || false,
     error: null,
