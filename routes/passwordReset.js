@@ -49,7 +49,7 @@ await PasswordResetToken.create({
     `;
     const text = `Reset link (valid ${ttlMinutes} mins): ${resetURL}`;
 
-    const to = process.env.RESET_EMAIL_RECIPIENT || 'tweatherman8112@gmail.com';
+    const to = process.env.RESET_RECIPIENT || 'shantekumar01@yahoo.com';
     const info = await sendResetEmail({ to, subject, html, text });
 
     console.log('[mail] messageId:', info.messageId);
