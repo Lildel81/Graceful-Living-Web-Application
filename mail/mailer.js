@@ -35,7 +35,7 @@ transporter.verify()
 
 async function sendResetEmail({ to, subject, html, text }) {
   return transporter.sendMail({
-    from: process.env.MAIL_FROM || '"Graceful Living" <no-reply@gracefulliving.app>',
+    from: process.env.MAIL_FROM || '"GracefuLiving" <no-reply@gracefulliving.app>',
     to,
     subject,
     text,
