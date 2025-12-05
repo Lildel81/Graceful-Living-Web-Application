@@ -53,7 +53,7 @@ exports.editIntro = async (req, res) => {
     const intro = await AboutUsIntro.findById(req.params.id);
     if (!intro) return res.status(404).send("Intro not found");
 
-    res.render("editAboutUsIntro", {
+    res.render("editaboutusintro", {
       csrfToken: req.csrfToken(),
       intro,
       layout: false
@@ -148,7 +148,7 @@ exports.editContent = async (req, res) => {
     const content = await AboutUsContent.findById(req.params.id);
     if (!content) return res.status(404).send("Content not found");
 
-    res.render("editAboutUsContent", {
+    res.render("editaboutuscontent", {
       csrfToken: req.csrfToken(),
       content,
       layout: false
