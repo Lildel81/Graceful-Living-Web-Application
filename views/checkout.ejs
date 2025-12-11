@@ -21,7 +21,15 @@
     />
 
     <label for="email">Email</label>
-    <input id="email" type="email" name="email" required />
+    <input id="email" type="email" name="email" required size="40" />
+    <style>
+      input[type="email"] {
+        width: 17%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
 
     <button type="submit" class="gl-btn">Pay with Stripe</button>
   </form>
