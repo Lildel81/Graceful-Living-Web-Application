@@ -48,7 +48,7 @@ router.post('/create-checkout-session', async (req, res) => {
       line_items = [{
         price_data: {
           currency: 'usd',
-          product_data: { name: 'Graceful Living Order' },
+          product_data: { name: 'GracefuLiving Order' },
           unit_amount: cents
         },
         quantity: 1
