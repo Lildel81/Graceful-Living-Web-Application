@@ -25,7 +25,7 @@
 
 /* === Hero Section === */
 .reviews-page .hero {
-  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  background: linear-gradient(135deg, #008080, #008080);
   color: white;
   text-align: center;
   padding: 80px 0;
@@ -96,14 +96,14 @@
 
 .reviews-page .name { font-weight: 600; }
 .reviews-page .location { font-size: 0.9rem; color: gray; opacity: 0.8; }
-.reviews-page .event-card h3 { color: #6c5ce7; margin-bottom: 15px; }
+.reviews-page .event-card h3 { color: #008080; margin-bottom: 15px; }
 .reviews-page .event-card p { color: gray; font-size: 0.95rem; }
 
 /* === Tag === */
 .reviews-page .event-tag {
   display: inline-block;
-  background: #fd79a8;
-  color: white;
+  background: #e8f9f7;
+  color: #008080;
   padding: 5px 10px;
   border-radius: 20px;
   font-size: 0.8rem;
