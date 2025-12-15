@@ -233,6 +233,8 @@ app.use(async (req, res, next) => {
           facebookLabel: s.facebookLabel || "Facebook",
           instagramUrl: s.instagramUrl || "",
           instagramLabel: s.instagramLabel || "Instagram",
+          youtubeUrl: s.youtubeUrl || "",
+          youtubeLabel: s.youtubeLabel || "YouTube",
         }
       : {};
   } catch (err) {

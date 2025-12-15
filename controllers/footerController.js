@@ -12,6 +12,8 @@ async function getOrCreateFooter() {
         facebookLabel: 'Facebook',
         instagramUrl: '',
         instagramLabel: 'Instagram',
+        youtubeUrl: '',
+        youtubeLabel: 'YouTube',
         });
     }
     return doc;
@@ -43,6 +45,8 @@ const updateFooterSettings = async (req, res) => {
         s.facebookLabel = (req.body.facebookLabel || 'Facebook').trim();
         s.instagramUrl = (req.body.instagramUrl || '').trim();
         s.instagramLabel = (req.body.instagramLabel || 'Instagram').trim();
+        s.youtubeUrl = (req.body.youtubeUrl || '').trim();
+        s.youtubeLabel = (req.body.youtubeLabel || 'YouTube').trim();
         await s.save();
         res.redirect('/adminportal/footer-settings?saved=1');
     } catch (err) {

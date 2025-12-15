@@ -141,8 +141,15 @@
                             </a>
                         </li>
                         <% } %>
-
-                        <% if (!fc.phone && !fc.facebookUrl && !fc.instagramUrl) { %>
+                        <% if (fc.youtubeUrl) { %>
+                        <li>
+                            <a href="<%= fc.youtubeUrl %>" target="_blank" rel="noopener">
+                            <img src="/images/youtube-logo.png" class="icon" alt="">
+                            <%= fc.youtubeLabel || 'YouTube' %>
+                            </a>
+                        </li>
+                        <% } %>
+                        <% if (!fc.phone && !fc.facebookUrl && !fc.instagramUrl && !fc.youtubeUrl) { %>
                         <li>No contact info yet — add it in Admin &raquo; Footer Settings.</li>
                         <% } %>
                     </ul>

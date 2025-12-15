@@ -25,7 +25,16 @@ const footerSchema = new mongoose.Schema({
     instagramLabel:{ 
         type: String, 
         default: 'Instagram' 
+    },
+    youtubeUrl:{ 
+        type: String, 
+        default: ''
+    },
+    youtubeLabel:{ 
+        type: String, 
+        default: 'YouTube'  
     }
+
 
 });
 
