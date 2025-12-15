@@ -33,7 +33,7 @@ function autoSlide() {
   moveToSlide(counter);
 }
 
-let slideInterval = setInterval(autoSlide, 5000); // Change every 5s
+let slideInterval = setInterval(autoSlide, 20000); // Change every 5s
 
 /*function moveToSlide(index) {
   slides.forEach(slide => delete slide.dataset.active);

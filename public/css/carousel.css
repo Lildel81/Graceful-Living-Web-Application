@@ -20,8 +20,8 @@ ul > input {
   position: absolute; /*absolute*/
   inset: 0;
   opacity: 0;
-  transition: 200ms opacity ease-in-out;
-  transition-delay: 200ms;
+  transition: 1000ms opacity ease-in-out;
+  transition-delay: 10000ms;
 }
 
 
