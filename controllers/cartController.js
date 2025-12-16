@@ -41,7 +41,7 @@ exports.adminCreate = async (req, res, next) => {
     const product = new Product({
       ...value,
       description: sanitizeHtml(value.description || ''),
-      imagePath: req.file ? `/images/uploads/${req.file.filename}` : ''
+      imagePath: req.file ? `/var/data/${req.file.filename}` : ''
     });
     await product.save();
     res.redirect('/shop');

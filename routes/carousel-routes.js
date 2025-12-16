@@ -14,7 +14,7 @@ const carousel = require('../controllers/carouselController');
 // }
 // // Storage configuration for multer
 // const storage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, uploadDir), // save to public/images/uploads
+//   destination: (req, file, cb) => cb(null, uploadDir), // save to public/var/data
 //   filename: (req, file, cb) => {
 //     const base = path.basename(file.originalname).replace(/[^a-zA-Z0-9._-]/g, '_');
 //     cb(null, `${Date.now()}-${base}`); // add timestamp to filename to avoid conflicts

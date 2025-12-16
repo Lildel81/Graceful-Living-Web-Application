@@ -123,7 +123,7 @@ exports.createResourcesImage = async (req, res) => {
 
     // uploaded file
     if (imageOption === "upload" && req.file) {
-      finalImageUrl = `/images/uploads/${req.file.filename}`;
+      finalImageUrl = `/var/data/${req.file.filename}`;
     }
 
     // fallback if nothing provided
@@ -176,13 +176,13 @@ exports.updateResourcesImage = async (req, res) => {
     // update image based on admin choice
     if (imageOption === "upload" && req.file) {
       // delete old image file if needed
-      if (resource.imageUrl?.startsWith("/images/uploads/")) {
+      if (resource.imageUrl?.startsWith("/var/data/")) {
         const oldImg = path.join(__dirname, "..", "public", resource.imageUrl.replace(/^\//, ""));
         fs.unlink(oldImg, err => {
           if (err) console.warn("Could not delete old resource image:", err);
         });
       }
-      resource.imageUrl = `/images/uploads/${req.file.filename}`;
+      resource.imageUrl = `/var/data/${req.file.filename}`;
     } else if (imageOption === "url" && imageUrl) {
       resource.imageUrl = imageUrl;
     }
@@ -202,7 +202,7 @@ exports.deleteResourcesImage = async (req, res) => {
     if (!resource) return res.status(404).send("Resource not found");
 
     // delete local file if it was uploaded
-    if (resource.imageUrl?.startsWith("/images/uploads/")) {
+    if (resource.imageUrl?.startsWith("/var/data/")) {
       const imgPath = path.join(__dirname, "..", "public", resource.imageUrl.replace(/^\//, ""));
       fs.unlink(imgPath, err => {
         if (err) console.warn("Could not delete resource image:", err);

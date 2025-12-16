@@ -18,7 +18,7 @@ const createSlide = async(req, res) => {
 
     let imagePath = imageUrl;
     if(imageOption === 'upload' && req.file) {
-        imagePath = `/images/uploads/${req.file.filename}`;
+        imagePath = `/var/data/${req.file.filename}`;
     }
     else if (imageOption === 'url' && imageUrl){
         imagePath = imageUrl;
@@ -42,18 +42,18 @@ const deleteSlide = async(req, res) => {
     const id = req.params.id;
     /*
     Look up the slide first.
-    If its imageUrl starts with /images/uploads/ and isn't the default image, 
+    If its imageUrl starts with /var/data/ and isn't the default image, 
         compute the absolute path under public/ and fs.unlink it.
     Then delete the slide doc.
     Errors are logged but won’t block the redirect.
-    This only deletes files that were uploaded to public/images/uploads/. 
+    This only deletes files that were uploaded to public/var/data/. 
     External URLs and the default fallback are ignored.
     */
     try {
         const slide = await CarouselSlide.findById(id);
         if (slide && slide.imageUrl) {
             // Only delete local uploaded files (not external URLs or default image)
-            const isLocalUpload = slide.imageUrl.startsWith('/images/uploads/');
+            const isLocalUpload = slide.imageUrl.startsWith('/var/data/');
             const isDefault = slide.imageUrl.includes('default-fallback');
             if (isLocalUpload && !isDefault) {
                 const absolutePath = path.join(__dirname, '..', 'public', slide.imageUrl.replace(/^\//, ''));
@@ -78,13 +78,13 @@ const editSlide = async (req, res) => {
 
     try {
       const existing = await CarouselSlide.findById(req.params.id);
-      const hadLocalUpload = existing && existing.imageUrl && existing.imageUrl.startsWith('/images/uploads/') && !existing.imageUrl.includes('default-fallback');
+      const hadLocalUpload = existing && existing.imageUrl && existing.imageUrl.startsWith('/var/data/') && !existing.imageUrl.includes('default-fallback');
       // let imagePath = existing.imageUrl; // Keep existing image by default
       let imagePath = existing ? existing.imageUrl : 'images/default-fallback.jpg'; // Keep the exising image by default, replace with default image if there's no current one 
 
       if (imageOption === 'upload' && req.file) {
         // User uploaded a new image
-        imagePath = `/images/uploads/${req.file.filename}`;
+        imagePath = `/var/data/${req.file.filename}`;
         // Delete old uploaded file if it exists
         if (hadLocalUpload) {
           const oldAbs = path.join(__dirname, '..', 'public', existing.imageUrl.replace(/^\//, ''));

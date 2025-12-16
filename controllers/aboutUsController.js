@@ -31,7 +31,7 @@ exports.createIntro = async (req, res) => {
     const { title, description } = req.body;
 
     const headshotUrl = req.file
-      ? `/images/uploads/${req.file.filename}`
+      ? `/var/data/${req.file.filename}`
       : null;
 
     await new AboutUsIntro({
@@ -80,7 +80,7 @@ exports.updateIntro = async (req, res) => {
           if (err) console.warn("Could not delete old headshot:", err);
         });
       }
-      intro.headshotUrl = `/images/uploads/${req.file.filename}`;
+      intro.headshotUrl = `/var/data/${req.file.filename}`;
     }
 
     intro.title = title;
@@ -126,7 +126,7 @@ exports.createContent = async (req, res) => {
     const { title, description } = req.body;
 
     const imageUrl = req.file
-      ? `/images/uploads/${req.file.filename}`
+      ? `/var/data/${req.file.filename}`
       : null;
 
     await new AboutUsContent({
@@ -175,7 +175,7 @@ exports.updateContent = async (req, res) => {
           if (err) console.warn("Could not delete old image:", err);
         });
       }
-      content.imageUrl = `/images/uploads/${req.file.filename}`;
+      content.imageUrl = `/var/data/${req.file.filename}`;
     }
 
     content.title = title;

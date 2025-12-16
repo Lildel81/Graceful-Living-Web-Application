@@ -88,7 +88,7 @@ exports.adminCreate = async (req, res, next) => {
       ...value,
       currency: 'usd',
       description: sanitizeHtml(value.description || ''),
-      imagePath: req.file ? `/images/uploads/${req.file.filename}` : ''
+      imagePath: req.file ? `/var/data/${req.file.filename}` : ''
     });
 
     await product.save();
@@ -187,7 +187,7 @@ exports.adminDelete = async (req, res, next) => {
   try {
     const doc = await Product.findByIdAndDelete(req.params.id).lean();
     if (doc && doc.imagePath) {
-      // Only delete if inside /public/images/uploads
+      // Only delete if inside /public/var/data
       const uploadRoot = path.join(__dirname, '..', 'public', 'images', 'uploads');
       const abs = path.join(__dirname, '..', 'public', doc.imagePath.replace(/^\//, ''));
       if (abs.startsWith(uploadRoot)) {

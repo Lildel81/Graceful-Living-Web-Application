@@ -75,7 +75,7 @@ global.testUtils = {
         description: 'This is a test slide description.',
         buttonText: 'Test Button',
         buttonUrl: 'https://test.com',
-        imageUrl: '/images/uploads/test-slide.jpg',
+        imageUrl: '/var/data/test-slide.jpg',
         createAt: new Date('2025-10-23'),
         ...overrides // Override any fields as needed
     })

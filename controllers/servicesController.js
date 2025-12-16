@@ -36,7 +36,7 @@ exports.createService = async (req, res) => {
 
     const { serviceName, serviceDescription, buttonText, buttonUrl } = req.body;
 
-    const imageUrl = req.file ? `/images/uploads/${req.file.filename}` : null;
+    const imageUrl = req.file ? `/var/data/${req.file.filename}` : null;
 
     const newService = new Services({
       serviceName,
@@ -124,7 +124,7 @@ exports.updateService = async (req, res) => {
           if (err) console.warn("Could not delete old image:", err.message);
         });
       }
-      service.imageUrl = `/images/uploads/${req.file.filename}`;
+      service.imageUrl = `/var/data/${req.file.filename}`;
     }
 
     // update other fields

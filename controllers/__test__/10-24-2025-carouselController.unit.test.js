@@ -46,7 +46,7 @@ describe('Carousel Controller CRUD Operations', () => {
         description: 'Test description',
         buttonText: 'Learn More',
         buttonUrl: 'https:/example.com',
-        imageUrl: '/images/uploads/test.jpg',
+        imageUrl: '/var/data/test.jpg',
         createdAt: new Date('2025-10-24'),
         ...overrides                        // Spread operator allows overriding any default value
     });
@@ -218,7 +218,7 @@ describe('Carousel Controller CRUD Operations', () => {
                 description: 'New Description',
                 buttonText: 'Click Here',
                 buttonUrl: 'https://example.com',
-                imageUrl: '/images/uploads/test-image.jpg'  // Controller should format the path correctly
+                imageUrl: '/var/data/test-image.jpg'  // Controller should format the path correctly
             });
         });
 
@@ -392,7 +392,7 @@ describe('Carousel Controller CRUD Operations', () => {
         test('should update slide keeping current image', async () => {
             // Arrange
             const existingSlide = createTestSlide({
-                imageUrl: '/images/uploads/existing.jpg'
+                imageUrl: '/var/data/existing.jpg'
             });
 
             const updateData = {
@@ -422,14 +422,14 @@ describe('Carousel Controller CRUD Operations', () => {
                 description: 'Updated Description',
                 buttonText: 'Updated Button',
                 buttonUrl: 'https://updated.com',
-                imageUrl: '/images/uploads/existing.jpg'            // Should keep existing image
+                imageUrl: '/var/data/existing.jpg'            // Should keep existing image
             });
         });
 
         test('should update slide with new uploaded image', async() => {
             // Arrange
             const existingSlide = createTestSlide({
-                imageUrl: '/images/uploads/old-image.jpg'
+                imageUrl: '/var/data/old-image.jpg'
             });
 
             const updateData = {
@@ -461,7 +461,7 @@ describe('Carousel Controller CRUD Operations', () => {
             expect(fs.promises.unlink).toHaveBeenCalled();      // Should delete the old file
             expect(CarouselSlide.findByIdAndUpdate).toHaveBeenCalledWith('507f1f77bcf86cd799439011',
                 expect.objectContaining({
-                    imageUrl: '/images/uploads/new-image.jpg'
+                    imageUrl: '/var/data/new-image.jpg'
                 })
             );
         });
@@ -469,7 +469,7 @@ describe('Carousel Controller CRUD Operations', () => {
         test('should update slide with new image Url', async() => {
             // Arrange
             const existingSlide = createTestSlide({
-                imageUrl: '/images/uploads/old-image.jpg'
+                imageUrl: '/var/data/old-image.jpg'
             });
 
             const updateData = {
@@ -506,7 +506,7 @@ describe('Carousel Controller CRUD Operations', () => {
         test('should handle file cleanup errors', async() => {
             // Arrange
             const existingSlide = createTestSlide({
-                imageUrl: '/images/uploads/old-image.jpg'
+                imageUrl: '/var/data/old-image.jpg'
             });
 
             const updateData = {
@@ -563,7 +563,7 @@ describe('Carousel Controller CRUD Operations', () => {
         test('should delete slide and remove uploaded file', async () => {
             // Arrange
             const slideToDelete = createTestSlide({
-                imageUrl: '/images/uploads/to-delete.jpg'
+                imageUrl: '/var/data/to-delete.jpg'
             });
 
             CarouselSlide.findById.mockResolvedValue(slideToDelete);
@@ -604,7 +604,7 @@ describe('Carousel Controller CRUD Operations', () => {
         test('should handle file deletion errors', async() => {
             // Arrange
             const slideToDelete = createTestSlide({
-                imageUrl: '/images/uploads/to-delete.jpg'
+                imageUrl: '/var/data/to-delete.jpg'
             });
 
             CarouselSlide.findById.mockResolvedValue(slideToDelete);
