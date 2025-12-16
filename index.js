@@ -30,6 +30,8 @@ const googleCalendarService = require("./services/googleCalendar");
 const userAuthRoutes = require("./routes/userAuth");
 const statsRoutes = require("./routes/statsRoutes");
 const zoomIntegrations = require("./routes/zoom-integrations");
+const clientController = require("./controllers/clientController");
+
 
 const footerRoutes = require('./routes/footer-routes');
 const homeQuoteRoutes = require('./routes/home-quote-routes');
@@ -345,9 +347,7 @@ app.use("/", homeRoutes);
 app.use("/assessment", chakraRoutes);
 app.use("/login", loginController);
 
-app.get("/services", (req, res) => {
-  res.render("services");
-});
+app.get("/services", clientController.getServicesView);
 app.get("/contact", (req, res) => {
   res.render("contact");
 });
