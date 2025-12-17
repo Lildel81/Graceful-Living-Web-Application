@@ -67,6 +67,9 @@ app.use(
           "'self'",
           "https://www.youtube.com",
           "https://www.gstatic.com",
+          "https://www.youtube-nocookie.com",
+          "https://youtube.com",
+          "https://youtu.be",
         ],
         "script-src-attr": ["'none'"],
 
@@ -75,7 +78,8 @@ app.use(
           "'self'",
           "https://www.youtube.com",
           "https://www.youtube-nocookie.com",
-          "https://youtube.com"],
+          "https://youtube.com",
+          "https://youtu.be",],
         // forms can POST back to this origin
         "form-action": ["'self'", "https://checkout.stripe.com"],
 

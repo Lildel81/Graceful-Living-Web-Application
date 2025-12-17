@@ -121,27 +121,40 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 
     <div class="intro-video">
       <!-- DYNAMIC -->
-      <% 
-        // If an intro video exists, use it. Otherwise use a default/fallback.
-        const videoSrc = introVideo && introVideo.videoUrl
-          ? introVideo.videoUrl
-          : "https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7";
-      %>
+      <%
+  function toEmbed(url) {
+    if (!url) return null;
+    url = String(url).trim();
 
-     <!-- <iframe
-        src="<%= videoSrc %>"
-        title="GracefulLiving Introduction Video"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen>
-      </iframe>-->
-      <iframe
-       src="<%= videoSrc %>""
-       title="YouTube video player"
-       allowfullscreen
-       referrerpolicy="strict-origin-when-cross-origin" 
-></iframe>
+    // already embed (youtube or nocookie)
+    if (/^https:\/\/(www\.)?youtube(-nocookie)?\.com\/embed\//i.test(url)) return url;
+
+    // youtu.be/<id>
+    const m1 = url.match(/^https?:\/\/youtu\.be\/([A-Za-z0-9_-]{6,})/i);
+    if (m1) return `https://www.youtube.com/embed/${m1[1]}`;
+
+    // youtube.com/watch?v=<id>
+    const m2 = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/i);
+    if (url.includes("youtube.com/watch") && m2) return `https://www.youtube.com/embed/${m2[1]}`;
+
+    return null;
+  }
+
+  const fallback = "https://www.youtube.com/embed/LKa0ABbkGrQ";
+  const videoSrc = toEmbed(introVideo && introVideo.videoUrl) || fallback;
+%>
+
+<iframe
+  src="<%= videoSrc %>"
+  title="GracefulLiving Introduction Video"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen>
+</iframe>
+
+
+
 
       <!-- STATIC IMPLEMENTATION -->
       <!-- <iframe

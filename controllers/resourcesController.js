@@ -64,18 +64,24 @@ exports.createDefaultText = async () => {
 // normalize YouTube URL to embed format
 function normalizeYouTubeUrl(url) {
   if (!url) return null;
+  const trimmed = String(url).trim();
 
-  if (url.includes("youtu.be/")) {
-    const id = url.split("youtu.be/")[1].split("?")[0];
-    return `https://www.youtube.com/embed/${id}`;
+  // Already embed (youtube or nocookie)
+  if (/^https:\/\/(www\.)?youtube(-nocookie)?\.com\/embed\//i.test(trimmed)) {
+    return trimmed;
   }
 
-  if (url.includes("watch?v=")) {
-    const id = url.split("watch?v=")[1].split("&")[0];
-    return `https://www.youtube.com/embed/${id}`;
+  // youtu.be/<id>
+  const short = trimmed.match(/^https?:\/\/youtu\.be\/([A-Za-z0-9_-]{6,})/i);
+  if (short) return `https://www.youtube.com/embed/${short[1]}`;
+
+  // youtube.com/watch?v=<id>
+  const watch = trimmed.match(/[?&]v=([A-Za-z0-9_-]{6,})/i);
+  if ((trimmed.includes("youtube.com/watch") || trimmed.includes("youtube.com/shorts")) && watch) {
+    return `https://www.youtube.com/embed/${watch[1]}`;
   }
 
-  return url;
+  return null;
 }
 
 // update resources text

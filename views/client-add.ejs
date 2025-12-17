@@ -1,166 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Add Client</title>
-  <link rel="stylesheet" href="/css/adminportal.css" />
-  <style>
-    .page-container {
-      max-width: 900px;
-      margin: 40px auto;
-      margin-top: 100px;
-      background: rgba(255, 255, 255, 0.6);
-      padding: 2rem;
-      padding-top: 7%;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-
-    .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-    }
-
-    .page-header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #23423f;
-    }
-
-    .btn-back {
-      background-color: #0b8;
-      color: #fff;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background 0.2s ease;
-    }
-
-    .btn-back:hover {
-      background-color: #097a66;
-    }
-
-    form {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem 1.5rem;
-    }
-
-    form label {
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    form input, form select {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 0.95rem;
-    }
-
-    .full-width {
-      grid-column: 1 / -1;
-    }
-
-    .form-footer {
-      grid-column: 1 / -1;
-      margin-top: 1rem;
-      text-align: right;
-    }
-
-    button[type="submit"] {
-      background-color: #23423f;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.25s ease;
-    }
-
-    button[type="submit"]:hover {
-      background-color: #2b5955;
-    }
-
-    .form-note {
-      grid-column: 1 / -1;
-      font-size: 0.85rem;
-      opacity: 0.7;
-      margin-top: 4px;
-    }
-
-    .alert-error {
-      grid-column: 1 / -1;
-      background: #ffecec;
-      border: 1px solid #f5c2c7;
-      color: #842029;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 1rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Sign-Up</title>
+    <link rel="stylesheet" href="/css/user-login.css">
 </head>
 
-<body>
-  <div class="page-container">
-    <div class="page-header">
-      <h1>Add Client</h1>
-      <a href="/adminportal" class="btn-back">← Back to Admin Portal</a>
-    </div>
-
-    <% if (formError) { %>
-      <div class="alert-error"><%= formError %></div>
-    <% } %>
-
-    <form action="/admin/clients" method="POST">
-      <div>
-        <label>First Name *</label>
-        <input name="firstname" required value="<%= formValues?.firstname || '' %>" />
-      </div>
-
-      <div>
-        <label>Last Name *</label>
-        <input name="lastname" required value="<%= formValues?.lastname || '' %>" />
-      </div>
-
-      <div>
-        <label>Phone Number *</label>
-        <input name="phonenumber" required value="<%= formValues?.phonenumber || '' %>" />
-      </div>
-
-      <div>
-        <label>Email *</label>
-        <input name="email" type="email" required value="<%= formValues?.email || '' %>" />
-      </div>
-
-      <div class="full-width">
-        <label>Closed Chakra *</label>
-        <select name="closedChakra" required>
-          <option value="" disabled <%= formValues?.closedChakra ? '' : 'selected' %>>Select one</option>
-          <option value="root"        <%= formValues?.closedChakra==='root'?'selected':'' %>>Root</option>
-          <option value="sacral"      <%= formValues?.closedChakra==='sacral'?'selected':'' %>>Sacral</option>
-          <option value="solarPlexus" <%= formValues?.closedChakra==='solarPlexus'?'selected':'' %>>Solar Plexus</option>
-          <option value="heart"       <%= formValues?.closedChakra==='heart'?'selected':'' %>>Heart</option>
-          <option value="throat"      <%= formValues?.closedChakra==='throat'?'selected':'' %>>Throat</option>
-          <option value="thirdEye"    <%= formValues?.closedChakra==='thirdEye'?'selected':'' %>>Third Eye</option>
-          <option value="crown"       <%= formValues?.closedChakra==='crown'?'selected':'' %>>Crown</option>
-        </select>
-      </div>
-
-      <div class="form-footer">
-        <button type="submit">Add Client</button>
-      </div>
-
-      <p class="form-note">* Required by current schema</p>
-    </form>
+<body class="signup-body">
+  <main class="signup-page-wrapper">
+  <!-- Admin Login Link (top-right corner) -->
+  <div class="admin-login">
+    <a href="/login">Admin Login</a>
   </div>
+
+  <!-- Sign-Up Card -->
+  <div class="signup-page">
+    <h1>User Sign-Up</h1>
+
+    <!-- Sign-Up Form -->
+    <form id="signup-form" action="/user-signup" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input
+          type="text"
+          id="fullname"
+          name="fullName"
+          autocomplete="name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <button class="signup_button" type="submit">Sign Up</button>
+
+      <div class="login-link">
+        <label>Already have an account? <a href="/user-login">Login</a></label>
+      </div>
+    </form>
+
+    <!-- Messages -->
+    <div id="msg" role="status" aria-live="polite">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p class="error"><%= error %></p>
+      <% } %>
+      <% if (typeof ok !== 'undefined' && ok) { %>
+        <p class="success">Saved! You can now proceed.</p>
+      <% } %>
+    </div>
+  </div>
+</main>
 </body>
 </html>
-

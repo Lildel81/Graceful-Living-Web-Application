@@ -8,6 +8,7 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
 const Client = require("../models/client");
+const Users = require("../models/userSchema");
 const CarouselSlide = require("../models/carouselSlide");
 const testimonials = require("../models/testimonialSchema");
 const ResourcesImage = require("../models/resourcesImage");
@@ -28,7 +29,7 @@ const {getMLConversionStats} = require('./conversionStatsController');
 function allowAdminEmbeds(res) {
   const extra = [
     "frame-ancestors 'self'",
-    "frame-src 'self' http://localhost:8080 https://localhost:8080 https://www.youtube.com https://www.youtube-nocookie.com",
+    "frame-src 'self' http://localhost:8080 https://localhost:8080 https://www.youtube.com https://www.youtube-nocookie.com https://youtu.be",
     "form-action 'self' http://localhost:8080 https://localhost:8080"
   ].join('; ');
 
@@ -739,14 +740,14 @@ const getResourcesManagementView = (req, res) => {
 
 const getClientManagementView = async (req, res, next) => {
   try {
-    const users = await Client
-      .find({}, 'firstname lastname phonenumber email closedChakra')
-      .sort({ firstname: 1, lastname: 1 })
+    const users = await Users
+      .find({}, 'fullName email')
+      .sort({ fullName: 1 })
       .lean();
 
     res.render('clientmanagement', {
       users,
-      userName: (req.user && (req.user.firstname || req.user.name)) || 'Admin',
+      userName: (req.user && (req.user.fullName || req.user.name)) || 'Admin',
     });
   } catch (err) {
     next(err);
