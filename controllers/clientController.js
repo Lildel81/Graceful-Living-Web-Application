@@ -41,7 +41,7 @@ function allowAdminEmbeds(res) {
 
   res.set('Content-Security-Policy', cleaned ? `${cleaned}; ${extra}` : extra);
   res.set('X-Frame-Options', 'SAMEORIGIN');
-}
+ }
 
 
 const MOCK_USERS = [

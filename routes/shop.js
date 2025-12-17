@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const csrf = require('../middleware/csrf');
-const upload = require('../middleware/upload');
+const { upload } = require('../middleware/upload');
 const shop = require('../controllers/shopController');
 
 const Stripe = require('stripe');

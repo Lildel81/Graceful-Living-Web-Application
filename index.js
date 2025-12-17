@@ -48,12 +48,14 @@ app.use(expressLayouts);
 
 // For application PDF endings
 app.use("/pdfs", express.static(path.join(__dirname, "public", "pdfs")));
-
+console.log("HELMET CONFIG LOADED FROM index.js @", __filename, "time:", new Date().toISOString());
 app.use(
   helmet({
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
+      
+
         // IMPORTANT: turn OFF automatic http→https upgrade in dev
         "upgrade-insecure-requests": null,
 
@@ -73,13 +75,17 @@ app.use(
           "'self'",
           "https://www.youtube.com",
           "https://www.youtube-nocookie.com",
-        ],
-
+          "https://youtube.com"],
         // forms can POST back to this origin
         "form-action": ["'self'", "https://checkout.stripe.com"],
 
         // images/fonts/styles you already had
-        "img-src": ["'self'", "data:", "https://i.ytimg.com"],
+        "img-src": [
+          "'self'",
+          "data:",
+          //"https://i.ytimg.com",
+          "https://gracefuliving-image-bucket.s3.us-east-1.amazonaws.com",
+        ],
         "style-src": [
           "'self'",
           "'unsafe-inline'",
@@ -95,6 +101,12 @@ app.use(
     crossOriginEmbedderPolicy: false,
   })
 );
+
+// app.use((req, res, next) => {
+//   const csp = res.getHeader("content-security-policy");
+//   if (csp) console.log("CSP NOW:", csp);
+//   next();
+// });
 
 //this is the webhook to use for stripe (our payment system)
 app.post("/checkout/webhook", bodyParser.raw({ type: "application/json" }));
@@ -171,6 +183,11 @@ app.use(["/admin/testimonials", "/admin/testimonials/*"], (req, res, next) => {
   } else {
     res.setHeader("Content-Security-Policy", fa);
   }
+  next();
+ });
+
+app.use(["/admin/testimonials", "/admin/testimonials/*"], (req, res, next) => {
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
   next();
 });
 

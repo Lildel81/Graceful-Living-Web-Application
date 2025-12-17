@@ -1,6 +1,8 @@
 const CarouselSlide = require('../models/carouselSlide');
-const fs = require('fs');
 const path = require('path');
+const putToS3 = require('../public/js/s3').putToS3;
+const { upload } = require('../middleware/upload');
+
 
 const getCarouselManagement = async(req, res) => {
     const slides = await CarouselSlide.find().sort({createdAt: -1});
@@ -13,107 +15,143 @@ const getEditSlideView = async(req, res) => {
     res.render('editslide', {csrfToken: req.csrfToken(), slide, layout: false});
 };
 
-const createSlide = async(req, res) => {
-    const {title, description, buttonText, buttonUrl, imageOption, imageUrl} = req.body;
 
-    let imagePath = imageUrl;
-    if(imageOption === 'upload' && req.file) {
-        imagePath = `/var/data/${req.file.filename}`;
-    }
-    else if (imageOption === 'url' && imageUrl){
-        imagePath = imageUrl;
-    }
-    else{
-        imagePath = 'images/default-fallback.jpg';
-    }
+function safeFilename(originalname) {
+  const ext = path.extname(originalname).toLowerCase();
+  const base = path.basename(originalname, ext).replace(/[^a-z0-9_\-]/gi, '_');
+  return `${Date.now()}_${base}${ext}`;
+}
 
-    await CarouselSlide.create ({
-        title,
-        description,
-        buttonText,
-        buttonUrl,
-        imageUrl: imagePath
+  const createSlide = async (req, res) => {
+  const { title, description, buttonText, buttonUrl, imageOption, imageUrl } = req.body;
+
+
+    const publicUrl = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    imagePath = publicUrl;
+
+
+
+  if (imageOption === 'upload' && req.file) {
+    const filename = safeFilename(req.file.originalname);
+    const key = `carousel/${filename}`;
+
+    await putToS3({
+      key,
+      buffer: req.file.buffer,
+      contentType: req.file.mimetype,
     });
 
-    res.redirect('/adminportal/carouselmanagement');
+    // store as "s3:<key>" so MongoDB can hold either URL or s3 object reference
+    imagePath = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  } else if (imageOption === 'url' && imageUrl) {
+    imagePath = imageUrl;
+  } else {
+    imagePath = 'images/default-fallback.jpg';
+  }
+
+  await CarouselSlide.create({
+    title,
+    description,
+    buttonText,
+    buttonUrl,
+    imageUrl: imagePath,
+  });
+
+  res.redirect('/adminportal/carouselmanagement');
 };
 
-const deleteSlide = async(req, res) => {
-    const id = req.params.id;
-    /*
-    Look up the slide first.
-    If its imageUrl starts with /var/data/ and isn't the default image, 
-        compute the absolute path under public/ and fs.unlink it.
-    Then delete the slide doc.
-    Errors are logged but won’t block the redirect.
-    This only deletes files that were uploaded to public/var/data/. 
-    External URLs and the default fallback are ignored.
-    */
-    try {
-        const slide = await CarouselSlide.findById(id);
-        if (slide && slide.imageUrl) {
-            // Only delete local uploaded files (not external URLs or default image)
-            const isLocalUpload = slide.imageUrl.startsWith('/var/data/');
-            const isDefault = slide.imageUrl.includes('default-fallback');
-            if (isLocalUpload && !isDefault) {
-                const absolutePath = path.join(__dirname, '..', 'public', slide.imageUrl.replace(/^\//, ''));
-                try {
-                    await fs.promises.unlink(absolutePath);
-                } catch (err) {
-                    if (err && err.code !== 'ENOENT') {
-                        console.error('Failed to remove slide image:', absolutePath, err.message);
-                    }
-                }
-            }
-        }
-        await CarouselSlide.findByIdAndDelete(id);
-    } catch (err) {
-        console.error('Error deleting slide:', err.message);
-    }
-    res.redirect('/adminportal/carouselmanagement');
-};
 
-const editSlide = async (req, res) => {
-    const { title, description, buttonText, buttonUrl, imageOption, imageUrl } = req.body;
+const { deleteFromS3, isS3Image, s3KeyFromImageUrl } = require("../public/js/s3");
 
-    try {
-      const existing = await CarouselSlide.findById(req.params.id);
-      const hadLocalUpload = existing && existing.imageUrl && existing.imageUrl.startsWith('/var/data/') && !existing.imageUrl.includes('default-fallback');
-      // let imagePath = existing.imageUrl; // Keep existing image by default
-      let imagePath = existing ? existing.imageUrl : 'images/default-fallback.jpg'; // Keep the exising image by default, replace with default image if there's no current one 
+const deleteSlide = async (req, res) => {
+  const id = req.params.id;
 
-      if (imageOption === 'upload' && req.file) {
-        // User uploaded a new image
-        imagePath = `/var/data/${req.file.filename}`;
-        // Delete old uploaded file if it exists
-        if (hadLocalUpload) {
-          const oldAbs = path.join(__dirname, '..', 'public', existing.imageUrl.replace(/^\//, ''));
-          try { await fs.promises.unlink(oldAbs); } catch (err) { if (err.code !== 'ENOENT') console.error('Failed to remove old slide image:', oldAbs, err.message); }
-        }
-      } else if (imageOption === 'url' && imageUrl) {
-        // User provided a new URL
-        imagePath = imageUrl;
-        // Delete old uploaded file if switching from upload to URL
-        if (hadLocalUpload) {
-          const oldAbs = path.join(__dirname, '..', 'public', existing.imageUrl.replace(/^\//, ''));
-          try { await fs.promises.unlink(oldAbs); } catch (err) { if (err.code !== 'ENOENT') console.error('Failed to remove old slide image:', oldAbs, err.message); }
+  try {
+    const slide = await CarouselSlide.findById(id);
+
+    if (slide && slide.imageUrl) {
+      const isDefault = slide.imageUrl.includes('default-fallback');
+
+      // If it was an uploaded S3 image, delete it
+      if (isS3Image(slide.imageUrl) && !isDefault) {
+        const key = s3KeyFromImageUrl(slide.imageUrl);
+        try {
+          await deleteFromS3(key);
+        } catch (err) {
+          console.error('Failed to remove slide image from S3:', key, err.message);
         }
       }
-      // If imageOption === 'keep' or not specified, imagePath remains as existing.imageUrl
-
-      await CarouselSlide.findByIdAndUpdate(req.params.id, {
-        title,
-        description,
-        buttonText,
-        buttonUrl,
-        imageUrl: imagePath
-      });
-    } catch (err) {
-      console.error('Error updating slide:', err.message);
     }
 
-    res.redirect('/adminportal/carouselmanagement');
-  };
+    await CarouselSlide.findByIdAndDelete(id);
+  } catch (err) {
+    console.error('Error deleting slide:', err.message);
+  }
+
+  res.redirect('/adminportal/carouselmanagement');
+};
+
+
+//const {isS3Image, s3KeyFromImageUrl } = require("../utils/s3");
+
+const editSlide = async (req, res) => {
+  const { title, description, buttonText, buttonUrl, imageOption, imageUrl } = req.body;
+
+  try {
+    const existing = await CarouselSlide.findById(req.params.id);
+
+    const hadS3Upload =
+      existing &&
+      existing.imageUrl &&
+      isS3Image(existing.imageUrl) &&
+      !existing.imageUrl.includes('default-fallback');
+
+    let imagePath = existing ? existing.imageUrl : 'images/default-fallback.jpg';
+
+    if (imageOption === 'upload' && req.file) {
+      // upload new
+      const filename = safeFilename(req.file.originalname);
+      const key = `carousel/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype,
+      });
+
+    imagePath = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+
+      // delete old uploaded file if it exists
+      if (hadS3Upload) {
+        const oldKey = s3KeyFromImageUrl(existing.imageUrl);
+        try { await deleteFromS3(oldKey); }
+        catch (err) { console.error('Failed to remove old slide image from S3:', oldKey, err.message); }
+      }
+    } else if (imageOption === 'url' && imageUrl) {
+      imagePath = imageUrl;
+
+      // if switching from upload to URL, delete old upload
+      if (hadS3Upload) {
+        const oldKey = s3KeyFromImageUrl(existing.imageUrl);
+        try { await deleteFromS3(oldKey); }
+        catch (err) { console.error('Failed to remove old slide image from S3:', oldKey, err.message); }
+      }
+    }
+
+    await CarouselSlide.findByIdAndUpdate(req.params.id, {
+      title,
+      description,
+      buttonText,
+      buttonUrl,
+      imageUrl: imagePath,
+    });
+  } catch (err) {
+    console.error('Error updating slide:', err.message);
+  }
+
+  res.redirect('/adminportal/carouselmanagement');
+};
+
 
 module.exports = {
     getCarouselManagement,

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // multer upload middleware
-const upload = require("../middleware/upload.js");
+const { upload } = require('../middleware/upload')
 
 // controller
 const aboutUsController = require("../controllers/aboutUsController");

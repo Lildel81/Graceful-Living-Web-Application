@@ -2,8 +2,26 @@
 const ResourcesImage = require("../models/resourcesImage");
 const ResourcesText = require("../models/resourcesText");
 
-const fs = require("fs");
-const path = require("path");
+const { putToS3, deleteFromS3 } = require("../public/js/s3");  
+const { safeFilename } = require("../middleware/upload");  
+
+function publicS3Url(key) {
+  return `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+}
+
+function keyFromPublicS3Url(url) {
+  // expects: https://<bucket>.s3.<region>.amazonaws.com/<key>
+  try {
+    const u = new URL(url);
+    return u.pathname.replace(/^\//, "");
+  } catch {
+    return null;
+  }
+}
+
+function isOurS3Url(url) {
+  return typeof url === "string" && url.includes(".amazonaws.com/");
+}
 
 /* ===========================================================
     GET FULL RESOURCES MANAGEMENT PAGE
@@ -121,9 +139,18 @@ exports.createResourcesImage = async (req, res) => {
 
     let finalImageUrl = imageUrl;
 
-    // uploaded file
+    // uploaded file -> S3
     if (imageOption === "upload" && req.file) {
-      finalImageUrl = `/var/data/${req.file.filename}`;
+      const filename = safeFilename(req.file.originalname);
+      const key = `resources/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype
+      });
+
+      finalImageUrl = publicS3Url(key);
     }
 
     // fallback if nothing provided
@@ -175,15 +202,36 @@ exports.updateResourcesImage = async (req, res) => {
 
     // update image based on admin choice
     if (imageOption === "upload" && req.file) {
-      // delete old image file if needed
-      if (resource.imageUrl?.startsWith("/var/data/")) {
-        const oldImg = path.join(__dirname, "..", "public", resource.imageUrl.replace(/^\//, ""));
-        fs.unlink(oldImg, err => {
-          if (err) console.warn("Could not delete old resource image:", err);
-        });
+      // delete old S3 object if it was ours
+      if (isOurS3Url(resource.imageUrl)) {
+        const oldKey = keyFromPublicS3Url(resource.imageUrl);
+        if (oldKey) {
+          try { await deleteFromS3(oldKey); }
+          catch (err) { console.warn("Could not delete old resource image from S3:", oldKey, err.message); }
+        }
       }
-      resource.imageUrl = `/var/data/${req.file.filename}`;
+
+      // upload new
+      const filename = safeFilename(req.file.originalname);
+      const key = `resources/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype
+      });
+
+      resource.imageUrl = publicS3Url(key);
+
     } else if (imageOption === "url" && imageUrl) {
+      // switching to external URL -> delete old S3 object if needed
+      if (isOurS3Url(resource.imageUrl)) {
+        const oldKey = keyFromPublicS3Url(resource.imageUrl);
+        if (oldKey) {
+          try { await deleteFromS3(oldKey); }
+          catch (err) { console.warn("Could not delete old resource image from S3:", oldKey, err.message); }
+        }
+      }
       resource.imageUrl = imageUrl;
     }
 
@@ -201,12 +249,13 @@ exports.deleteResourcesImage = async (req, res) => {
     const resource = await ResourcesImage.findById(req.params.id);
     if (!resource) return res.status(404).send("Resource not found");
 
-    // delete local file if it was uploaded
-    if (resource.imageUrl?.startsWith("/var/data/")) {
-      const imgPath = path.join(__dirname, "..", "public", resource.imageUrl.replace(/^\//, ""));
-      fs.unlink(imgPath, err => {
-        if (err) console.warn("Could not delete resource image:", err);
-      });
+    // delete S3 object if it was ours
+    if (isOurS3Url(resource.imageUrl)) {
+      const key = keyFromPublicS3Url(resource.imageUrl);
+      if (key) {
+        try { await deleteFromS3(key); }
+        catch (err) { console.warn("Could not delete resource image from S3:", key, err.message); }
+      }
     }
 
     await ResourcesImage.findByIdAndDelete(req.params.id);

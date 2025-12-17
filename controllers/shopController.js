@@ -2,6 +2,9 @@ const Joi = require('joi');
 const sanitizeHtml = require('sanitize-html');
 const Product = require('../models/product');
 
+const { putToS3, deleteFromS3 } = require('../public/js/s3');        
+const { safeFilename } = require('../middleware/upload');       
+
 const productSchema = Joi.object({
   title: Joi.string().min(2).max(200).required(),
   slug: Joi.string().min(2).max(200).required(),
@@ -10,28 +13,6 @@ const productSchema = Joi.object({
   stock: Joi.number().integer().min(0).default(0),
   active: Joi.boolean().default(true)
 });
-
-exports.listProducts = async (req, res, next) => {
-  try {
-    const products = await Product.find({ active: true }).lean();
-    res.render('shop', { title: 'Shop', products });
-  } catch (e) { next(e); }
-};
-
-exports.showProduct = async (req, res, next) => {
-  try {
-    const product = await Product.findOne({ slug: req.params.slug, active: true }).lean();
-    if (!product) return res.status(404).render('404', { title: 'Not Found' });
-    res.render('shop-show', { title: product.title, product });
-  } catch (e) { next(e); }
-};
-
-// --- Admin ---
-exports.adminForm = async (req, res, next) => {
-  try {
-    res.render('shop-form', { title: 'New Product', product: {} });
-  } catch (e) { next(e); }
-};
 
 function toSlug(s = '') {
   return String(s)
@@ -51,8 +32,53 @@ async function ensureUniqueSlug(base) {
   return slug;
 }
 
-// controllers/shopController.js (adminCreate)
-// controllers/shopController.js (inside adminCreate)
+// --- S3 helpers ---
+function publicS3Url(key) {
+  return `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+}
+
+function keyFromPublicS3Url(url) {
+  // expects: https://<bucket>.s3.<region>.amazonaws.com/<key>
+  try {
+    const u = new URL(url);
+    return u.pathname.replace(/^\//, '');
+  } catch {
+    return null;
+  }
+}
+
+function isOurS3Url(url) {
+  return typeof url === 'string' && url.includes('.amazonaws.com/');
+}
+
+// =========================
+// Public shop pages
+// =========================
+exports.listProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find({ active: true }).lean();
+    res.render('shop', { title: 'Shop', products });
+  } catch (e) { next(e); }
+};
+
+exports.showProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug, active: true }).lean();
+    if (!product) return res.status(404).render('404', { title: 'Not Found' });
+    res.render('shop-show', { title: product.title, product });
+  } catch (e) { next(e); }
+};
+
+// =========================
+// Admin
+// =========================
+exports.adminForm = async (req, res, next) => {
+  try {
+    res.render('shop-form', { title: 'New Product', product: {} });
+  } catch (e) { next(e); }
+};
+
+// Create product (with optional image upload -> S3)
 exports.adminCreate = async (req, res, next) => {
   try {
     let { title, description, priceCents, priceDollars, stock /* no 'active' from body */ } = req.body;
@@ -71,7 +97,7 @@ exports.adminCreate = async (req, res, next) => {
       description,
       priceCents: Number(priceCents),
       stock: (stock === '' || typeof stock === 'undefined') ? 0 : Number(stock),
-      // do not include 'active' here -> Joi default(true) will apply
+      // Joi default(true) applies for active
     };
 
     const { value, error } = productSchema.validate(payload, { abortEarly: false });
@@ -84,11 +110,26 @@ exports.adminCreate = async (req, res, next) => {
       });
     }
 
+    // Upload image to S3 if provided
+    let imagePath = '';
+    if (req.file) {
+      const filename = safeFilename(req.file.originalname);
+      const key = `products/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype,
+      });
+
+      imagePath = publicS3Url(key);
+    }
+
     const product = new Product({
       ...value,
       currency: 'usd',
       description: sanitizeHtml(value.description || ''),
-      imagePath: req.file ? `/var/data/${req.file.filename}` : ''
+      imagePath
     });
 
     await product.save();
@@ -102,9 +143,6 @@ exports.adminCreate = async (req, res, next) => {
     });
   }
 };
-
-const path = require('path');
-const fs = require('fs');
 
 // List all products (including inactive) for admin
 exports.adminList = async (req, res, next) => {
@@ -129,7 +167,6 @@ exports.adminUpdate = async (req, res, next) => {
     const p = await Product.findById(req.params.id);
     if (!p) return res.status(404).render('404', { title: 'Not Found' });
 
-    // Price: accept either cents or dollars (dollars wins if provided)
     let { title, description, priceCents, priceDollars, stock, active, updateSlug } = req.body;
 
     if (!priceCents && priceDollars) {
@@ -146,23 +183,20 @@ exports.adminUpdate = async (req, res, next) => {
       active: typeof active === 'string' ? active === 'on' : !!active,
     };
 
-    // If user checked "Update URL from title", regenerate slug
     if (updateSlug === 'on' && payload.title) {
       payload.slug = await ensureUniqueSlug(toSlug(payload.title));
     }
 
-    // Validate with Joi
     const { value, error } = productSchema.validate(payload, { abortEarly: false });
     if (error) {
       const msg = error.details?.map(d => d.message).join('; ') || 'Validation error';
       return res.status(400).render('shop-edit', {
         title: `Edit: ${p.title}`,
-        product: { ...p.toObject?.() ?? p, ...payload },
+        product: { ...(p.toObject?.() ?? p), ...payload },
         error: msg
       });
     }
 
-    // Apply updates (do NOT change imagePath here)
     p.title = value.title;
     p.slug = value.slug;
     p.description = sanitizeHtml(value.description || '');
@@ -182,22 +216,22 @@ exports.adminUpdate = async (req, res, next) => {
   }
 };
 
-// Delete product + image
+// Delete product + image (delete S3 object if it was ours)
 exports.adminDelete = async (req, res, next) => {
   try {
     const doc = await Product.findByIdAndDelete(req.params.id).lean();
-    if (doc && doc.imagePath) {
-      // Only delete if inside /public/var/data
-      const uploadRoot = path.join(__dirname, '..', 'public', 'images', 'uploads');
-      const abs = path.join(__dirname, '..', 'public', doc.imagePath.replace(/^\//, ''));
-      if (abs.startsWith(uploadRoot)) {
-        fs.unlink(abs, (err) => {
-          if (err && err.code !== 'ENOENT') {
-            console.warn('[SHOP][DELETE] Could not remove image:', abs, err.message);
-          }
-        });
+
+    if (doc && doc.imagePath && isOurS3Url(doc.imagePath)) {
+      const key = keyFromPublicS3Url(doc.imagePath);
+      if (key) {
+        try {
+          await deleteFromS3(key);
+        } catch (err) {
+          console.warn('[SHOP][DELETE] Could not remove S3 image:', key, err.message);
+        }
       }
     }
+
     return res.redirect('/shop/admin/list');
   } catch (e) { next(e); }
 };

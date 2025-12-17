@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // upload is the multer 
-const upload = require('../middleware/upload.js');
+const { upload } = require('../middleware/upload')
 
 // csrf 
 const csrf = require('csurf');

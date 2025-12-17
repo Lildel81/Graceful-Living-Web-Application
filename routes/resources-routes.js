@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // upload is the multer 
-const upload = require('../middleware/upload.js');
+const { upload } = require('../middleware/upload');
 const resourcesController = require('../controllers/resourcesController');
 
 // debug middleware to log all requests hitting these routes

@@ -2,8 +2,26 @@
 const AboutUsIntro = require("../models/aboutUsIntroSchema");
 const AboutUsContent = require("../models/aboutUsContentSchema");
 
-const fs = require("fs");
-const path = require("path");
+const { putToS3, deleteFromS3 } = require("../public/js/s3");   
+const { safeFilename } = require("../middleware/upload");       
+
+function publicS3Url(key) {
+  return `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+}
+
+function keyFromPublicS3Url(url) {
+  // expects: https://<bucket>.s3.<region>.amazonaws.com/<key>
+  try {
+    const u = new URL(url);
+    return u.pathname.replace(/^\//, "");
+  } catch {
+    return null;
+  }
+}
+
+function isOurS3Url(url) {
+  return typeof url === "string" && url.includes(".amazonaws.com/");
+}
 
 // get full about us management page
 exports.getAboutUsManagement = async (req, res) => {
@@ -23,16 +41,27 @@ exports.getAboutUsManagement = async (req, res) => {
   }
 };
 
-// ABOUT US INTRO 
+// ABOUT US INTRO
 
-// create 
+// create
 exports.createIntro = async (req, res) => {
   try {
     const { title, description } = req.body;
 
-    const headshotUrl = req.file
-      ? `/var/data/${req.file.filename}`
-      : null;
+    let headshotUrl = null;
+
+    if (req.file) {
+      const filename = safeFilename(req.file.originalname);
+      const key = `about/headshots/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype
+      });
+
+      headshotUrl = publicS3Url(key);
+    }
 
     await new AboutUsIntro({
       title,
@@ -47,7 +76,7 @@ exports.createIntro = async (req, res) => {
   }
 };
 
-// edit 
+// edit
 exports.editIntro = async (req, res) => {
   try {
     const intro = await AboutUsIntro.findById(req.params.id);
@@ -64,7 +93,7 @@ exports.editIntro = async (req, res) => {
   }
 };
 
-// update 
+// update
 exports.updateIntro = async (req, res) => {
   try {
     const intro = await AboutUsIntro.findById(req.params.id);
@@ -74,19 +103,32 @@ exports.updateIntro = async (req, res) => {
 
     // replace headshot if new one uploaded
     if (req.file) {
-      if (intro.headshotUrl) {
-        const oldImg = path.join(__dirname, "..", "public", intro.headshotUrl.replace(/^\//, ""));
-        fs.unlink(oldImg, (err) => {
-          if (err) console.warn("Could not delete old headshot:", err);
-        });
+      // delete old from S3 (only if it’s one of ours)
+      if (intro.headshotUrl && isOurS3Url(intro.headshotUrl)) {
+        const oldKey = keyFromPublicS3Url(intro.headshotUrl);
+        if (oldKey) {
+          try { await deleteFromS3(oldKey); }
+          catch (err) { console.warn("Could not delete old headshot from S3:", oldKey, err.message); }
+        }
       }
-      intro.headshotUrl = `/var/data/${req.file.filename}`;
+
+      // upload new
+      const filename = safeFilename(req.file.originalname);
+      const key = `about/headshots/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype
+      });
+
+      intro.headshotUrl = publicS3Url(key);
     }
 
     intro.title = title;
     intro.description = description;
-    await intro.save();
 
+    await intro.save();
     res.redirect("/adminportal/aboutusmanagement");
   } catch (err) {
     console.error("Error updating intro:", err);
@@ -100,16 +142,16 @@ exports.deleteIntro = async (req, res) => {
     const intro = await AboutUsIntro.findById(req.params.id);
     if (!intro) return res.status(404).send("Intro not found");
 
-    // delete image file
-    if (intro.headshotUrl) {
-      const imgPath = path.join(__dirname, "..", "public", intro.headshotUrl.replace(/^\//, ""));
-      fs.unlink(imgPath, (err) => {
-        if (err) console.warn("Could not delete headshot:", err);
-      });
+    // delete from S3 if present
+    if (intro.headshotUrl && isOurS3Url(intro.headshotUrl)) {
+      const key = keyFromPublicS3Url(intro.headshotUrl);
+      if (key) {
+        try { await deleteFromS3(key); }
+        catch (err) { console.warn("Could not delete headshot from S3:", key, err.message); }
+      }
     }
 
     await AboutUsIntro.findByIdAndDelete(req.params.id);
-
     res.redirect("/adminportal/aboutusmanagement");
   } catch (err) {
     console.error("Error deleting intro:", err);
@@ -117,17 +159,27 @@ exports.deleteIntro = async (req, res) => {
   }
 };
 
+// ABOUT US CONTENT
 
-//  ABOUT US CONTENT
-
-// create 
+// create
 exports.createContent = async (req, res) => {
   try {
     const { title, description } = req.body;
 
-    const imageUrl = req.file
-      ? `/var/data/${req.file.filename}`
-      : null;
+    let imageUrl = null;
+
+    if (req.file) {
+      const filename = safeFilename(req.file.originalname);
+      const key = `about/content/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype
+      });
+
+      imageUrl = publicS3Url(key);
+    }
 
     await new AboutUsContent({
       title,
@@ -142,7 +194,7 @@ exports.createContent = async (req, res) => {
   }
 };
 
-// edit 
+// edit
 exports.editContent = async (req, res) => {
   try {
     const content = await AboutUsContent.findById(req.params.id);
@@ -159,7 +211,7 @@ exports.editContent = async (req, res) => {
   }
 };
 
-// update 
+// update
 exports.updateContent = async (req, res) => {
   try {
     const content = await AboutUsContent.findById(req.params.id);
@@ -169,20 +221,32 @@ exports.updateContent = async (req, res) => {
 
     // new image uploaded
     if (req.file) {
-      if (content.imageUrl) {
-        const oldPath = path.join(__dirname, "..", "public", content.imageUrl.replace(/^\//, ""));
-        fs.unlink(oldPath, (err) => {
-          if (err) console.warn("Could not delete old image:", err);
-        });
+      // delete old from S3
+      if (content.imageUrl && isOurS3Url(content.imageUrl)) {
+        const oldKey = keyFromPublicS3Url(content.imageUrl);
+        if (oldKey) {
+          try { await deleteFromS3(oldKey); }
+          catch (err) { console.warn("Could not delete old image from S3:", oldKey, err.message); }
+        }
       }
-      content.imageUrl = `/var/data/${req.file.filename}`;
+
+      // upload new
+      const filename = safeFilename(req.file.originalname);
+      const key = `about/content/${filename}`;
+
+      await putToS3({
+        key,
+        buffer: req.file.buffer,
+        contentType: req.file.mimetype
+      });
+
+      content.imageUrl = publicS3Url(key);
     }
 
     content.title = title;
     content.description = description;
 
     await content.save();
-
     res.redirect("/adminportal/aboutusmanagement");
   } catch (err) {
     console.error("Error updating content:", err);
@@ -190,18 +254,18 @@ exports.updateContent = async (req, res) => {
   }
 };
 
-// delete 
+// delete
 exports.deleteContent = async (req, res) => {
   try {
     const content = await AboutUsContent.findById(req.params.id);
     if (!content) return res.status(404).send("Content not found");
 
-    if (content.imageUrl) {
-      // const imgPath = path.join(__dirname, "..", content.imageUrl);
-      const imgPath = path.join(__dirname, "..", "public", content.imageUrl.replace(/^\//, ""));
-      fs.unlink(imgPath, (err) => {
-        if (err) console.warn("Could not delete image:", err);
-      });
+    if (content.imageUrl && isOurS3Url(content.imageUrl)) {
+      const key = keyFromPublicS3Url(content.imageUrl);
+      if (key) {
+        try { await deleteFromS3(key); }
+        catch (err) { console.warn("Could not delete image from S3:", key, err.message); }
+      }
     }
 
     await AboutUsContent.findByIdAndDelete(req.params.id);
