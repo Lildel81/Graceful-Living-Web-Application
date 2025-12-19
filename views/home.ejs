@@ -1,5 +1,4 @@
-<!--const path = require('path');
-app.use(express.static(path.join(__dirname, 'public'))); -->
+
 <!--/*------------------Carousel section-------------------------------*/-->
 <section aria-label="Newest Photos">
   <div class="carousel" data-carousel>
@@ -38,10 +37,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
     </ul>
     <!--main slider end-->
 
-     <!--Radio button start-->
-     <!-- <input type="radio" name="radio-btn" id="radio1">
-     <input type="radio" name="radio-btn" id="radio2">
-     <input type="radio" name="radio-btn" id="radio3"> -->
+    
 
    <% slides.forEach((slide, i) => { %>
       <input type="radio" name="radio-btn" id="radio<%= i+1 %>" <%= i === 0 ? 'checked' : '' %>>
@@ -59,9 +55,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 
     <!--Mannual navigation start-->
     <div class="navigation-mannual">
-      <!-- <label for="radio1" class="mannual-btn"></label>
-      <label for="radio2" class="mannual-btn"></label>
-      <label for="radio3" class="mannual-btn"></label> -->
+      
 
       <% slides.forEach((slide, i) => { %>
         <label for="radio<%= i+1 %>" class="mannual-btn"></label>
@@ -74,10 +68,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
 <!--/*------------------------Carousel Section End------------------------------------*/-->
 <div class="home-container">
 
- <!-- OLD HOME QUOTE  <div class="quote-container">
-    <h1>"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</h1>
-    <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
-  </div>-->
+ 
 
   <!--Editable Home Quote-->
   <%
@@ -91,23 +82,7 @@ app.use(express.static(path.join(__dirname, 'public'))); -->
     <a href="/assessment"><button id="quiz-button">Take our quiz</button></a>
   </div>
 
-  <!-- <div>
-    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #003366;">Hi!</h2>
-    <p style="font-size: 18px; margin-bottom: 20px; color: #003366;">Let me introduce myself to you.</p>
-  </div>
-  <div class="video-container">
-    <iframe 
-      width="560" 
-      height="315" 
-      src="https://www.youtube.com/embed/LKa0ABbkGrQ?si=ICvSx2P8WWPOMyz7" 
-      title="YouTube video player" 
-      frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-      referrerpolicy="strict-origin-when-cross-origin" 
-      allowfullscreen>
-    </iframe>
-
-  </div> -->
+  
   
   <link rel="stylesheet" href="/css/home-intro.css">
 

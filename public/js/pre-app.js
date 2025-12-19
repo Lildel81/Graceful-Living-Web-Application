@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const q2Fieldset = document.getElementById("q2-fieldset");
   const q3Fieldset = document.getElementById("q3-fieldset");
   const burnoutRadios = document.querySelectorAll('input[name="burnout"]');
+  const q4Fieldset = document.getElementById("q4-fieldset");
 
   function getSelectedValue(name) {
     const selected = document.querySelector(`input[name="${name}"]:checked`);
@@ -39,39 +40,113 @@ document.addEventListener("DOMContentLoaded", function () {
     return { hasAnySelection, symptomsYes: hasOtherSymptoms };
   }
 
+function getMethodState() {
+  const selectedMethod = Array.from(
+    document.querySelectorAll('input[name="method"]:checked')
+  ).map((cb) => cb.value);
+
+  const methodYes = selectedMethod.length > 0;
+  return { methodYes };
+}
+
   // Display certain questions depending on logic 
+  // function updateQuestionVisibility() {
+  //   const burnout = getSelectedValue("burnout");
+  //   const healthcare = getSelectedValue("healthcare");
+  //   const { hasAnySelection, symptomsYes } = getSymptomsState();
+  //   const { methodYes } = getMethodState();
+
+  //   // hide Q2 & Q3
+  //   if (!burnout) {
+  //     q2Fieldset.classList.add("hidden");
+  //     q3Fieldset.classList.add("hidden");
+  //     q4Fieldset.classList.add("hidden");
+  //     return;
+  //   }
+
+  //   // Skip Q2, go straight to Q3
+  //   if (burnout === "no") {
+  //     q2Fieldset.classList.add("hidden");
+  //     q3Fieldset.classList.remove("hidden");
+  //     if (healthcare === "yes") {
+  //       q4Fieldset.classList.remove("hidden");
+  //     } else {
+  //       q4Fieldset.classList.add("hidden");
+  //     }
+  //     return;
+  //   }
+
+  //   if (burnout === "no" && healthcare === "yes"){
+  //     q4Fieldset.classList.remove("hidden");
+    
+  //   }
+
+  //   if (burnout === "yes"){
+  //    // q2Fieldset.classList.remove("hidden");
+  //     q3Fieldset.classList.remove("hidden");
+  //    if (healthcare === "yes"){
+  //     q2Fieldset.classList.remove("hidden");
+  //     q4Fieldset.classList.remove("hidden");
+
+  //   } else {
+  //     q2Fieldset.classList.remove("hidden");
+  //   }
+  // }
+
+  //   if (!hasAnySelection) {
+  //     // Haven't answered Q2 yet dont show q3
+  //     q3Fieldset.classList.add("hidden");
+  //   } else if (symptomsYes) {
+  //     // Any symptom checked go to app
+  //     q3Fieldset.classList.add("hidden");
+  //   } else {
+  //     // no symptoms q3
+  //     q3Fieldset.classList.remove("hidden");
+  //   }
+  // }
+
   function updateQuestionVisibility() {
-    const burnout = getSelectedValue("burnout");
-    const { hasAnySelection, symptomsYes } = getSymptomsState();
+  const burnout = getSelectedValue("burnout");
+  const healthcare = getSelectedValue("healthcare");
+  const { hasAnySelection, symptomsYes } = getSymptomsState();
 
-    // hide Q2 & Q3
-    if (!burnout) {
-      q2Fieldset.classList.add("hidden");
-      q3Fieldset.classList.add("hidden");
-      return;
+  // Default: hide everything except Q1
+  q2Fieldset.classList.add("hidden");
+  q3Fieldset.classList.add("hidden");
+  q4Fieldset.classList.add("hidden");
+
+  // Nothing selected yet
+  if (!burnout) return;
+
+  // Burnout = NO  -> show healthcare, then methods if healthcare yes
+  if (burnout === "no") {
+    q3Fieldset.classList.remove("hidden");
+
+    if (healthcare === "yes") {
+      q4Fieldset.classList.remove("hidden");
     }
+    return;
+  }
 
-    // Skip Q2, go straight to Q3
-    if (burnout === "no") {
-      q2Fieldset.classList.add("hidden");
-      q3Fieldset.classList.remove("hidden");
-      return;
-    }
+  // Burnout = YES -> ask healthcare FIRST
+  if (burnout === "yes") {
+    q3Fieldset.classList.remove("hidden");
 
-    // burnout === "yes"
+    // Don't show symptoms until healthcare is answered
+    if (!healthcare) return;
+
+    // After healthcare answered, show symptoms
     q2Fieldset.classList.remove("hidden");
 
-    if (!hasAnySelection) {
-      // Haven't answered Q2 yet dont show q3
-      q3Fieldset.classList.add("hidden");
-    } else if (symptomsYes) {
-      // Any symptom checked go to app
-      q3Fieldset.classList.add("hidden");
-    } else {
-      // no symptoms q3
-      q3Fieldset.classList.remove("hidden");
+    // If you ONLY want methods for healthcare=yes, keep this:
+    if (healthcare === "yes") {
+      q4Fieldset.classList.remove("hidden");
     }
+
+    return;
   }
+}
+
 
   symptomCheckboxes.forEach((cb) => {
     cb.addEventListener("change", () => {
@@ -92,6 +167,11 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", updateQuestionVisibility);
   });
 
+  document.querySelectorAll('input[name="healthcare"]').forEach(r =>
+  r.addEventListener("change", updateQuestionVisibility)
+);
+
+
   updateQuestionVisibility();// first load 
 
   form.addEventListener("submit", function (e) {
@@ -104,8 +184,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedSymptoms = Array.from(
       document.querySelectorAll('input[name="symptoms"]:checked')
     ).map((cb) => cb.value);
+    
+const selectedMethod = Array.from(
+  document.querySelectorAll('input[name="method"]:checked')
+).map((cb) => cb.value);
 
     const hasAnySelection = selectedSymptoms.length > 0;
+    const methodYes = selectedMethod.length > 0;
     const hasNone = selectedSymptoms.includes("none");
     const hasOtherSymptoms = selectedSymptoms.some((v) => v !== "none");
 
@@ -120,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // show Q2 if Q1 is yes
     if (burnout === "yes" && !hasAnySelection) {
-      alert("Please select at least one option for question 2.");
+      alert("Please select at least one symptom of burnout.");
       return;
     }
 
@@ -137,20 +222,33 @@ document.addEventListener("DOMContentLoaded", function () {
     form.style.display = "none";
 
     
-    if (burnout === "yes" && symptomsYes) {
-      // Ending 1: send to application
+    // if ((burnout === "yes" && symptomsYes) || (burnout === "no" && healthcare == 'yes' && methodYes) || (burnout === "yes" && healthcare == 'yes' && methodYes)) {
+    //   // Ending 1: send to application
+    //   ending1.style.display = "block";
+    //   // reveal the header paragraph
+    //   document.getElementById("hero-description").style.display = "block";
+    // } else {
+    //   // No burnout OR burnout but no listed symptoms 
+    //   if (healthcare === "yes") {
+    //     // Ending 3: healthcare PDF
+    //     ending3.style.display = "block";
+    //   } else {
+    //     // Ending 2: general PDF
+    //     ending2.style.display = "block";
+    //   }
+    // }
+
+    if (burnout == "yes" && symptomsYes || methodYes){
       ending1.style.display = "block";
-      // reveal the header paragraph
-      document.getElementById("hero-description").style.display = "block";
+    }
+    else if (burnout == "no" && healthcare == 'yes' && methodYes){
+      ending1.style.display = "block";
+    } else if (burnout == "yes" && healthcare == 'yes' && methodYes){
+      ending1.style.display = "block";
+    }else if(burnout == "no" && healthcare == 'no'){
+      ending3.style.display = "block";
     } else {
-      // No burnout OR burnout but no listed symptoms 
-      if (healthcare === "yes") {
-        // Ending 3: healthcare PDF
-        ending3.style.display = "block";
-      } else {
-        // Ending 2: general PDF
-        ending2.style.display = "block";
-      }
+      ending2.style.display = "block";
     }
   });
 });

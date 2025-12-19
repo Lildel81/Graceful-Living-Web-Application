@@ -109,9 +109,17 @@ body.pre-app { padding-top: var(--nav-height); }
     margin: 0.5rem 0 0.5rem 0;
 }
 
+.pre-app .healingMethods {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.5rem 0 0.5rem 0;
+}
+
 .pre-app .symptoms-list li {
     margin: .3rem 0;
 }
+
+.pre-app .healingMethods li
 
 /* Required asterisk */
 .required {

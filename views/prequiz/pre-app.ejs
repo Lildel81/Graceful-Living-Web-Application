@@ -38,6 +38,19 @@
         </label>
       </fieldset>
 
+            <!--Question 3-->
+      <fieldset id="q3-fieldset" class="hidden">
+        <legend> Are you a healthcare worker?<span class="required"> *</span></legend>
+        <label>
+          <input type="radio" name="healthcare" value="yes">
+          Yes
+        </label>
+        <label>
+          <input type="radio" name="healthcare" value="no">
+          No
+        </label>
+      </fieldset>
+
       <!--Question 2 (only if Q1 == yes)-->
       <fieldset id="q2-fieldset" class="hidden">
         <legend>
@@ -77,27 +90,47 @@
           </li>
           <li>
             <label>
-              <input type="checkbox" name="symptoms" value="none" id="symptoms-none">
-              None of the above
+              <input type="checkbox" name="symptoms" value="other">
+              Other
+            </label>
+        </ul>
+      </fieldset>
+
+
+      
+    
+
+      <fieldset id="q4-fieldset" class="hidden">
+        <legend>-	Are you interested in either, life coaching, kunulani yoga, eft, and/or sound baths? </legend>
+        <ul class="healingMethods">
+          <li>
+            <label>
+              <input type="checkbox" name="method" value="life_coachign">
+              I'm interested in Life Coaching.
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="method" value="kunulani_yoga">
+              I'm interested in Kunulani Yoga.
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="method" value="eft">
+              I'm interested in EFT.
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="method" value="sound_bath">
+              I'm interested in Sound Baths.
             </label>
           </li>
         </ul>
       </fieldset>
 
-      <!--Question 3-->
-      <fieldset id="q3-fieldset" class="hidden">
-        <legend> Are you a healthcare worker?<span class="required"> *</span></legend>
-        <label>
-          <input type="radio" name="healthcare" value="yes">
-          Yes
-        </label>
-        <label>
-          <input type="radio" name="healthcare" value="no">
-          No
-        </label>
-      </fieldset>
-      
-      <button type="submit" class="btn-next">See My Next Step</button>
+        <button type="submit" class="btn-next">See My Next Step</button>
     </form>
 
     <!--Ending 1: Go to application-->
